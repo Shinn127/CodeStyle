@@ -1,0 +1,48 @@
+         110023 function calls (97899 primitive calls) in 0.372 seconds
+
+   Ordered by: cumulative time
+   List reduced from 625 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   102/64    0.001    0.000    0.147    0.002 /home/shinn/桌面/multimedia/revision/NewCode/analysis/profile_clip_recipe_v2.py:84(wrapped)
+ 1489/192    0.001    0.000    0.135    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/module.py:1774(_wrapped_call_impl)
+ 1489/192    0.002    0.000    0.135    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/module.py:1782(_call_impl)
+    74/57    0.000    0.000    0.099    0.002 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/_contextlib.py:120(decorate_context)
+        8    0.000    0.000    0.091    0.011 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/__init__.py:255(backward)
+        8    0.000    0.000    0.091    0.011 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/graph.py:966(_engine_run_backward)
+        8    0.054    0.007    0.091    0.011 {method 'run_backward' of 'torch._C._EngineBase' objects}
+        8    0.006    0.001    0.090    0.011 /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:875(_predict_velocity)
+       35    0.038    0.001    0.083    0.002 /home/shinn/桌面/multimedia/revision/NewCode/arch/clip_recipe_v2.py:26(forward)
+       27    0.005    0.000    0.069    0.003 /home/shinn/桌面/multimedia/revision/NewCode/arch/clip_recipe_v2.py:297(forward)
+        8    0.004    0.000    0.067    0.008 /home/shinn/桌面/multimedia/revision/NewCode/Utils/clip_recipe_training.py:119(embeddings)
+        1    0.002    0.002    0.062    0.062 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/_tensor.py:566(backward)
+        8    0.030    0.004    0.036    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/function.py:313(apply)
+       35    0.000    0.000    0.035    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/transformer.py:405(forward)
+       70    0.002    0.000    0.033    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/transformer.py:795(forward)
+        8    0.000    0.000    0.025    0.003 /home/shinn/桌面/multimedia/revision/NewCode/arch/clip_recipe_v2.py:206(probabilities_from_references)
+       16    0.025    0.002    0.025    0.002 {built-in method torch.nonzero}
+        9    0.000    0.000    0.020    0.002 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/tqdm/std.py:1166(__iter__)
+        9    0.001    0.000    0.019    0.002 /home/shinn/桌面/multimedia/revision/NewCode/Utils/clip_recipe_resident.py:57(__iter__)
+       35    0.000    0.000    0.016    0.000 /home/shinn/桌面/multimedia/revision/NewCode/arch/basic_vqvae_375to291.py:662(decode)
+       36    0.000    0.000    0.016    0.000 /home/shinn/桌面/multimedia/revision/NewCode/arch/basic_vqvae_375to291.py:339(forward)
+       36    0.001    0.000    0.016    0.000 /home/shinn/桌面/multimedia/revision/NewCode/arch/basic_vqvae_375to291.py:330(_forward_flat)
+       35    0.000    0.000    0.016    0.000 /home/shinn/桌面/multimedia/revision/NewCode/arch/basic_vqvae_375to291.py:568(_decode_btd)
+        8    0.005    0.001    0.015    0.002 /home/shinn/桌面/multimedia/revision/NewCode/Utils/clip_recipe_training.py:56(retarget_windows)
+       32    0.000    0.000    0.015    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/transformer.py:957(_sa_block)
+      578    0.014    0.000    0.014    0.000 {built-in method torch._C._nn.linear}
+       32    0.000    0.000    0.014    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/activation.py:1255(forward)
+       32    0.001    0.000    0.013    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/functional.py:6637(multi_head_attention_forward)
+       17    0.000    0.000    0.013    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:1090(forward)
+       16    0.000    0.000    0.012    0.001 /home/shinn/桌面/multimedia/revision/NewCode/arch/clip_recipe_v2.py:200(requantize_latent)
+       16    0.000    0.000    0.012    0.001 /home/shinn/桌面/multimedia/revision/NewCode/arch/basic_vqvae_375to291.py:136(quantize_only)
+      514    0.000    0.000    0.012    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/modules/linear.py:130(forward)
+       65    0.000    0.000    0.011    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/sampler.py:276(__iter__)
+        1    0.011    0.011    0.011    0.011 {built-in method torch.multinomial}
+       17    0.000    0.000    0.011    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/amp/autocast_mode.py:41(decorate_autocast)
+        8    0.000    0.000    0.011    0.001 /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:862(feedback_state)
+       17    0.000    0.000    0.011    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/vector_quantize_pytorch/vector_quantize_pytorch.py:674(forward)
+     1472    0.009    0.000    0.009    0.000 {method 'to' of 'torch._C.TensorBase' objects}
+     24/8    0.001    0.000    0.009    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/nn/utils/clip_grad.py:39(_no_grad_wrapper)
+       38    0.008    0.000    0.009    0.000 {built-in method torch._transformer_encoder_layer_fwd}
+
+

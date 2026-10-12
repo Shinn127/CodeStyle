@@ -1,0 +1,204 @@
+{
+  "date": "2026-10-11",
+  "purpose": "label nomirror 链路接入交互窗口的复测记录（默认路径切到 flowmatch_label_nomirror_150ep）",
+  "model": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+  "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "db": "database_100sty_375_memmap_nomirror",
+  "targeted_tests": {
+    "command": "python -m pytest tests/test_interactive_control.py tests/test_pose_postprocess.py -q",
+    "result": "29 passed"
+  },
+  "headless": {
+    "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+    "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "source_entry_id": 412,
+    "initial_frame": 2007765,
+    "source_style": "Neutral",
+    "steps": 8,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90,
+    "frames": 120,
+    "final_style": "OnHeels",
+    "vq_unchanged": true,
+    "inference_ms_mean": 4.2467520171406,
+    "inference_ms_p95": 4.533260449534282,
+    "root_position": [
+      0.47015923261642456,
+      0.2869180738925934
+    ],
+    "root_yaw_degrees": 7.312724234660419
+  },
+  "gui": {
+    "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+    "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "source_entry_id": 412,
+    "initial_frame": 2007765,
+    "source_style": "Neutral",
+    "steps": 8,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90,
+    "frames": 120,
+    "final_style": "OnHeels",
+    "vq_unchanged": true,
+    "inference_ms_mean": 5.216248864863618,
+    "inference_ms_p95": 5.525393454445293,
+    "root_position": [
+      0.47015923261642456,
+      0.2869180738925934
+    ],
+    "root_yaw_degrees": 7.312724234660419,
+    "render": {
+      "postprocess": true,
+      "foot_ik": true,
+      "foot_ik_active": true,
+      "smoothing_active": true,
+      "smooth_cutoff": 6.0,
+      "postprocess_ms_mean": 2.2392011839353168,
+      "contacts": 1,
+      "pelvis_offset": 0.0030039886381072623
+    }
+  },
+  "source_sha256": {
+    "Utils/interactive_control.py": "0dd5d413714951d30aeda2e5e3965ad7b91186b424212cda0919fbf1a0cff6ec",
+    "Visualization/cli/interactive_label_control.py": "b26390ceefbf9360e6d40eae3e4cf7d9109a74fa2b2512669df436762f561abc",
+    "Visualization/pose_postprocess.py": "2edade7a683c90b8de8a55a8da14f51e71137d1faf70c14d4202690b9d423447",
+    "run_interactive_label_control.sh": "060fdf2114ee0e1f3830531f5bffe858dbefa5c4ef58d12f7ec27f8b633c4765",
+    "tests/test_interactive_control.py": "2dbb2800417bf70cead0c3af9adfb37e55fbe53a19f9d07b8ab36ba5dfcc3c57"
+  },
+  "feedback_modes": {
+    "requantize_true": {
+      "headless": {
+        "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+        "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+        "source_entry_id": 412,
+        "initial_frame": 2007765,
+        "source_style": "Neutral",
+        "steps": 8,
+        "seed": 42,
+        "fps": 60,
+        "fp32": true,
+        "tf32": false,
+        "feedback": "clip_quantize_decode",
+        "root": "predicted_velocity_integrated",
+        "styles": 90,
+        "frames": 120,
+        "final_style": "OnHeels",
+        "vq_unchanged": true,
+        "inference_ms_mean": 4.2467520171406,
+        "inference_ms_p95": 4.533260449534282,
+        "root_position": [
+          0.47015923261642456,
+          0.2869180738925934
+        ],
+        "root_yaw_degrees": 7.312724234660419
+      },
+      "gui": {
+        "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+        "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+        "source_entry_id": 412,
+        "initial_frame": 2007765,
+        "source_style": "Neutral",
+        "steps": 8,
+        "seed": 42,
+        "fps": 60,
+        "fp32": true,
+        "tf32": false,
+        "feedback": "clip_quantize_decode",
+        "root": "predicted_velocity_integrated",
+        "styles": 90,
+        "frames": 120,
+        "final_style": "OnHeels",
+        "vq_unchanged": true,
+        "inference_ms_mean": 5.216248864863618,
+        "inference_ms_p95": 5.525393454445293,
+        "root_position": [
+          0.47015923261642456,
+          0.2869180738925934
+        ],
+        "root_yaw_degrees": 7.312724234660419,
+        "render": {
+          "postprocess": true,
+          "foot_ik": true,
+          "foot_ik_active": true,
+          "smoothing_active": true,
+          "smooth_cutoff": 6.0,
+          "postprocess_ms_mean": 2.2392011839353168,
+          "contacts": 1,
+          "pelvis_offset": 0.0030039886381072623
+        }
+      }
+    },
+    "requantize_false_ae": {
+      "headless": {
+        "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+        "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+        "source_entry_id": 412,
+        "initial_frame": 2007765,
+        "source_style": "Neutral",
+        "steps": 8,
+        "seed": 42,
+        "fps": 60,
+        "fp32": true,
+        "tf32": false,
+        "feedback": "clip_continuous_decode",
+        "root": "predicted_velocity_integrated",
+        "styles": 90,
+        "frames": 120,
+        "final_style": "OnHeels",
+        "vq_unchanged": true,
+        "inference_ms_mean": 4.186187982717953,
+        "inference_ms_p95": 4.7541650470520835,
+        "root_position": [
+          0.46938711404800415,
+          0.31908100843429565
+        ],
+        "root_yaw_degrees": 7.3311803281308405
+      },
+      "gui": {
+        "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+        "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+        "source_entry_id": 412,
+        "initial_frame": 2007765,
+        "source_style": "Neutral",
+        "steps": 8,
+        "seed": 42,
+        "fps": 60,
+        "fp32": true,
+        "tf32": false,
+        "feedback": "clip_continuous_decode",
+        "root": "predicted_velocity_integrated",
+        "styles": 90,
+        "frames": 120,
+        "final_style": "OnHeels",
+        "vq_unchanged": true,
+        "inference_ms_mean": 4.562064809513024,
+        "inference_ms_p95": 4.869169444282306,
+        "root_position": [
+          0.46938711404800415,
+          0.31908100843429565
+        ],
+        "root_yaw_degrees": 7.3311803281308405,
+        "render": {
+          "postprocess": true,
+          "foot_ik": true,
+          "foot_ik_active": true,
+          "smoothing_active": true,
+          "smooth_cutoff": 6.0,
+          "postprocess_ms_mean": 2.256773259189989,
+          "contacts": 0,
+          "pelvis_offset": 0.003581065582471862
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-12",
+  "cpu_tests": 327,
+  "cuda_tests": 21,
+  "actual_updates": 100,
+  "full_training_started": false,
+  "fp32": true,
+  "tf32": false,
+  "vq_unchanged": true,
+  "norm_unchanged": true,
+  "objective_version": 10,
+  "history_conditioning": true,
+  "loss_weights": {
+    "recon_weight": 0.0,
+    "root_recon_weight": 0.0,
+    "style_consistency_weight": 0.0,
+    "style_hist_weight": 0.02,
+    "style_entropy_weight": 0.003
+  },
+  "best_selection": {
+    "key": [
+      1,
+      20.546093651344457
+    ],
+    "epoch": 1,
+    "metrics": {
+      "matched_quality_cases": 2,
+      "matched_accuracy": 1.0,
+      "matched_root_ade_cm": 20.489086627960205,
+      "matched_cases": 2,
+      "cross_quality_cases": 4,
+      "cross_accuracy": 1.0,
+      "cross_root_ade_cm": 18.940005898475647,
+      "cross_cases": 4,
+      "evaluation_batch_size": 4,
+      "jitter_cm": 2.0229943539915967,
+      "foot_sliding_local_cm": 1.217365026473999,
+      "foot_sliding_world_cm": 2.518494609007641,
+      "world_contact_count": 319,
+      "world_contact_coverage": 0.33368200836820083,
+      "cross_jitter_cm": 3.234043067910758,
+      "cross_pose_step_p99_cm": 10.902522897720345,
+      "cross_pose_step_max_cm": 13.918983459472656,
+      "matched_pose_step_p99_cm": 12.559516754150392,
+      "matched_pose_step_max_cm": 14.354411125183105,
+      "quality_protocol": "first_fixed_window_per_clip_matched_reference_contacts_cross_raw_jitter_240f",
+      "time_sec": 1.7706195220234804
+    },
+    "protocol": "rollout_240f",
+    "policy": "motion_quality",
+    "constraints_passed": false
+  },
+  "frozen_vq_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "inference": {
+    "steps": 8,
+    "noise_std": 1,
+    "policy": "clip_quantize_decode"
+  },
+  "runtime": {
+    "old_window_gate_100_updates_seconds": 8.712351844005752,
+    "new_batch_gate_cached_100_updates_seconds": 5.267121564014815,
+    "speedup": 1.654101151476907,
+    "cuda_peak_allocated_gb": 11.007853984832764,
+    "limitation": "Bounded 100-update timing; gate organization differs, not a full-epoch or accuracy comparison."
+  },
+  "cold_warm_targets_equal": true,
+  "cold_warm_rng_equal": true,
+  "long_rollout": "rollout_verification.json",
+  "gui": "gui.png",
+  "temporary_checkpoint": "/tmp/newcode_history_delivery_smoke/latest.pt"
+}

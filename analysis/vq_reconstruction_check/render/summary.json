@@ -1,0 +1,28 @@
+[
+  {
+    "style": "Roadrunner",
+    "suffix": "SR",
+    "segment_id": 546,
+    "window_start": 2658232,
+    "seed": 27442855,
+    "mpjpe_quantized": 2.611839124891493,
+    "jitter_quantized": 0.5192527877850359,
+    "mpjpe_continuous": 3.2464392768012154,
+    "jitter_continuous": 0.3339323156020221,
+    "any_head_switch_rate": 1.0,
+    "switch_frames": 239
+  },
+  {
+    "style": "March",
+    "suffix": "BW",
+    "segment_id": 389,
+    "window_start": 1899199,
+    "seed": 27442855,
+    "mpjpe_quantized": 2.2611989339192706,
+    "jitter_quantized": 0.3884792808725053,
+    "mpjpe_continuous": 2.18925289577908,
+    "jitter_continuous": 0.15377574674889488,
+    "any_head_switch_rate": 1.0,
+    "switch_frames": 239
+  }
+]

@@ -1,0 +1,61 @@
+# NewCode standalone repository. Generated assets (data, checkpoints, caches,
+# eval payloads, videos, logs) stay on disk but are not versioned; code, docs,
+# tests and analysis reports are.
+
+# -----------------------------------------------------------------------------
+# OS / editor
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# -----------------------------------------------------------------------------
+# Python caches / envs
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# -----------------------------------------------------------------------------
+# Model weights, datasets, derived numeric payloads
+# -----------------------------------------------------------------------------
+checkpoints/
+cache/
+database_100sty_375_memmap*/
+data/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.npz
+*.npy
+*.f32
+*.i32
+*.u16
+*.bin
+
+# -----------------------------------------------------------------------------
+# Generated evaluation / visualization artifacts
+# -----------------------------------------------------------------------------
+eval_results/
+rollout_vis/
+reconstruction_vis/
+**/motion_eval_summary.json
+*.trace.json
+*.mp4
+*.mov
+*.avi
+*.gif
+
+# -----------------------------------------------------------------------------
+# Logs / runtime scratch
+# -----------------------------------------------------------------------------
+*.log
+nohup.out

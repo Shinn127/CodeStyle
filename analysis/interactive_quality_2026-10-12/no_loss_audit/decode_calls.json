@@ -1,0 +1,7 @@
+{
+  "unroll_steps": 4,
+  "feedback_probability": 0.25,
+  "decoder_calls": 6,
+  "needed_feedback_decodes": 3,
+  "all_finite": true
+}

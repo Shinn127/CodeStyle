@@ -1,0 +1,46 @@
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+                                  cudaStreamSynchronize        15.23%      75.498ms        15.23%      75.498ms     120.797us       0.000us         0.00%       0.000us       0.000us           625  
+                                       cudaLaunchKernel        10.94%      54.237ms        10.94%      54.237ms       2.994us       0.000us         0.00%       0.000us       0.000us         18118  
+                                               aten::mm         3.30%      16.389ms         5.33%      26.412ms      13.299us      37.239ms        24.66%      37.239ms      18.751us          1986  
+                                              aten::bmm         3.30%      16.354ms         6.03%      29.922ms      29.307us      12.226ms         8.10%      12.805ms      12.542us          1021  
+                                            Phi_forward         3.01%      14.907ms        12.66%      62.773ms       2.325ms       0.000us         0.00%       4.878ms     180.673us            27  
+                                     reference_plan_CPU         2.89%      14.312ms         2.96%      14.661ms       1.833ms       0.000us         0.00%       0.000us       0.000us             8  
+enumerate(DataLoader)#_MultiProcessingDataLoaderIter...         2.81%      13.918ms         2.94%      14.562ms       1.618ms       0.000us         0.00%      13.185us       1.465us             9  
+                                        cudaMemcpyAsync         2.48%      12.293ms         2.48%      12.293ms      11.832us       0.000us         0.00%       0.000us       0.000us          1039  
+                                      aten::multinomial         2.35%      11.665ms         2.36%      11.678ms      11.678ms       0.000us         0.00%       0.000us       0.000us             1  
+                                              aten::mul         2.20%      10.908ms         3.47%      17.228ms       7.947us       9.864ms         6.53%       9.864ms       4.550us          2168  
+                                            aten::empty         2.09%      10.380ms         2.09%      10.380ms       2.029us       0.000us         0.00%       0.000us       0.000us          5117  
+                                              aten::sum         2.05%      10.189ms         3.47%      17.229ms       9.384us       8.770ms         5.81%       8.880ms       4.837us          1836  
+                                  _native::bmm_triton_0         1.99%       9.892ms         2.15%      10.669ms      83.352us     579.112us         0.38%     579.112us       4.524us           128  
+                                            aten::addmm         1.78%       8.840ms         2.70%      13.388ms      15.388us      17.629ms        11.68%      17.629ms      20.264us           870  
+                                       frozen_VQ_decode         1.43%       7.102ms         3.52%      17.442ms     498.333us       0.000us         0.00%       5.535ms     158.132us            35  
+                                            aten::copy_         1.39%       6.881ms        14.83%      73.550ms      29.432us      12.558ms         8.32%      12.673ms       5.071us          2499  
+                                         cuLaunchKernel         1.31%       6.488ms         1.31%       6.488ms       2.460us       0.000us         0.00%       0.000us       0.000us          2637  
+                                     flow_field_forward         1.28%       6.348ms         5.88%      29.172ms       3.646ms       0.000us         0.00%      15.686ms       1.961ms             8  
+                                   reference_Es_forward         1.00%       4.965ms         3.97%      19.668ms       2.459ms       0.000us         0.00%       2.330ms     291.308us             8  
+                              Optimizer.step#AdamW.step         0.99%       4.895ms         1.11%       5.486ms     685.768us       0.000us         0.00%       2.876ms     359.484us             8  
+                                             aten::add_         0.94%       4.660ms         2.00%       9.934ms       4.955us       3.593ms         2.38%       3.593ms       1.792us          2005  
+                                    cudaLaunchKernelExC         0.93%       4.627ms         0.93%       4.627ms       2.796us       0.000us         0.00%       0.000us       0.000us          1655  
+                                        aten::transpose         0.89%       4.400ms         1.17%       5.789ms       0.785us       0.000us         0.00%       0.000us       0.000us          7377  
+                                          aten::nonzero         0.87%       4.316ms         6.01%      29.778ms     120.559us     918.950us         0.61%     922.599us       3.735us           247  
+    autograd::engine::evaluate_function: AddmmBackward0         0.86%       4.277ms         8.45%      41.915ms      42.253us       0.000us         0.00%      41.322ms      41.655us           992  
+     autograd::engine::evaluate_function: ViewBackward0         0.83%       4.095ms         1.97%       9.758ms       4.280us       0.000us         0.00%     414.693us       0.182us          2280  
+                                              aten::add         0.82%       4.080ms         1.33%       6.584ms       7.933us       9.068ms         6.01%       9.068ms      10.925us           830  
+                                              aten::div         0.81%       4.030ms         1.20%       5.964ms      10.126us     901.190us         0.60%     901.190us       1.530us           589  
+                                              aten::cat         0.79%       3.925ms         1.25%       6.210ms       9.119us       2.086ms         1.38%       2.086ms       3.063us           681  
+                                            aten::index         0.77%       3.826ms         5.35%      26.515ms      66.288us       1.568ms         1.04%       2.226ms       5.565us           400  
+                                             aten::view         0.77%       3.808ms         0.77%       3.810ms       0.467us       0.000us         0.00%       2.464us       0.000us          8157  
+                                          aten::reshape         0.74%       3.660ms         2.67%      13.231ms       2.370us       0.000us         0.00%       1.729ms       0.310us          5583  
+                                                aten::t         0.70%       3.447ms         1.36%       6.745ms       1.353us       0.000us         0.00%       0.000us       0.000us          4985  
+                                         donor_retarget         0.69%       3.401ms         3.04%      15.083ms       1.885ms       0.000us         0.00%       1.216ms     152.011us             8  
+                                Activity Buffer Request         0.67%       3.346ms         0.75%       3.708ms     617.959us     110.978us         0.07%     128.194us      21.366us             6  
+autograd::engine::evaluate_function: torch::autograd...         0.67%       3.310ms         2.24%      11.129ms       5.040us       0.000us         0.00%       1.655ms       0.750us          2208  
+                                       aten::as_strided         0.64%       3.154ms         0.64%       3.154ms       0.206us       0.000us         0.00%       0.000us       0.000us         15333  
+                                   frozen_reference_Phi         0.59%       2.916ms        12.44%      61.699ms       7.712ms       0.000us         0.00%       6.316ms     789.524us             8  
+                                         AddmmBackward0         0.58%       2.893ms         5.79%      28.717ms      28.948us       0.000us         0.00%      35.486ms      35.772us           992  
+                                            aten::fill_         0.58%       2.892ms         1.30%       6.448ms       5.105us       4.833ms         3.20%       4.833ms       3.827us          1263  
+-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  
+Self CPU time total: 495.880ms
+Self CUDA time total: 150.996ms

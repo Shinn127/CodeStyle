@@ -1,0 +1,625 @@
+{
+  "checkpoint_path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/clip_recipe_gt_history50/best.pt",
+  "checkpoint_sha256": "d039d7d520dcbb58d62fd72b7f4a56cd154722ae9cd4d1bf0a6bee0686b58a3f",
+  "device": "cuda",
+  "fp32": true,
+  "seed": 42,
+  "sources": [
+    7032323,
+    4970056,
+    5904789,
+    4534042,
+    3005262,
+    3003223,
+    469636,
+    5372272,
+    7032323,
+    4970056,
+    5904789,
+    4534042,
+    3005262,
+    3003223,
+    469636,
+    5372272
+  ],
+  "target_names": [
+    "TogetherStep",
+    "Punch",
+    "SpinClock",
+    "OnToesCrouched",
+    "LawnMower",
+    "LawnMower",
+    "Balance",
+    "Robot",
+    "BigSteps",
+    "March",
+    "Skip",
+    "Morris",
+    "Teapot",
+    "OnPhoneLeft",
+    "WildArms",
+    "Zombie"
+  ],
+  "oracle_same_action": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    false,
+    true,
+    null,
+    null
+  ],
+  "representation": {
+    "histogram_mass_raw_topk": 0.30930835008621216,
+    "histogram_mass_learned_topk": 0.2940728962421417,
+    "mean_topk_overlap": 0.8762499690055847,
+    "residual_saturation_fraction": 0.6049426198005676
+  },
+  "history": {
+    "source_history_quantized": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.534881517291069
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 17.66885995864868
+        },
+        "pose_cross": {
+          "correct": 1,
+          "n": 2,
+          "root_ade_cm": 12.133366107940674
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 14.512949347496033
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "SpinClock",
+        "FairySteps",
+        "Teapot",
+        "ArmsBySide",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999986886978149,
+        1.0,
+        0.9999536275863647,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.731494593636861e-16,
+        8.876607466845599e-07,
+        9.076017271070214e-09,
+        4.06275245040731e-15,
+        1.0,
+        0.011878135614097118,
+        8.304057752029931e-15,
+        2.390902587023902e-09
+      ]
+    },
+    "source_history_continuous": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.712056294083595
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 13.79657632112503
+        },
+        "pose_cross": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 12.376386165618896
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 14.949272990226746
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "Strutting",
+        "FairySteps",
+        "Teapot",
+        "OnPhoneLeft",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999990463256836,
+        1.0,
+        0.9999517202377319,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.100654100675012e-16,
+        1.534514353807026e-06,
+        3.45138033708281e-08,
+        6.987483779519882e-14,
+        1.0,
+        1.0,
+        4.312805893799199e-15,
+        2.277897426239406e-09
+      ]
+    },
+    "source_history_unclipped_continuous": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.720244258642197
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 13.745595097541809
+        },
+        "pose_cross": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 12.367617130279541
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 14.948123574256897
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "Strutting",
+        "FairySteps",
+        "Teapot",
+        "OnPhoneLeft",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999990463256836,
+        1.0,
+        0.9999518394470215,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.121589049361994e-16,
+        1.5448581507371273e-06,
+        3.374399426547825e-08,
+        6.912948268293292e-14,
+        1.0,
+        1.0,
+        4.316961860954902e-15,
+        2.2920443321083894e-09
+      ]
+    },
+    "source_history_unclipped_quantized": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.534893199801445
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 17.667168617248535
+        },
+        "pose_cross": {
+          "correct": 1,
+          "n": 2,
+          "root_ade_cm": 12.133366107940674
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 14.512949347496033
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "SpinClock",
+        "FairySteps",
+        "Teapot",
+        "ArmsBySide",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999986886978149,
+        1.0,
+        0.9999536275863647,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.731494593636861e-16,
+        8.876607466845599e-07,
+        9.127184341650718e-09,
+        4.042692169117486e-15,
+        1.0,
+        0.011878135614097118,
+        8.304057752029931e-15,
+        2.390902587023902e-09
+      ]
+    },
+    "selector_bypass_raw_topk": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.45440785586834
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 13.200778067111969
+        },
+        "pose_cross": {
+          "correct": 1,
+          "n": 2,
+          "root_ade_cm": 12.159881114959717
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 14.947356224060059
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "SpinClock",
+        "FairySteps",
+        "Teapot",
+        "ArmsBySide",
+        "ShieldedRight",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999990463256836,
+        1.0,
+        0.999951958656311,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.80684823281138e-16,
+        0.0014968892792239785,
+        2.2217049380768294e-11,
+        1.2409202930897898e-14,
+        1.0,
+        0.011891365051269531,
+        3.8611303043722955e-10,
+        7.423422232477606e-08
+      ]
+    },
+    "oracle_target_history_ae": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 2.8829182386398315
+        },
+        "dynamic_cross": {
+          "correct": 3,
+          "n": 4,
+          "root_ade_cm": 5.271408349275589
+        },
+        "pose_cross": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 2.2667112946510315
+        },
+        "ood": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 2.092862844467163
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "BentKnees",
+        "March",
+        "Skip",
+        "Morris",
+        "Teapot",
+        "OnPhoneLeft",
+        "WildArms",
+        "Zombie"
+      ],
+      "target_confidence": [
+        0.9999998807907104,
+        1.0,
+        0.9999788999557495,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.134216967737302e-05,
+        1.0,
+        1.0,
+        0.9999997615814209,
+        0.9999998807907104,
+        1.0,
+        0.9999678134918213,
+        0.8545884490013123
+      ]
+    },
+    "oracle_target_history_clipped_ae": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 2.882915034890175
+        },
+        "dynamic_cross": {
+          "correct": 3,
+          "n": 4,
+          "root_ade_cm": 5.2714216113090515
+        },
+        "pose_cross": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 2.2667099237442017
+        },
+        "ood": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 2.0943108797073364
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "BentKnees",
+        "March",
+        "Skip",
+        "Morris",
+        "Teapot",
+        "OnPhoneLeft",
+        "WildArms",
+        "Zombie"
+      ],
+      "target_confidence": [
+        0.9999998807907104,
+        1.0,
+        0.9999788999557495,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.134185681119561e-05,
+        1.0,
+        1.0,
+        0.9999997615814209,
+        0.9999998807907104,
+        1.0,
+        0.9999666213989258,
+        0.8545876741409302
+      ]
+    },
+    "oracle_target_history": {
+      "groups": {
+        "matched": {
+          "correct": 8,
+          "n": 8,
+          "root_ade_cm": 10.534881517291069
+        },
+        "dynamic_cross": {
+          "correct": 1,
+          "n": 4,
+          "root_ade_cm": 24.043648958206177
+        },
+        "pose_cross": {
+          "correct": 2,
+          "n": 2,
+          "root_ade_cm": 13.51603078842163
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 11.332865715026855
+        }
+      },
+      "predicted": [
+        "TogetherStep",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "Skip",
+        "FairySteps",
+        "Teapot",
+        "OnPhoneLeft",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.9999986886978149,
+        1.0,
+        0.9999536275863647,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.4395568070924014e-10,
+        2.856680725304983e-10,
+        0.9296017289161682,
+        3.7449650856519884e-14,
+        1.0,
+        0.9999985694885254,
+        1.889380341903949e-14,
+        9.927894062400355e-09
+      ]
+    },
+    "joint_history_mask": {
+      "groups": {
+        "matched": {
+          "correct": 7,
+          "n": 8,
+          "root_ade_cm": 9.4896130412817
+        },
+        "dynamic_cross": {
+          "correct": 0,
+          "n": 4,
+          "root_ade_cm": 11.58773398399353
+        },
+        "pose_cross": {
+          "correct": 1,
+          "n": 2,
+          "root_ade_cm": 7.321746110916138
+        },
+        "ood": {
+          "correct": 0,
+          "n": 2,
+          "root_ade_cm": 12.524675607681274
+        }
+      },
+      "predicted": [
+        "Robot",
+        "Punch",
+        "SpinClock",
+        "OnToesCrouched",
+        "LawnMower",
+        "LawnMower",
+        "Balance",
+        "Robot",
+        "TogetherStep",
+        "ArmsBySide",
+        "SpinClock",
+        "FairySteps",
+        "Teapot",
+        "ArmsBySide",
+        "FairySteps",
+        "InTheDark"
+      ],
+      "target_confidence": [
+        0.0003953050763811916,
+        0.7569853663444519,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9999997615814209,
+        3.431974704426466e-10,
+        3.6197849162533657e-09,
+        1.2212781008713591e-08,
+        1.884867689174157e-15,
+        1.0,
+        0.032139938324689865,
+        2.4549528805217075e-14,
+        8.036920462473063e-08
+      ]
+    }
+  },
+  "vq_unchanged": true,
+  "limitations": "16 post-hoc validation cases, not population estimates. Oracle target history supplies GT each frame and may change action/content. Raw TopK bypass changes the condition distribution; masking preserves root/trajectory but removes phase. No optimizer updates or rollout.",
+  "latent_bounds": {
+    "predicted": {
+      "matched": 0.0,
+      "dynamic_cross": 0.0,
+      "pose_cross": 0.0,
+      "ood": 0.0
+    },
+    "oracle_gt": {
+      "matched": 0.0,
+      "dynamic_cross": 0.0,
+      "pose_cross": 0.0,
+      "ood": 0.0
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+ "matched_quality_cases": 90,
+ "matched_accuracy": 0.9296296296296296,
+ "matched_root_ade_cm": 8.528524815815466,
+ "matched_cases": 270,
+ "cross_quality_cases": 180,
+ "cross_accuracy": 0.9055555555555556,
+ "cross_root_ade_cm": 10.913136504976837,
+ "cross_cases": 540,
+ "evaluation_batch_size": 64,
+ "jitter_cm": 2.0424404895828774,
+ "foot_sliding_local_cm": 1.5824901590543368,
+ "foot_sliding_world_cm": 2.225503738568465,
+ "world_contact_count": 21436,
+ "world_contact_coverage": 0.498279869827987,
+ "cross_jitter_cm": 2.597330563186375,
+ "cross_pose_step_p99_cm": 11.042579050064028,
+ "cross_pose_step_max_cm": 28.617277145385742,
+ "matched_pose_step_p99_cm": 10.033552789688109,
+ "matched_pose_step_max_cm": 29.122024536132812,
+ "quality_protocol": "first_fixed_window_per_clip_matched_reference_contacts_cross_raw_jitter_240f"
+}

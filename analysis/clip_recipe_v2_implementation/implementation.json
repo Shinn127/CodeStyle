@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-10",
+  "status": "code_and_bounded_smoke_verified",
+  "formal_training_complete": false,
+  "targets": {
+    "matched": 0.85,
+    "cross": 0.8,
+    "unseen": 0.7
+  },
+  "targets_verified": false,
+  "tests": {
+    "cpu": 257,
+    "cuda": 16,
+    "subtests": 5
+  },
+  "smoke_file": "smoke_final.json",
+  "random_metric": true,
+  "ms_per_update": 48.21345745000144,
+  "peak_allocated_MiB": 1373.888671875,
+  "paired_cross_actual": 0.012500000186264515,
+  "paired_cross_requested": 0.09749999642372131,
+  "source_sha256": {
+    "arch/clip_recipe_v2.py": "b33b3e1c60dabe7ceb86c9201ed2c02e0a6679060ebe2ca04f74cf49af62902b",
+    "Utils/clip_recipe_training.py": "70be677a8ec18dcbd8c7fdc47830ff383650d474c47f455a716b88e9b63c0d6b",
+    "Utils/clip_recipe_assets.py": "fd7a508af7847f1532d77c04fdccd926d834269a49a9ac31aef3cee39d3d644f",
+    "train_clip_recipe_v2.py": "d07fecf043e47c7a2c16915ecede2676c840e47ebefe30bd3db77e4d6f4389a6",
+    "train_motion_style_metric.py": "ab18744e194fed500f5ab398af97dec3402f47e0e834486223a5ec08e5b7a3ce",
+    "run_train_clip_recipe_v2.sh": "4639b0e623ccea9d2e1156100eb5d7ae0f08ee1afa396bd02456723a7115cf0e",
+    "Utils/controller_validation.py": "e0b784e7df8cf07da00b503983ed7b01efd1cbece78db3ef304090a676984684",
+    "Utils/style_code_prior.py": "bf360c8a80de540e5441e07333bb3aaa6606b8bc06cab5515e384edb3e1ddeaf",
+    "tests/test_clip_recipe_v2.py": "4869fdbae648a782fe6726e65968cc4790417d2cd9ceab6bf143ee4adb94d01d"
+  }
+}

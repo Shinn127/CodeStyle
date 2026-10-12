@@ -1,0 +1,28 @@
+{
+  "seed": 42,
+  "fp32": true,
+  "tf32": false,
+  "effective_batch": 512,
+  "warmup_updates": 100,
+  "timed_updates": 100,
+  "baseline_ms": 66.84573902006377,
+  "final_ms": 47.0863312498841,
+  "speed_ratio": 1.4196421179071648,
+  "time_reduction": 0.29559711748042583,
+  "metrics_identical": true,
+  "baseline_recipe_hit": 0.403632789850235,
+  "final_recipe_hit": 0.403632789850235,
+  "tests": {
+    "cpu": 249,
+    "cuda": 13,
+    "subtests": 5
+  },
+  "source_sha256": {
+    "dataset.py": "14691f44e3e95db1dbcd8807c4561f976219997db94e81af1b89d85864975be1",
+    "arch/basic_vqvae_375to291.py": "9f59a969abf88968a6cacfa6954d1c6746401ebfe8386d214d57c97fdfb4da36",
+    "Utils/style_code_prior.py": "33449f82cdea11ef7a63eafa016aa568b822daa4069fa0cb9be5aaf3c3ec7d4b",
+    "train_flowmatch_vqvae_controller.py": "88a0b1d13eb1170ec5397fb623539ca3485faa1cd428ba5ca014f3068591d119",
+    "analysis/profile_training.py": "98374477e160d5162e5f219f78e5f7a9522dd7527a380b28ee0d161165c54e97",
+    "tests/test_training_pipeline.py": "faf600e40cbe630ea91224835ddd4db122fab41ea3c080c768ed064680a1ebdf"
+  }
+}

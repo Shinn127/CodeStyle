@@ -1,0 +1,33 @@
+{
+  "raw": {
+    "world_second_difference_cm": 5.452544212341309,
+    "locked_support_slide_cm_per_frame": 2.2973161079427777,
+    "locked_support_pairs": 85,
+    "locked_support_pair_coverage": 0.35714285714285715,
+    "sole_penetration_max_cm": 0.7543437480926514,
+    "bone_length_max_error_cm": 1.5004947185516357
+  },
+  "smooth_fk": {
+    "world_second_difference_cm": 3.012263536453247,
+    "locked_support_slide_cm_per_frame": 1.618861432110562,
+    "locked_support_pairs": 85,
+    "locked_support_pair_coverage": 0.35714285714285715,
+    "sole_penetration_max_cm": 4.104311943054199,
+    "bone_length_max_error_cm": 5.364418029785156e-05
+  },
+  "smooth_fk_ik": {
+    "world_second_difference_cm": 3.078570604324341,
+    "locked_support_slide_cm_per_frame": 0.030078070697768185,
+    "locked_support_pairs": 85,
+    "locked_support_pair_coverage": 0.35714285714285715,
+    "sole_penetration_max_cm": 1.1548399925231934e-05,
+    "bone_length_max_error_cm": 5.364418029785156e-05
+  },
+  "protocol": "render_diagnostics_same_120frame_demo_not_paper_metrics",
+  "fp32": true,
+  "seed": 42,
+  "raw_controller_feedback_unchanged": true,
+  "vq_unchanged": true,
+  "postprocess_ms_mean": 2.1917316920735175,
+  "limitations": "Sole heights are joint proxies; raw and processed support slide use the same final-IK contact intervals."
+}

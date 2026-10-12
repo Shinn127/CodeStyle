@@ -1,0 +1,43 @@
+         324970 function calls (319213 primitive calls) in 0.867 seconds
+
+   Ordered by: cumulative time
+   List reduced from 724 to 35 due to restriction <35>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       48    0.001    0.000    1.048    0.022 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/connection.py:258(poll)
+       48    0.008    0.000    0.949    0.020 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/connection.py:444(_poll)
+       48    0.002    0.000    0.921    0.019 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/connection.py:1160(wait)
+    50/48    0.007    0.000    0.568    0.012 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/_utils/pin_memory.py:26(do_one_step)
+      200    0.004    0.000    0.388    0.002 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/multiprocessing/reductions.py:537(rebuild_storage_fd)
+    26/20    0.000    0.000    0.360    0.018 /home/shinn/miniforge3/envs/mcc/lib/python3.13/threading.py:327(wait)
+    56/40    0.001    0.000    0.357    0.009 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/_contextlib.py:120(decorate_context)
+    49/48    0.000    0.000    0.342    0.007 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/queues.py:96(get)
+        8    0.061    0.008    0.321    0.040 /home/shinn/桌面/multimedia/revision/NewCode/Utils/style_code_prior.py:92(sample)
+      200    0.001    0.000    0.269    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/resource_sharer.py:55(detach)
+      200    0.001    0.000    0.266    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/resource_sharer.py:81(get_connection)
+      200    0.000    0.000    0.229    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/connection.py:267(__exit__)
+    20993    0.029    0.000    0.227    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/sampler.py:160(__iter__)
+   248/48    0.003    0.000    0.221    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/_utils/pin_memory.py:55(pin_memory)
+       98    0.000    0.000    0.204    0.002 {built-in method builtins.next}
+       41    0.000    0.000    0.204    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:1531(_try_put_index)
+       41    0.000    0.000    0.204    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:714(_next_index)
+       42    0.002    0.000    0.204    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/sampler.py:333(__iter__)
+        1    0.000    0.000    0.204    0.204 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:492(__iter__)
+        1    0.000    0.000    0.204    0.204 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:1233(_reset)
+       48    0.001    0.000    0.170    0.004 {built-in method _pickle.loads}
+      200    0.001    0.000    0.138    0.001 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/multiprocessing/reductions.py:108(rebuild_tensor)
+     2485    0.001    0.000    0.137    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/numpy/_core/fromnumeric.py:2031(nonzero)
+     2485    0.001    0.000    0.133    0.000 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/numpy/_core/fromnumeric.py:48(_wrapfunc)
+     2485    0.131    0.000    0.131    0.000 {method 'nonzero' of 'numpy.ndarray' objects}
+       20    0.110    0.005    0.110    0.005 {method 'tolist' of 'torch._C.TensorBase' objects}
+    14374    0.017    0.000    0.105    0.000 {method 'astype' of 'numpy.ndarray' objects}
+        1    0.088    0.088    0.088    0.088 {built-in method torch.randperm}
+     1200    0.052    0.000    0.085    0.000 /home/shinn/桌面/multimedia/revision/NewCode/Utils/style_code_prior.py:19(sparse_code_histogram)
+        8    0.000    0.000    0.040    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/_tensor.py:566(backward)
+        8    0.000    0.000    0.040    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/__init__.py:255(backward)
+        8    0.000    0.000    0.039    0.005 /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/graph.py:966(_engine_run_backward)
+        8    0.038    0.005    0.039    0.005 {method 'run_backward' of 'torch._C._EngineBase' objects}
+        8    0.002    0.000    0.039    0.005 /home/shinn/桌面/multimedia/revision/NewCode/train_flowmatch_vqvae_controller.py:243(unrolled_flow_loss)
+        8    0.003    0.000    0.037    0.005 /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:942(compute_loss)
+
+

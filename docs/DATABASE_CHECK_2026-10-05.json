@@ -1,0 +1,700 @@
+[
+  {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap",
+    "failures": 0,
+    "warnings": 0,
+    "checks": [
+      {
+        "level": "PASS",
+        "name": "meta.json present",
+        "detail": ""
+      },
+      {
+        "level": "PASS",
+        "name": "meta.format",
+        "detail": "motion375_memmap"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.schema_version",
+        "detail": "v4"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.feature_layout",
+        "detail": "traj 0:84 motion 84:375"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.v4 fields",
+        "detail": "mirror_layout=interleaved_per_entry"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.input fingerprint",
+        "detail": "e3c1d2beab6486e0"
+      },
+      {
+        "level": "PASS",
+        "name": "meta dimensions",
+        "detail": "7,068,516 frames x 375 dims"
+      },
+      {
+        "level": "PASS",
+        "name": "X.f32 size",
+        "detail": "10,602,774,000 bytes (float32)"
+      },
+      {
+        "level": "PASS",
+        "name": "Labels.i32 size",
+        "detail": "28,274,064 bytes (int32)"
+      },
+      {
+        "level": "PASS",
+        "name": "num_styles consistency",
+        "detail": "90 styles"
+      },
+      {
+        "level": "PASS",
+        "name": "labels contiguous",
+        "detail": "0..89, every style present"
+      },
+      {
+        "level": "PASS",
+        "name": "segments.json present",
+        "detail": "1458 segments"
+      },
+      {
+        "level": "PASS",
+        "name": "num_segments consistency",
+        "detail": "1458"
+      },
+      {
+        "level": "PASS",
+        "name": "segments non-overlapping",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments within bounds",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments label match",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments stay in one style",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments cover all frames",
+        "detail": "0..7,068,516 without gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "segments contiguous",
+        "detail": "no gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs share split",
+        "detail": "729 source clips"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs same length",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror variants per clip",
+        "detail": "[2]"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.segment_counts",
+        "detail": "{'total': 1458, 'mirrored': 729, 'unmirrored': 729}"
+      },
+      {
+        "level": "PASS",
+        "name": "all three splits present",
+        "detail": "train/val/test"
+      },
+      {
+        "level": "PASS",
+        "name": "no cross-split frame overlap",
+        "detail": "verified for all split pairs"
+      },
+      {
+        "level": "PASS",
+        "name": "every style in all splits",
+        "detail": "90 styles in train+val+test"
+      },
+      {
+        "level": "PASS",
+        "name": "frame ratio",
+        "detail": "train=80.8%  val=10.6%  test=8.6%  (7,068,516 frames)"
+      },
+      {
+        "level": "PASS",
+        "name": "frame balance per style",
+        "detail": "train share between 77.6% and 84.3% (worst: SpinClock 84.3%)"
+      },
+      {
+        "level": "PASS",
+        "name": "meta coverage matches data",
+        "detail": "90/90"
+      },
+      {
+        "level": "PASS",
+        "name": "features finite",
+        "detail": "20,000 sampled frames"
+      },
+      {
+        "level": "PASS",
+        "name": "traj direction unit-norm",
+        "detail": "max deviation 2.83e-04"
+      },
+      {
+        "level": "PASS",
+        "name": "traj speed non-negative",
+        "detail": "min 0.0001, max 3.1663"
+      },
+      {
+        "level": "PASS",
+        "name": "motion rotation basis orthonormal",
+        "detail": "|c0|-1=2.85e-04 |c1|-1=3.13e-04 |c0.c1|=1.28e-04"
+      },
+      {
+        "level": "PASS",
+        "name": "motion local ranges",
+        "detail": "local_pos |v| [0.016, 1.892]  local_vel |v| [0.000, 8.168]"
+      },
+      {
+        "level": "PASS",
+        "name": "root motion range",
+        "detail": "vx [-2.3, 1.9] yaw [-402.2, 405.5] deg vz [-3.1, 2.8]"
+      }
+    ]
+  },
+  {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_unmirrored",
+    "failures": 1,
+    "warnings": 0,
+    "checks": [
+      {
+        "level": "PASS",
+        "name": "meta.json present",
+        "detail": ""
+      },
+      {
+        "level": "PASS",
+        "name": "meta.format",
+        "detail": "motion375_memmap"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.schema_version",
+        "detail": "v4"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.feature_layout",
+        "detail": "traj 0:84 motion 84:375"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.v4 fields",
+        "detail": "mirror_layout=interleaved_per_entry"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.input fingerprint",
+        "detail": "e3c1d2beab6486e0"
+      },
+      {
+        "level": "PASS",
+        "name": "meta dimensions",
+        "detail": "3,534,258 frames x 375 dims"
+      },
+      {
+        "level": "PASS",
+        "name": "X.f32 size",
+        "detail": "5,301,387,000 bytes (float32)"
+      },
+      {
+        "level": "PASS",
+        "name": "Labels.i32 size",
+        "detail": "14,137,032 bytes (int32)"
+      },
+      {
+        "level": "PASS",
+        "name": "num_styles consistency",
+        "detail": "90 styles"
+      },
+      {
+        "level": "PASS",
+        "name": "labels contiguous",
+        "detail": "0..89, every style present"
+      },
+      {
+        "level": "PASS",
+        "name": "segments.json present",
+        "detail": "729 segments"
+      },
+      {
+        "level": "PASS",
+        "name": "num_segments consistency",
+        "detail": "729"
+      },
+      {
+        "level": "PASS",
+        "name": "segments non-overlapping",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments within bounds",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments label match",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments stay in one style",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments cover all frames",
+        "detail": "0..3,534,258 without gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "segments contiguous",
+        "detail": "no gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs share split",
+        "detail": "729 source clips"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs same length",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror variants per clip",
+        "detail": "[1]"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.segment_counts",
+        "detail": "{'total': 729, 'mirrored': 0, 'unmirrored': 729}"
+      },
+      {
+        "level": "PASS",
+        "name": "all three splits present",
+        "detail": "train/val/test"
+      },
+      {
+        "level": "PASS",
+        "name": "no cross-split frame overlap",
+        "detail": "verified for all split pairs"
+      },
+      {
+        "level": "PASS",
+        "name": "every style in all splits",
+        "detail": "90 styles in train+val+test"
+      },
+      {
+        "level": "PASS",
+        "name": "frame ratio",
+        "detail": "train=80.8%  val=10.6%  test=8.6%  (3,534,258 frames)"
+      },
+      {
+        "level": "PASS",
+        "name": "frame balance per style",
+        "detail": "train share between 77.6% and 84.3% (worst: SpinClock 84.3%)"
+      },
+      {
+        "level": "PASS",
+        "name": "meta coverage matches data",
+        "detail": "90/90"
+      },
+      {
+        "level": "PASS",
+        "name": "features finite",
+        "detail": "20,000 sampled frames"
+      },
+      {
+        "level": "FAIL",
+        "name": "traj direction unit-norm",
+        "detail": "max deviation 2.21e-03"
+      },
+      {
+        "level": "PASS",
+        "name": "traj speed non-negative",
+        "detail": "min 0.0001, max 3.2240"
+      },
+      {
+        "level": "PASS",
+        "name": "motion rotation basis orthonormal",
+        "detail": "|c0|-1=2.87e-04 |c1|-1=2.90e-04 |c0.c1|=7.88e-05"
+      },
+      {
+        "level": "PASS",
+        "name": "motion local ranges",
+        "detail": "local_pos |v| [0.015, 1.888]  local_vel |v| [0.000, 8.334]"
+      },
+      {
+        "level": "PASS",
+        "name": "root motion range",
+        "detail": "vx [-2.4, 2.2] yaw [-374.0, 347.2] deg vz [-2.1, 2.7]"
+      }
+    ]
+  },
+  {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_zeroshot",
+    "failures": 0,
+    "warnings": 0,
+    "checks": [
+      {
+        "level": "PASS",
+        "name": "meta.json present",
+        "detail": ""
+      },
+      {
+        "level": "PASS",
+        "name": "meta.format",
+        "detail": "motion375_memmap"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.schema_version",
+        "detail": "v4"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.feature_layout",
+        "detail": "traj 0:84 motion 84:375"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.v4 fields",
+        "detail": "mirror_layout=interleaved_per_entry"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.input fingerprint",
+        "detail": "e3c1d2beab6486e0"
+      },
+      {
+        "level": "PASS",
+        "name": "meta dimensions",
+        "detail": "423,710 frames x 375 dims"
+      },
+      {
+        "level": "PASS",
+        "name": "X.f32 size",
+        "detail": "635,565,000 bytes (float32)"
+      },
+      {
+        "level": "PASS",
+        "name": "Labels.i32 size",
+        "detail": "1,694,840 bytes (int32)"
+      },
+      {
+        "level": "PASS",
+        "name": "num_styles consistency",
+        "detail": "10 styles"
+      },
+      {
+        "level": "PASS",
+        "name": "labels contiguous",
+        "detail": "0..9, every style present"
+      },
+      {
+        "level": "PASS",
+        "name": "segments.json present",
+        "detail": "81 segments"
+      },
+      {
+        "level": "PASS",
+        "name": "num_segments consistency",
+        "detail": "81"
+      },
+      {
+        "level": "PASS",
+        "name": "segments non-overlapping",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments within bounds",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments label match",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments stay in one style",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments cover all frames",
+        "detail": "0..423,710 without gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "segments contiguous",
+        "detail": "no gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs share split",
+        "detail": "81 source clips"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs same length",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror variants per clip",
+        "detail": "[1]"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.segment_counts",
+        "detail": "{'total': 81, 'mirrored': 0, 'unmirrored': 81}"
+      },
+      {
+        "level": "PASS",
+        "name": "zero-shot has no splits",
+        "detail": "held-out styles are intentionally unsplit"
+      },
+      {
+        "level": "PASS",
+        "name": "features finite",
+        "detail": "20,000 sampled frames"
+      },
+      {
+        "level": "PASS",
+        "name": "traj direction unit-norm",
+        "detail": "max deviation 7.18e-04"
+      },
+      {
+        "level": "PASS",
+        "name": "traj speed non-negative",
+        "detail": "min 0.0001, max 2.6402"
+      },
+      {
+        "level": "PASS",
+        "name": "motion rotation basis orthonormal",
+        "detail": "|c0|-1=2.05e-04 |c1|-1=2.27e-04 |c0.c1|=9.83e-05"
+      },
+      {
+        "level": "PASS",
+        "name": "motion local ranges",
+        "detail": "local_pos |v| [0.015, 2.009]  local_vel |v| [0.000, 6.447]"
+      },
+      {
+        "level": "PASS",
+        "name": "root motion range",
+        "detail": "vx [-2.3, 2.1] yaw [-351.7, 311.4] deg vz [-1.8, 2.4]"
+      }
+    ]
+  },
+  {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_fid_full100",
+    "failures": 1,
+    "warnings": 1,
+    "checks": [
+      {
+        "level": "PASS",
+        "name": "meta.json present",
+        "detail": ""
+      },
+      {
+        "level": "PASS",
+        "name": "meta.format",
+        "detail": "motion375_memmap"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.schema_version",
+        "detail": "v4"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.feature_layout",
+        "detail": "traj 0:84 motion 84:375"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.v4 fields",
+        "detail": "mirror_layout=interleaved_per_entry"
+      },
+      {
+        "level": "WARN",
+        "name": "meta.input fingerprint",
+        "detail": "generation.frame_cuts_sha256 absent; rebuild provenance unknown"
+      },
+      {
+        "level": "PASS",
+        "name": "meta dimensions",
+        "detail": "7,492,226 frames x 375 dims"
+      },
+      {
+        "level": "PASS",
+        "name": "X.f32 size",
+        "detail": "11,238,339,000 bytes (float32)"
+      },
+      {
+        "level": "PASS",
+        "name": "Labels.i32 size",
+        "detail": "29,968,904 bytes (int32)"
+      },
+      {
+        "level": "PASS",
+        "name": "num_styles consistency",
+        "detail": "100 styles"
+      },
+      {
+        "level": "PASS",
+        "name": "labels contiguous",
+        "detail": "0..99, every style present"
+      },
+      {
+        "level": "PASS",
+        "name": "segments.json present",
+        "detail": "1539 segments"
+      },
+      {
+        "level": "PASS",
+        "name": "num_segments consistency",
+        "detail": "1539"
+      },
+      {
+        "level": "PASS",
+        "name": "segments non-overlapping",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments within bounds",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments label match",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments stay in one style",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "segments cover all frames",
+        "detail": "0..7,492,226 without gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "segments contiguous",
+        "detail": "no gaps"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs share split",
+        "detail": "810 source clips"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror pairs same length",
+        "detail": "verified"
+      },
+      {
+        "level": "PASS",
+        "name": "mirror variants per clip",
+        "detail": "[1, 2]"
+      },
+      {
+        "level": "PASS",
+        "name": "meta.segment_counts",
+        "detail": "{'total': 1539, 'mirrored': 729, 'unmirrored': 810}"
+      },
+      {
+        "level": "PASS",
+        "name": "all three splits present",
+        "detail": "train/val/test"
+      },
+      {
+        "level": "PASS",
+        "name": "no cross-split frame overlap",
+        "detail": "verified for all split pairs"
+      },
+      {
+        "level": "FAIL",
+        "name": "every style in all splits",
+        "detail": "10 style(s) missing from a split: ['TwoFootJump', 'WalkingStickLeft', 'WalkingStickRight', 'Waving', 'WhirlArms', 'WideLegs', 'WiggleHips', 'WildArms']"
+      },
+      {
+        "level": "PASS",
+        "name": "frame ratio",
+        "detail": "train=81.9%  val=10.0%  test=8.1%  (7,492,226 frames)"
+      },
+      {
+        "level": "PASS",
+        "name": "frame balance per style",
+        "detail": "train share between 77.6% and 100.0% (worst: TwoFootJump 100.0%)"
+      },
+      {
+        "level": "PASS",
+        "name": "features finite",
+        "detail": "20,000 sampled frames"
+      },
+      {
+        "level": "PASS",
+        "name": "traj direction unit-norm",
+        "detail": "max deviation 4.60e-04"
+      },
+      {
+        "level": "PASS",
+        "name": "traj speed non-negative",
+        "detail": "min 0.0000, max 3.5486"
+      },
+      {
+        "level": "PASS",
+        "name": "motion rotation basis orthonormal",
+        "detail": "|c0|-1=3.32e-04 |c1|-1=3.35e-04 |c0.c1|=2.67e-04"
+      },
+      {
+        "level": "PASS",
+        "name": "motion local ranges",
+        "detail": "local_pos |v| [0.016, 1.973]  local_vel |v| [0.000, 9.494]"
+      },
+      {
+        "level": "PASS",
+        "name": "root motion range",
+        "detail": "vx [-2.3, 2.1] yaw [-358.8, 380.5] deg vz [-3.3, 2.9]"
+      }
+    ]
+  }
+]

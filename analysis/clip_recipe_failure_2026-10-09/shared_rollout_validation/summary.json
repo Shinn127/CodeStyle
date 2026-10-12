@@ -1,0 +1,44 @@
+{
+  "protocol": "rollout_240f",
+  "seed": 42,
+  "fp32": true,
+  "results": {
+    "clip_recipe_gt_history50": {
+      "matched_accuracy": 0.6111111111111112,
+      "matched_root_ade_cm": 29.27958958413866,
+      "matched_cases": 90,
+      "cross_accuracy": 0.37777777777777777,
+      "cross_root_ade_cm": 28.345884580744638,
+      "cross_cases": 180,
+      "seconds": 35.05296217900468,
+      "checkpoint_sha256": "d039d7d520dcbb58d62fd72b7f4a56cd154722ae9cd4d1bf0a6bee0686b58a3f",
+      "vq_unchanged": true,
+      "checkpoint_unchanged": true
+    },
+    "clip_recipe_scratch150": {
+      "matched_accuracy": 0.6777777777777778,
+      "matched_root_ade_cm": 10.69630975458357,
+      "matched_cases": 90,
+      "cross_accuracy": 0.5333333333333333,
+      "cross_root_ade_cm": 11.339030545949935,
+      "cross_cases": 180,
+      "seconds": 34.792622910004866,
+      "checkpoint_sha256": "3ea04f0d0d73f49a537db5e019836649b29d11a88cd7c67aaa4585696ee24e13",
+      "vq_unchanged": true,
+      "checkpoint_unchanged": true
+    },
+    "flowmatch_tf150_staged_noise": {
+      "matched_accuracy": 0.7777777777777778,
+      "matched_root_ade_cm": 11.367407479551103,
+      "matched_cases": 90,
+      "cross_accuracy": 0.7222222222222222,
+      "cross_root_ade_cm": 14.517109204663171,
+      "cross_cases": 180,
+      "seconds": 34.6907153860011,
+      "checkpoint_sha256": "931cc7732a4b5c3f1310d18020b8ed360c5da390cfb7cefb816a5c61015c5de6",
+      "vq_unchanged": true,
+      "checkpoint_unchanged": true
+    }
+  },
+  "limitations": "90 validation sources, one fixed window each, two cross targets. Shared manifest and references; no OOD selection or optimizer updates. Different training recipes and durations prevent attributing differences to a single change."
+}

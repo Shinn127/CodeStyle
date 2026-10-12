@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-10",
+  "targeted_cpu_tests": 17,
+  "diagnostics": {
+    "raw": {
+      "world_second_difference_cm": 5.452544212341309,
+      "locked_support_slide_cm_per_frame": 2.2973161079427777,
+      "locked_support_pairs": 85,
+      "locked_support_pair_coverage": 0.35714285714285715,
+      "sole_penetration_max_cm": 0.7543437480926514,
+      "bone_length_max_error_cm": 1.5004947185516357
+    },
+    "smooth_fk": {
+      "world_second_difference_cm": 3.012263536453247,
+      "locked_support_slide_cm_per_frame": 1.618861432110562,
+      "locked_support_pairs": 85,
+      "locked_support_pair_coverage": 0.35714285714285715,
+      "sole_penetration_max_cm": 4.104311943054199,
+      "bone_length_max_error_cm": 5.364418029785156e-05
+    },
+    "smooth_fk_ik": {
+      "world_second_difference_cm": 3.078570604324341,
+      "locked_support_slide_cm_per_frame": 0.030078070697768185,
+      "locked_support_pairs": 85,
+      "locked_support_pair_coverage": 0.35714285714285715,
+      "sole_penetration_max_cm": 1.1548399925231934e-05,
+      "bone_length_max_error_cm": 5.364418029785156e-05
+    },
+    "protocol": "render_diagnostics_same_120frame_demo_not_paper_metrics",
+    "fp32": true,
+    "seed": 42,
+    "raw_controller_feedback_unchanged": true,
+    "vq_unchanged": true,
+    "postprocess_ms_mean": 2.1917316920735175,
+    "limitations": "Sole heights are joint proxies; raw and processed support slide use the same final-IK contact intervals."
+  },
+  "gui": {
+    "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+    "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "source_entry_id": 416,
+    "initial_frame": 4062474,
+    "source_style": "Neutral",
+    "steps": 8,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90,
+    "frames": 120,
+    "final_style": "OnHeels",
+    "vq_unchanged": true,
+    "inference_ms_mean": 5.208099772624502,
+    "inference_ms_p95": 5.611210050119553,
+    "root_position": [
+      0.4757641851902008,
+      0.3249322772026062
+    ],
+    "root_yaw_degrees": 14.271573493195092,
+    "render": {
+      "postprocess": true,
+      "foot_ik": true,
+      "smooth_cutoff": 6.0,
+      "postprocess_ms_mean": 2.288163375184619,
+      "contacts": 1,
+      "pelvis_offset": -0.02772275054760773
+    }
+  },
+  "world_second_difference_reduction": 0.4353882363106212,
+  "no_training": true,
+  "render_only": true,
+  "source_sha256": {
+    "Visualization/pose_postprocess.py": "2edade7a683c90b8de8a55a8da14f51e71137d1faf70c14d4202690b9d423447",
+    "Visualization/cli/interactive_label_control.py": "e76990fe82285a4cfb72b4f709dceec9b86ead36bb9769bef39a365f1bf5e057",
+    "tests/test_pose_postprocess.py": "5466f377b11272bc86c86978c19077bd10870b55dbef0fc3b71521bd385fad64",
+    "analysis/interactive_label_postprocess/check.py": "f34ad6ff3e16501565e5eaaeeb34ebe7f56e7099c7dd5d962ea680a1bf10dd70",
+    "run_tests.py": "e0bda94e76454c766c482592c6608304778cfb1c99c6045db744264cd2d9e5c6"
+  }
+}

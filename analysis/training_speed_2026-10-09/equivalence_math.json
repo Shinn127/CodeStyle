@@ -1,0 +1,10 @@
+{
+  "real_batches": 16,
+  "batch_size": 512,
+  "fp32_math_attention": true,
+  "donor_recipe_rng_exact": true,
+  "frozen_vq_unchanged": true,
+  "loss_max_abs": 1.71661376953125e-05,
+  "gradient_max_abs": 3.1888484954833984e-06,
+  "gradient_l2_relative": 8.389172762690578e-06
+}

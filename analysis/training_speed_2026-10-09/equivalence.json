@@ -1,0 +1,8 @@
+{
+  "real_batches": 16,
+  "batch_size": 512,
+  "donor_recipe_rng_exact": true,
+  "frozen_vq_unchanged": true,
+  "loss_max_abs": 9.5367431640625e-07,
+  "gradient_max_abs": 0.0
+}

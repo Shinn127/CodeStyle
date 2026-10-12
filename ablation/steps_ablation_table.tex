@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Inference-step ablation on \texttt{database\_100sty\_375\_memmap\_head10}. Lower is better for both MPJPE and P95 latency.}
+\label{tab:steps_ablation}
+\setlength{\tabcolsep}{5.5pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{MPJPE $\downarrow$} & \multicolumn{3}{c}{P95 latency $\downarrow$} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Method & 4 & 8 & 16 & 4 & 8 & 16 \\
+\midrule
+AE + FM & -- & -- & -- & -- & -- & -- \\
+VQ + FM & -- & -- & -- & -- & -- & -- \\
+AE + Diff & -- & -- & -- & -- & -- & -- \\
+VQ + Diff & -- & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

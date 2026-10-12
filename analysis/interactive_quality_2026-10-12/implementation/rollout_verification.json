@@ -1,0 +1,63 @@
+{
+  "checkpoint": "/tmp/newcode_history_fast2_smoke_gpu_20261012/latest.pt",
+  "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "source_entry_id": 412,
+  "initial_frame": 2007765,
+  "source_style": "Neutral",
+  "steps": 8,
+  "noise_std": 1.0,
+  "seed": 42,
+  "fps": 60,
+  "fp32": true,
+  "tf32": false,
+  "feedback": "clip_quantize_decode",
+  "root": "predicted_velocity_integrated",
+  "styles": 90,
+  "history_conditioning": true,
+  "trajectory_policy": "smoothed_commands",
+  "60f": {
+    "seconds": 0.25329622099525295,
+    "latency_ms_mean": 3.8383404217893258,
+    "latency_ms_p95": 3.87248200859176,
+    "finite": true,
+    "feedback_matches_decoder": true
+  },
+  "600f": {
+    "seconds": 2.3009835179836955,
+    "latency_ms_mean": 3.8149218715754953,
+    "latency_ms_p95": 3.8672800466883928,
+    "finite": true,
+    "feedback_matches_decoder": true
+  },
+  "simulator_tf_12f_finite": true,
+  "validation_6case_smoke": {
+    "seconds": 1.7434090120077599,
+    "metrics": {
+      "matched_quality_cases": 2,
+      "matched_accuracy": 1.0,
+      "matched_root_ade_cm": 15.821010828018188,
+      "matched_cases": 2,
+      "cross_quality_cases": 4,
+      "cross_accuracy": 1.0,
+      "cross_root_ade_cm": 17.832500457763672,
+      "cross_cases": 4,
+      "evaluation_batch_size": 4,
+      "jitter_cm": 1.60289193802521,
+      "foot_sliding_local_cm": 1.1806836128234863,
+      "foot_sliding_world_cm": 2.6259969394408795,
+      "world_contact_count": 319,
+      "world_contact_coverage": 0.33368200836820083,
+      "cross_jitter_cm": 2.5240308831051954,
+      "cross_pose_step_p99_cm": 10.974941205978395,
+      "cross_pose_step_max_cm": 13.8217191696167,
+      "quality_protocol": "first_fixed_window_per_clip_matched_reference_contacts_cross_raw_jitter_240f"
+    },
+    "selection_key": [
+      1,
+      17.303149309111053
+    ],
+    "limitation": "Tiny interface smoke on a 100-update checkpoint, not a training result or accuracy estimate."
+  },
+  "vq_unchanged": true,
+  "protocol": "bounded_history_phase_interface_smoke"
+}

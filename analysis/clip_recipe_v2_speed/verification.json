@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-10",
+  "cpu_tests": 262,
+  "cuda_tests": 21,
+  "cpu_subtests": 5,
+  "fp32": true,
+  "tf32": false,
+  "main_training_epochs": 0,
+  "style_quality_verified": false,
+  "mean_ms_per_update": {
+    "baseline": 35.45833787000447,
+    "optimized": 23.475960430005216
+  },
+  "time_reduction": 0.33792834520130155,
+  "throughput_ratio": 1.5104105314764578,
+  "resident_bytes": 9476250048,
+  "single_model_peak_allocated_MiB": 10586.939453125,
+  "gpu_processes_before": {
+    "benchmark_pid": 46368,
+    "processes": [
+      "5268, /usr/libexec/gnome-remote-desktop-daemon, 225 MiB",
+      "46368, /home/shinn/miniforge3/envs/mcc/bin/python, 10414 MiB"
+    ]
+  },
+  "gpu_processes_after": {
+    "benchmark_pid": 46368,
+    "processes": [
+      "5268, /usr/libexec/gnome-remote-desktop-daemon, 225 MiB",
+      "46368, /home/shinn/miniforge3/envs/mcc/bin/python, 12070 MiB"
+    ]
+  },
+  "max_block_loss_difference": 0.00012630224227905273,
+  "source_sha256": {
+    "Utils/clip_recipe_training.py": "6645290ba350fd0abb6a83102a7b196c7cd7db2f371aa29e9e058fbcd3b9671a",
+    "Utils/clip_recipe_resident.py": "29713c0d121fc337940c21b8b34301b8c69cfa7e155b8c0affa5b2bdd56fa3e3",
+    "Utils/clip_recipe_cuda.py": "88108cf5b02e16e397d7638b7732811ef779220bf3303d6f75cb08b5923aaf54",
+    "arch/clip_recipe_v2.py": "190a334558ef11cfc6720871811029ca0d0413d0faf160033b592c14f3558a25",
+    "arch/basic_vqvae_375to291.py": "16558e56276cda0e35f6a8100b230ea75e9042593ee40192a47de1f1a0c660c5",
+    "train_clip_recipe_v2.py": "23194501118e264dbabfa3ef67102e968d58a16762d62987a8e36041799c5450",
+    "train_motion_style_metric.py": "1214dae357bac040754f2a1b40b067e6bd975bd044c6bfaec72b99be00ac4f3f",
+    "analysis/profile_clip_recipe_v2.py": "4df0e0f2391a6f873f53e08acc491d72bdf0d253e4e768d9a503ce02762fc3ea",
+    "tests/test_clip_recipe_v2_efficiency.py": "836fb02d8b0206a4cafdebd9e13f0f5d682853fa5deb3ed07d8b720121708cee",
+    "run_tests.py": "c427f109e3b067cb27e85f3646cb5fb73279ea5f81240941ac5dc69bc3f7f100",
+    "run_train_clip_recipe_v2.sh": "0f6b60fa9986fbae8bfc63f4440e17b7719471623ac79164d17eeac3eac89daa"
+  }
+}

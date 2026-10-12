@@ -1,0 +1,80 @@
+{
+  "info": {
+    "checkpoint": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/flowmatch_label_6tok_curriculum100/best.pt",
+    "normalization": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "source_entry_id": 412,
+    "initial_frame": 2007765,
+    "source_style": "Neutral",
+    "steps": 8,
+    "noise_std": 1.0,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90
+  },
+  "noise_rho": 0.95,
+  "protocol": "single_Neutral_keyboard_case_300f_seed42_not_benchmark",
+  "checkpoint_sha256": "2a70cfe208d9db2d65c6cd72db1d444e951e35dd1bc9bbac5de17411c6c242f8",
+  "raw_local": {
+    "second_difference_cm": 0.8120957612991333,
+    "step_p99_cm": 8.882429122924805,
+    "step_max_cm": 10.614398956298828
+  },
+  "continuous_local_same_feedback": {
+    "second_difference_cm": 0.7742974162101746,
+    "step_p99_cm": 8.706315040588379,
+    "step_max_cm": 11.071667671203613
+  },
+  "raw_render": {
+    "second_difference_cm": 1.5411720275878906,
+    "step_p99_cm": 10.217734336853027,
+    "step_max_cm": 26.566118240356445
+  },
+  "processed_render": {
+    "second_difference_cm": 0.9616071581840515,
+    "step_p99_cm": 7.8443732261657715,
+    "step_max_cm": 19.010147094726562
+  },
+  "glide": {
+    "name": "raw",
+    "frames": 300,
+    "root_speed_mean": 1.0474573373794556,
+    "pose_delta_mean": 0.7933770418167114,
+    "glide_fraction_locomotion": 0.09282700421940929,
+    "glide_longest_streak_frames": 4,
+    "right_steps": 5,
+    "left_steps": 7
+  },
+  "support": {
+    "raw": {
+      "contact_pairs": 501,
+      "coverage": 0.8377926421404682,
+      "ground_proxy_speed_cm_s": 128.9646759033203
+    },
+    "processed": {
+      "contact_pairs": 501,
+      "coverage": 0.8377926421404682,
+      "ground_proxy_speed_cm_s": 106.06094360351562
+    }
+  },
+  "ik_active_fraction": 0.4766666666666667,
+  "ik_fully_blended_fraction": 0.385,
+  "frozen_history_counterfactual": {
+    "2": {
+      "continuous_pose_std_cm": 0.3113670349121094,
+      "quantized_pose_std_cm": 0.3856590688228607,
+      "continuous_quantized_pose_gap_cm": 0.23368221521377563,
+      "unique_quantized_states": 32
+    },
+    "8": {
+      "continuous_pose_std_cm": 0.849972128868103,
+      "quantized_pose_std_cm": 0.9116593599319458,
+      "continuous_quantized_pose_gap_cm": 0.3367938697338104,
+      "unique_quantized_states": 32
+    }
+  },
+  "vq_unchanged": true
+}

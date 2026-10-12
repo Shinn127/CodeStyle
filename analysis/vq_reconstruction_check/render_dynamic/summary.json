@@ -1,0 +1,24 @@
+[
+  {
+    "style": "Roadrunner",
+    "suffix": "ID",
+    "segment_id": 545,
+    "mpjpe_quantized": 2.6877682156032985,
+    "jitter_quantized": 0.04260639650147168,
+    "mpjpe_continuous": 2.2915746053059896,
+    "jitter_continuous": 0.004562634713843423,
+    "any_head_switch_rate": 0.6903765690376569,
+    "switch_frames": 165
+  },
+  {
+    "style": "March",
+    "suffix": "BW",
+    "segment_id": 389,
+    "mpjpe_quantized": 2.2232235378689236,
+    "jitter_quantized": 0.4358824401342568,
+    "mpjpe_continuous": 2.104638163248698,
+    "jitter_continuous": 0.17648691556700805,
+    "any_head_switch_rate": 1.0,
+    "switch_frames": 239
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "gt": {
+    "joint_velocity_mismatch_m_s_mean": 0.01914437860250473,
+    "feet_velocity_mismatch_m_s_mean": 0.03271883353590965,
+    "feet_predicted_speed_m_s_mean": 0.8178301453590393,
+    "feet_actual_speed_m_s_mean": 0.8225967884063721,
+    "source_entry_id": 415,
+    "suffix": "FW"
+  },
+  "best_std1": {
+    "joint_velocity_mismatch_m_s_mean": 0.7150698900222778,
+    "feet_velocity_mismatch_m_s_mean": 1.5449767112731934,
+    "feet_predicted_speed_m_s_mean": 1.2968037128448486,
+    "feet_actual_speed_m_s_mean": 2.1245949268341064
+  },
+  "best_std025": {
+    "joint_velocity_mismatch_m_s_mean": 0.22504164278507233,
+    "feet_velocity_mismatch_m_s_mean": 0.5253070592880249,
+    "feet_predicted_speed_m_s_mean": 1.1821215152740479,
+    "feet_actual_speed_m_s_mean": 1.2553595304489136
+  },
+  "best_std1_rho0999": {
+    "joint_velocity_mismatch_m_s_mean": 0.5757954716682434,
+    "feet_velocity_mismatch_m_s_mean": 1.71947181224823,
+    "feet_predicted_speed_m_s_mean": 1.7679628133773804,
+    "feet_actual_speed_m_s_mean": 1.168139100074768
+  }
+}

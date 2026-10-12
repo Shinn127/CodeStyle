@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-10",
+  "cpu_targeted_tests": 28,
+  "gui_cases": {
+    "on": {
+      "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+      "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+      "source_entry_id": 416,
+      "initial_frame": 4062474,
+      "source_style": "Neutral",
+      "steps": 8,
+      "seed": 42,
+      "fps": 60,
+      "fp32": true,
+      "tf32": false,
+      "feedback": "clip_quantize_decode",
+      "root": "predicted_velocity_integrated",
+      "styles": 90,
+      "frames": 20,
+      "final_style": "Neutral",
+      "vq_unchanged": true,
+      "inference_ms_mean": 5.751642500399612,
+      "inference_ms_p95": 6.368906248826533,
+      "root_position": [
+        -0.0032834915909916162,
+        0.24399703741073608
+      ],
+      "root_yaw_degrees": 2.3677454921727152,
+      "render": {
+        "postprocess": true,
+        "foot_ik": true,
+        "foot_ik_active": true,
+        "smoothing_active": true,
+        "smooth_cutoff": 6.0,
+        "postprocess_ms_mean": 2.389636298903497,
+        "contacts": 1,
+        "pelvis_offset": -0.015077207010735422
+      }
+    },
+    "off": {
+      "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+      "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+      "source_entry_id": 416,
+      "initial_frame": 4062474,
+      "source_style": "Neutral",
+      "steps": 8,
+      "seed": 42,
+      "fps": 60,
+      "fp32": true,
+      "tf32": false,
+      "feedback": "clip_quantize_decode",
+      "root": "predicted_velocity_integrated",
+      "styles": 90,
+      "frames": 20,
+      "final_style": "Neutral",
+      "vq_unchanged": true,
+      "inference_ms_mean": 5.570914599229582,
+      "inference_ms_p95": 7.009380502495329,
+      "root_position": [
+        -0.0032834915909916162,
+        0.24399703741073608
+      ],
+      "root_yaw_degrees": 2.3677454921727152,
+      "render": {
+        "postprocess": false,
+        "foot_ik": true,
+        "foot_ik_active": false,
+        "smoothing_active": false,
+        "smooth_cutoff": 6.0,
+        "postprocess_ms_mean": 0.0,
+        "contacts": 0,
+        "pelvis_offset": 0.0
+      }
+    },
+    "ik_off": {
+      "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+      "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+      "source_entry_id": 416,
+      "initial_frame": 4062474,
+      "source_style": "Neutral",
+      "steps": 8,
+      "seed": 42,
+      "fps": 60,
+      "fp32": true,
+      "tf32": false,
+      "feedback": "clip_quantize_decode",
+      "root": "predicted_velocity_integrated",
+      "styles": 90,
+      "frames": 20,
+      "final_style": "Neutral",
+      "vq_unchanged": true,
+      "inference_ms_mean": 5.8150760996795725,
+      "inference_ms_p95": 6.4226092992612385,
+      "root_position": [
+        -0.0032834915909916162,
+        0.24399703741073608
+      ],
+      "root_yaw_degrees": 2.3677454921727152,
+      "render": {
+        "postprocess": true,
+        "foot_ik": false,
+        "foot_ik_active": false,
+        "smoothing_active": true,
+        "smooth_cutoff": 6.0,
+        "postprocess_ms_mean": 0.7441803500114474,
+        "contacts": 0,
+        "pelvis_offset": 0.0
+      }
+    }
+  },
+  "keyboard_mapping": {
+    "a_side": 1,
+    "d_side": -1,
+    "q_turn": 1,
+    "e_turn": -1,
+    "convention": "Geno +Z forward: positive X/yaw are character-left; coordinate reflection handled afterward"
+  },
+  "source_sha256": {
+    "Visualization/cli/interactive_label_control.py": "18df5a973f41dde6126fe395d589ce098ff9fc26bf27016330514ee04e075afd",
+    "tests/test_interactive_control.py": "62c8a6b8ff1fb4dffc4039d5f410934f5ee91a3356e882aa52474087b288d0db"
+  },
+  "limitations": "Keyboard mapping is covered by unit checks; virtual GUI checks verify rendering/state combinations, not human-operated key events."
+}

@@ -1,0 +1,221 @@
+--- before/arch/basic_vqvae_375to291.py
++++ after/arch/basic_vqvae_375to291.py
+@@ -632,8 +632,10 @@
+ 
+     @torch.no_grad()
+     def encode(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+-        details = self.forward(x, return_details=True)
+-        return details["quantized_latent"], details["indices"], details["perplexity"]
++        x_btd, squeezed_time = self._input_to_btd(x, name="x")
++        z_q, indices, result = self._quantize_btd(self._encode_btd(x_btd))
++        return (self._restore_from_btd(z_q, squeezed_time),
++                self._restore_from_btd(indices, squeezed_time), result.perplexity)
+ 
+     def decode_step(
+         self,
+--- before/Utils/style_code_prior.py
++++ after/Utils/style_code_prior.py
+@@ -24,7 +24,8 @@
+         raise ValueError('Recipe histogram requires nonempty [frames,slots] indices and positive topk/K')
+     if not np.issubdtype(indices.dtype, np.integer) or min(slots) < 0 or max(slots) >= indices.shape[1]:
+         raise ValueError('Recipe indices/selected slots are invalid')
+-    if (indices[:, slots] < 0).any() or (indices[:, slots] >= num_embeddings).any():
++    selected = indices[:, slots]
++    if (selected < 0).any() or (selected >= num_embeddings).any():
+         raise ValueError('Recipe code indices exceed the frozen codebook')
+     result = np.zeros((len(slots), num_embeddings), dtype=np.float32)
+     for local, slot in enumerate(slots):
+@@ -35,6 +36,20 @@
+         codes = np.argsort(-counts, kind='stable')[:min(topk, num_embeddings)]
+         result[local, codes] = counts[codes] / counts[codes].sum()
+     return result
++
++
++def _full_code_profile(indices, num_embeddings):
++    """Full histogram in sparse storage; avoid building and scanning a dense table twice."""
++    if ((indices < 0).any() or (indices >= num_embeddings).any()):
++        raise ValueError('Recipe code indices exceed the frozen codebook')
++    slots, codes, weights = [], [], []
++    for slot in range(indices.shape[1]):
++        counts = np.bincount(indices[:, slot], minlength=num_embeddings)
++        used = np.flatnonzero(counts)
++        slots.append(np.full(len(used), slot, dtype=np.uint8 if indices.shape[1] <= 256 else np.int32))
++        codes.append(used.astype(np.uint16 if num_embeddings <= 65536 else np.int32))
++        weights.append((counts[used].astype(np.float64) / len(indices)).astype(np.float32))
++    return np.concatenate(slots), np.concatenate(codes), np.concatenate(weights)
+ 
+ 
+ class TrainStyleRecipePool:
+@@ -90,7 +105,7 @@
+ 
+     @torch.no_grad()
+     def sample(self, labels, *, probability, excluded_source_ids=(),
+-               per_sample_exclusions=None, require_all=False):
++               per_sample_exclusions=None, require_all=False, labels_cpu=None):
+         if not 0 <= probability <= 1:
+             raise ValueError('Recipe probability must be in [0,1]')
+         if labels.ndim != 1 or (require_all and probability != 1.):
+@@ -107,7 +122,14 @@
+             mask = selected.cpu().numpy()
+             if not mask.any():
+                 return None, 0.
+-        requested = labels.detach().cpu().numpy()
++        if labels_cpu is None:
++            requested = labels.detach().cpu().numpy()
++        else:
++            # Only pass the original host labels while target labels remain unchanged.
++            if (labels_cpu.device.type != 'cpu' or labels_cpu.shape != labels.shape
++                    or labels_cpu.dtype != labels.dtype):
++                raise ValueError('Host recipe labels must match the batch shape and dtype on CPU')
++            requested = labels_cpu.detach().numpy()
+         excluded = set(excluded_source_ids)
+         slots = self.model.selected_style_slots
+         size = self.model.vqvae.quantizer.num_embeddings
+@@ -187,28 +209,29 @@
+                 crop_count = int(segment['num_frames']) - self.frames + 1
+                 offset = int(private_rng.integers(crop_count) if private_rng is not None else torch.randint(crop_count, ()).item())
+                 start = int(segment['frame_start']) + offset
+-                ids = np.arange(start, start + self.frames)
+                 if self.cache is not None:
+-                    indices = np.asarray(self.cache.indices[ids], dtype=np.int64)
++                    indices = np.asarray(self.cache.indices[start:start + self.frames, slots], dtype=np.int64)
+                 else:
+-                    raw = np.array(self.source[ids], dtype=np.float32, copy=True)
++                    raw = np.array(self.source[start:start + self.frames], dtype=np.float32, copy=True)
+                     x = torch.from_numpy((raw - self.mean) / self.std).to(labels.device)
+                     _, encoded, _ = self.model.vqvae.encode(x)
+-                    indices = encoded.cpu().numpy()
++                    indices = encoded.cpu().numpy()[:, slots]
+                 parts.append(indices)
+-            dense = sparse_code_histogram(np.concatenate(parts),
+-                selected_slots=slots, num_embeddings=size, topk=size if self.full_histogram else self.model.style_selector.topk)
+-            if sparse_upload:
+-                si, codes = np.nonzero(dense)
+-                profiles.append((si, codes, dense[si, codes]))
+-                profile_rows[rows] = len(profiles)
++            if self.full_histogram:
++                profile = _full_code_profile(np.concatenate(parts), size)
++                si, codes, weights = profile
++                if sparse_upload:
++                    profiles.append(profile)
++                    profile_rows[rows] = len(profiles)
++                else:
++                    recipes[np.asarray(rows)[:, None], si[None], codes[None]] = weights[None]
+             else:
++                dense = sparse_code_histogram(np.concatenate(parts), selected_slots=range(len(slots)),
++                    num_embeddings=size, topk=self.model.style_selector.topk)
+                 recipes[rows] = dense
+             if self.bank_size:
+                 if self.full_histogram:
+-                    si, codes = np.nonzero(dense)
+-                    self.bank[key] = (si.astype(np.uint8 if len(slots) <= 256 else np.int32),
+-                                      codes.astype(np.uint16 if size <= 65536 else np.int32), dense[si, codes])
++                    self.bank[key] = profile
+                 else:
+                     codes = np.argsort(-dense, axis=-1, kind='stable')[:, :min(size, self.model.style_selector.topk)]
+                     self.bank[key] = (codes.astype(np.uint16 if size <= 65536 else np.int32),
+--- before/train_flowmatch_vqvae_controller.py
++++ after/train_flowmatch_vqvae_controller.py
+@@ -74,7 +74,7 @@
+     FlowMatchVQVAEController,
+     build_flowmatch_controller_from_config,
+ )
+-from dataset import build_train_val_test_dataloaders
++from dataset import build_train_val_test_dataloaders, Motion375Dataset
+ from Utils.model_loading import build_vqvae_from_checkpoint
+ from Utils.runtime import (
+     MEMMAP_META_FILE,
+@@ -95,7 +95,7 @@
+     "style_prior_probs",
+     "style_prior_ready",
+ )
+-from Utils.style_code_prior import load_style_code_prior
++from Utils.style_code_prior import load_style_code_prior, TrainStyleRecipePool
+ from Utils.vq_target_cache import VQTargetCache
+ from Utils.reproducibility import (
+     IMPLEMENTATION_VERSION, artifact_fingerprints, isolated_rng, rng_state,
+@@ -760,9 +760,17 @@
+ 
+ 
+ def controller_collate(samples):
++    if isinstance(samples, dict):
++        return samples
+     # traj/motion are views of x in the dataset, but default_collate copies both again.
+     return default_collate([{key: sample[key] for key in ('x', 'label', 'start', 'segment_id')
+                              if key in sample} for sample in samples])
++
++
++def configure_controller_loader(loader, cache=None, *, worker_batches=True):
++    loader.collate_fn = controller_collate
++    if worker_batches and isinstance(loader.dataset, Motion375Dataset):
++        loader.dataset.enable_controller_batches(cache if isinstance(cache, VQTargetCache) else None)
+ 
+ 
+ def _run_epoch(
+@@ -818,6 +826,7 @@
+                 break
+             x = batch["x"].to(device, non_blocking=True).float()
+             labels = batch["label"].to(device, non_blocking=True).long()
++            labels_cpu = batch['label'].long() if batch['label'].device.type == 'cpu' else None
+             # Cache indices are CPU memmap rows: keep frame IDs on CPU throughout lookup.
+             starts = batch["start"].long()
+             if x.ndim != 3 or x.size(1) < 2:
+@@ -831,6 +840,8 @@
+                 window = x if repeats == 1 else torch.stack((x[:, :-1], x[:, 1:]), dim=2).reshape(-1, 2, 375)
+                 starts = (starts[:, None] + torch.arange(repeats, device=starts.device)).reshape(-1)
+                 labels = labels.repeat_interleave(repeats)
++                if labels_cpu is not None:
++                    labels_cpu = labels_cpu.repeat_interleave(repeats)
+                 if segments is not None:
+                     segments = segments.repeat_interleave(repeats)
+             else:
+@@ -838,6 +849,13 @@
+             ids = starts[:, None] + torch.arange(steps + 1, device=starts.device)
+             if vq_target_cache is None:
+                 latents = model.frame_latent(window.reshape(-1, 375)).reshape(window.size(0), steps + 1, -1)
++            elif 'vq_indices' in batch:
++                indices = batch['vq_indices']
++                if steps == 1 and repeats > 1:
++                    indices = torch.stack((indices[:, :-1], indices[:, 1:]), 2).reshape(-1, 2, indices.size(-1))
++                else:
++                    indices = indices[:, :steps + 1]
++                latents = cache_vqvae.quantizer.lookup(indices.to(device, non_blocking=True)).reshape(window.size(0), steps + 1, -1)
+             else:
+                 latents = vq_target_cache.lookup_latents(ids.flatten(), vqvae=cache_vqvae,
+                     device=device).reshape(window.size(0), steps + 1, -1)
+@@ -919,7 +937,8 @@
+                 if pure_recipe:
+                     exclusions = [{source_ids[i], donor_entries[i] if donor_entries is not None else source_ids[donor_rows[i]]} for i in range(count)]
+                     manual_probs, recipe_fraction = recipe_pool.sample(labels, probability=1.,
+-                        per_sample_exclusions=exclusions, require_all=True)
++                        per_sample_exclusions=exclusions, require_all=True,
++                        **({'labels_cpu': labels_cpu} if decouple_prob == 0 and isinstance(recipe_pool, TrainStyleRecipePool) else {}))
+                 else:
+                     manual_probs, recipe_fraction = recipe_pool.sample(labels, probability=recipe_probability,
+                         excluded_source_ids=set(source_ids))
+@@ -1057,6 +1076,8 @@
+     parser.add_argument("--resume", type=Path, default=None)
+     parser.add_argument("--init-ckpt", type=Path, default=None)
+     parser.add_argument("--microbatch-size", type=int, default=0)
++    parser.add_argument('--worker-batches', action=argparse.BooleanOptionalAction, default=True,
++                        help='Assemble tensor batches and frozen VQ cache indices in DataLoader workers')
+     parser.add_argument("--max-train-batches", type=int, default=0)
+     parser.add_argument('--fp32-math-attention', action=argparse.BooleanOptionalAction, default=True,
+                         help='Use math SDPA for the six-token FP32 training field; eval keeps the original path')
+@@ -1409,7 +1430,7 @@
+     )
+     for loader in (bundle.train_loader, bundle.val_loader, bundle.test_loader):
+         if loader is not None:
+-            loader.collate_fn = controller_collate
++            configure_controller_loader(loader, vq_target_cache, worker_batches=args.worker_batches)
+     if args.norm_stats is None:
+         args.norm_stats = norm_stats_path
+ 
+@@ -1696,7 +1717,6 @@
+ 
+     recipe_pool = None
+     if args.recipe_prob > 0:
+-        from Utils.style_code_prior import TrainStyleRecipePool
+         recipe_pool = TrainStyleRecipePool(db=args.db, model=model, cache=vq_target_cache,
+             mean=bundle.norm_mean, std=bundle.norm_std, frames=args.recipe_frames, exemplars=args.recipe_exemplars,
+             exemplar_choices=args.recipe_exemplar_choices, bank_size=args.recipe_bank_size, seed=args.seed,

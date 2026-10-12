@@ -1,0 +1,14 @@
+{
+  "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+  "frames": 240,
+  "requantize": false,
+  "seed": 42,
+  "per_head_switch_rate": 0.7356171548117155,
+  "any_head_switch_rate": 1.0,
+  "all_head_switch_rate": 0.0,
+  "distinct_codes_used": 240,
+  "jump_at_switch_cm": 0.8974301815032959,
+  "jump_steady_cm": null,
+  "fraction_steady_frames": 0.0,
+  "jitter_proxy_cm": 0.8986226320266724
+}

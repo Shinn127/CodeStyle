@@ -1,0 +1,14 @@
+{
+  "6tok_ns1.0": {
+    "low_sole_frame_fraction": 0.9882943143812709,
+    "low_sole_but_horizontal_speed_reject_fraction": 0.6889632107023411,
+    "raw_vs_fixed_fk_ankle_gap_cm_mean": 0.22120921313762665,
+    "raw_vs_fixed_fk_ankle_gap_cm_p95": 0.4466093182563782
+  },
+  "6tok_std025": {
+    "low_sole_frame_fraction": 0.9832775919732442,
+    "low_sole_but_horizontal_speed_reject_fraction": 0.4882943143812709,
+    "raw_vs_fixed_fk_ankle_gap_cm_mean": 0.18305020034313202,
+    "raw_vs_fixed_fk_ankle_gap_cm_p95": 0.3621107041835785
+  }
+}

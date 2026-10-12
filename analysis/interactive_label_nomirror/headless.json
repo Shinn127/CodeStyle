@@ -1,0 +1,25 @@
+{
+  "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/best.pt",
+  "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "source_entry_id": 412,
+  "initial_frame": 2007765,
+  "source_style": "Neutral",
+  "steps": 8,
+  "seed": 42,
+  "fps": 60,
+  "fp32": true,
+  "tf32": false,
+  "feedback": "clip_quantize_decode",
+  "root": "predicted_velocity_integrated",
+  "styles": 90,
+  "frames": 120,
+  "final_style": "OnHeels",
+  "vq_unchanged": true,
+  "inference_ms_mean": 4.2467520171406,
+  "inference_ms_p95": 4.533260449534282,
+  "root_position": [
+    0.47015923261642456,
+    0.2869180738925934
+  ],
+  "root_yaw_degrees": 7.312724234660419
+}

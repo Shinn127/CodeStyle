@@ -1,0 +1,17 @@
+....................s.s.............                                     [100%]
+=============================== warnings summary ===============================
+tests/test_clip_recipe_revision.py: 12 warnings
+tests/test_practical_style_training.py: 2 warnings
+tests/test_unseen_recipe_eval.py: 6 warnings
+  /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:400: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+    self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+
+tests/test_clip_recipe_revision.py::test_new_actual_train_validation_and_epoch_resume
+tests/test_clip_recipe_revision.py::test_legacy_weight_initialization_and_tf_best_checkpoint_entry
+tests/test_clip_recipe_revision.py::test_scratch_tf_entry_skips_initial_model_reference
+tests/test_practical_style_training.py::test_actual_gt_target_training_stop_and_exact_resume
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+34 passed, 2 skipped, 24 warnings in 11.55s

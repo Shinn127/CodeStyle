@@ -1,0 +1,50 @@
+[
+  {
+    "style": "Neutral",
+    "suffix": "TR1",
+    "segment_id": 419,
+    "window_start": 2044689,
+    "seed": 7,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "Robot",
+    "matched": false,
+    "root_ade_cm": 12.69556999206543,
+    "pred_style": "Robot",
+    "pred_conf": 1.0,
+    "pred_is_target": true,
+    "gen_ms_per_frame": 4.8486454541489366
+  },
+  {
+    "style": "March",
+    "suffix": "ID",
+    "segment_id": 392,
+    "window_start": 1915889,
+    "seed": 7,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "Robot",
+    "matched": false,
+    "root_ade_cm": 1.5715430974960327,
+    "pred_style": "SpinAntiClock",
+    "pred_conf": 0.9777342677116394,
+    "pred_is_target": false,
+    "gen_ms_per_frame": 3.7937289708376434
+  },
+  {
+    "style": "Roadrunner",
+    "suffix": "FR",
+    "segment_id": 543,
+    "window_start": 2651365,
+    "seed": 7,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "Robot",
+    "matched": false,
+    "root_ade_cm": 54.84999465942383,
+    "pred_style": "Tiptoe",
+    "pred_conf": 0.9599854350090027,
+    "pred_is_target": false,
+    "gen_ms_per_frame": 4.108332575015083
+  }
+]

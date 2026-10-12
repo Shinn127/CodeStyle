@@ -1,0 +1,381 @@
+{
+  "seed": 42,
+  "fp32": true,
+  "mode": "rollout",
+  "sources": [
+    7032323,
+    4970056,
+    5904789,
+    4534042,
+    3005262,
+    3003223,
+    469636,
+    5372272,
+    7032323,
+    4970056,
+    5904789,
+    4534042,
+    3005262,
+    3003223,
+    469636,
+    5372272
+  ],
+  "target_names": [
+    "TogetherStep",
+    "Punch",
+    "SpinClock",
+    "OnToesCrouched",
+    "LawnMower",
+    "LawnMower",
+    "Balance",
+    "Robot",
+    "BigSteps",
+    "March",
+    "Skip",
+    "Morris",
+    "Teapot",
+    "OnPhoneLeft",
+    "WildArms",
+    "Zombie"
+  ],
+  "results": {
+    "clip_recipe_gt_history50": {
+      "checkpoint_sha256": "d039d7d520dcbb58d62fd72b7f4a56cd154722ae9cd4d1bf0a6bee0686b58a3f",
+      "vq_unchanged": true,
+      "variants": {
+        "baseline": {
+          "groups": {
+            "matched": {
+              "correct": 5,
+              "n": 8,
+              "root_ade_cm": 42.17272228002548,
+              "position_jitter_cm": 6.471975803375244
+            },
+            "dynamic_cross": {
+              "correct": 0,
+              "n": 4,
+              "root_ade_cm": 51.7437539100647,
+              "position_jitter_cm": 7.259172439575195
+            },
+            "pose_cross": {
+              "correct": 2,
+              "n": 2,
+              "root_ade_cm": 42.02534103393555,
+              "position_jitter_cm": 5.598723888397217
+            },
+            "ood": {
+              "correct": 0,
+              "n": 2,
+              "root_ade_cm": 47.07533550262451,
+              "position_jitter_cm": 6.4789628982543945
+            }
+          },
+          "predictions": [
+            "Robot",
+            "Swimming",
+            "SpinClock",
+            "OnToesCrouched",
+            "InTheDark",
+            "LawnMower",
+            "Balance",
+            "Robot",
+            "TogetherStep",
+            "StartStop",
+            "SpinClock",
+            "Proud",
+            "Teapot",
+            "OnPhoneLeft",
+            "FairySteps",
+            "InTheDark"
+          ],
+          "target_confidence": [
+            1.9587359929573722e-05,
+            0.029675330966711044,
+            0.9999487400054932,
+            0.7076454758644104,
+            0.003957254346460104,
+            1.0,
+            1.0,
+            0.8843222856521606,
+            5.759978605190952e-10,
+            6.107764988216857e-11,
+            1.8363879306093622e-08,
+            2.6387047000753228e-06,
+            0.9999974966049194,
+            0.9999998807907104,
+            3.4264328570635105e-13,
+            1.2647164426837776e-09
+          ],
+          "cycle_changed_fraction": null
+        },
+        "cycle_projection": {
+          "groups": {
+            "matched": {
+              "correct": 7,
+              "n": 8,
+              "root_ade_cm": 32.48797154426575,
+              "position_jitter_cm": 3.4257049560546875
+            },
+            "dynamic_cross": {
+              "correct": 0,
+              "n": 4,
+              "root_ade_cm": 36.792444467544556,
+              "position_jitter_cm": 6.184671401977539
+            },
+            "pose_cross": {
+              "correct": 2,
+              "n": 2,
+              "root_ade_cm": 53.41084289550781,
+              "position_jitter_cm": 3.5822954177856445
+            },
+            "ood": {
+              "correct": 0,
+              "n": 2,
+              "root_ade_cm": 23.228546380996704,
+              "position_jitter_cm": 5.519443988800049
+            }
+          },
+          "predictions": [
+            "WalkingStickRight",
+            "Punch",
+            "SpinClock",
+            "OnToesCrouched",
+            "LawnMower",
+            "LawnMower",
+            "Balance",
+            "Robot",
+            "StartStop",
+            "Skip",
+            "Strutting",
+            "Proud",
+            "Teapot",
+            "OnPhoneLeft",
+            "FairySteps",
+            "InTheDark"
+          ],
+          "target_confidence": [
+            2.927891728177201e-06,
+            0.9979238510131836,
+            0.9999997615814209,
+            0.9999505281448364,
+            1.0,
+            1.0,
+            0.9999997615814209,
+            0.9999995231628418,
+            3.3271354027419875e-07,
+            3.2844855724079025e-08,
+            7.596658542752266e-05,
+            0.00021133922564331442,
+            1.0,
+            0.9999990463256836,
+            5.517564677480632e-16,
+            7.869079468036944e-07
+          ],
+          "cycle_changed_fraction": 0.7322835922241211
+        },
+        "output_prior_0.25": {
+          "groups": {
+            "matched": {
+              "correct": 8,
+              "n": 8,
+              "root_ade_cm": 90.14322698116302,
+              "position_jitter_cm": 3.791330337524414
+            },
+            "dynamic_cross": {
+              "correct": 0,
+              "n": 4,
+              "root_ade_cm": 89.4456205368042,
+              "position_jitter_cm": 5.344751834869385
+            },
+            "pose_cross": {
+              "correct": 2,
+              "n": 2,
+              "root_ade_cm": 150.5424919128418,
+              "position_jitter_cm": 5.661750316619873
+            },
+            "ood": {
+              "correct": 0,
+              "n": 2,
+              "root_ade_cm": 51.430471420288086,
+              "position_jitter_cm": 4.958769798278809
+            }
+          },
+          "predictions": [
+            "TogetherStep",
+            "Punch",
+            "SpinClock",
+            "OnToesCrouched",
+            "LawnMower",
+            "LawnMower",
+            "Balance",
+            "Robot",
+            "Robot",
+            "FlickLegs",
+            "Robot",
+            "FairySteps",
+            "Teapot",
+            "OnPhoneLeft",
+            "LimpRight",
+            "InTheDark"
+          ],
+          "target_confidence": [
+            0.7902683615684509,
+            0.9996563196182251,
+            0.9999994039535522,
+            1.0,
+            0.999258816242218,
+            0.9999971389770508,
+            1.0,
+            0.9999998807907104,
+            8.660655481662616e-08,
+            4.736011582906485e-10,
+            4.689057302165178e-13,
+            2.864345515512139e-19,
+            1.0,
+            1.0,
+            3.4500217336159945e-15,
+            4.787349183743572e-08
+          ],
+          "cycle_changed_fraction": null
+        },
+        "output_prior_1.0": {
+          "groups": {
+            "matched": {
+              "correct": 7,
+              "n": 8,
+              "root_ade_cm": 96.601233959198,
+              "position_jitter_cm": 3.5186026096343994
+            },
+            "dynamic_cross": {
+              "correct": 0,
+              "n": 4,
+              "root_ade_cm": 104.64857006072998,
+              "position_jitter_cm": 5.592007637023926
+            },
+            "pose_cross": {
+              "correct": 2,
+              "n": 2,
+              "root_ade_cm": 167.60711669921875,
+              "position_jitter_cm": 7.291857719421387
+            },
+            "ood": {
+              "correct": 0,
+              "n": 2,
+              "root_ade_cm": 103.05614852905273,
+              "position_jitter_cm": 5.880951404571533
+            }
+          },
+          "predictions": [
+            "TogetherStep",
+            "KarateChop",
+            "SpinClock",
+            "OnToesCrouched",
+            "LawnMower",
+            "LawnMower",
+            "Balance",
+            "Robot",
+            "StartStop",
+            "FlickLegs",
+            "ArmsBySide",
+            "FairySteps",
+            "Teapot",
+            "OnPhoneLeft",
+            "Proud",
+            "InTheDark"
+          ],
+          "target_confidence": [
+            0.30333688855171204,
+            7.797188459335302e-07,
+            0.9999703168869019,
+            0.9999997615814209,
+            0.8460310697555542,
+            0.9859299063682556,
+            1.0,
+            0.9999998807907104,
+            1.1688783274621528e-07,
+            2.061722043089631e-10,
+            4.574926375233712e-12,
+            1.807513095134789e-18,
+            1.0,
+            1.0,
+            1.8383901443253664e-13,
+            1.7691828002597276e-09
+          ],
+          "cycle_changed_fraction": null
+        }
+      }
+    },
+    "clip_recipe_scratch150": {
+      "checkpoint_sha256": "3ea04f0d0d73f49a537db5e019836649b29d11a88cd7c67aaa4585696ee24e13",
+      "vq_unchanged": true,
+      "variants": {
+        "baseline": {
+          "groups": {
+            "matched": {
+              "correct": 8,
+              "n": 8,
+              "root_ade_cm": 9.223121240735054,
+              "position_jitter_cm": 2.325788736343384
+            },
+            "dynamic_cross": {
+              "correct": 0,
+              "n": 4,
+              "root_ade_cm": 11.521818339824677,
+              "position_jitter_cm": 3.497007131576538
+            },
+            "pose_cross": {
+              "correct": 2,
+              "n": 2,
+              "root_ade_cm": 10.588188886642456,
+              "position_jitter_cm": 2.62005615234375
+            },
+            "ood": {
+              "correct": 0,
+              "n": 2,
+              "root_ade_cm": 13.686389446258545,
+              "position_jitter_cm": 2.1114227771759033
+            }
+          },
+          "predictions": [
+            "TogetherStep",
+            "Punch",
+            "SpinClock",
+            "OnToesCrouched",
+            "LawnMower",
+            "LawnMower",
+            "Balance",
+            "Robot",
+            "TogetherStep",
+            "ArmsBySide",
+            "CrowdAvoidance",
+            "ArmsBySide",
+            "Teapot",
+            "OnPhoneLeft",
+            "ShieldedRight",
+            "InTheDark"
+          ],
+          "target_confidence": [
+            0.94971764087677,
+            0.8783669471740723,
+            0.9998888969421387,
+            1.0,
+            1.0,
+            1.0,
+            0.9999997615814209,
+            0.999566376209259,
+            3.012336037500063e-06,
+            2.5757817212479495e-08,
+            6.541999675812281e-16,
+            2.29040146848547e-08,
+            1.0,
+            1.0,
+            1.109201773941311e-13,
+            9.877260467860971e-12
+          ],
+          "cycle_changed_fraction": null
+        }
+      }
+    }
+  },
+  "limitations": "16 post-hoc validation cases; not aggregate benchmark estimates or OOD hyperparameter selection. All variants start from the same source GT and use the same Gaussian cases. Output-prior variants change final code selection and require richer recipe metadata; they are research diagnostics, not deployed methods. No optimizer updates or GT root overwrite."
+}

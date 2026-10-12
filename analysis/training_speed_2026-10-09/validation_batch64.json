@@ -1,0 +1,27 @@
+{
+  "batch_size": 64,
+  "seconds": 9.71546937499079,
+  "before_batch_size": 8,
+  "before": {
+    "matched_accuracy": 0.6111111111111112,
+    "matched_root_ade_cm": 29.27958958413866,
+    "matched_cases": 90,
+    "cross_accuracy": 0.37777777777777777,
+    "cross_root_ade_cm": 28.345884580744638,
+    "cross_cases": 180,
+    "seconds": 35.05296217900468,
+    "checkpoint_sha256": "d039d7d520dcbb58d62fd72b7f4a56cd154722ae9cd4d1bf0a6bee0686b58a3f",
+    "vq_unchanged": true,
+    "checkpoint_unchanged": true
+  },
+  "after": {
+    "matched_accuracy": 0.6111111111111112,
+    "matched_root_ade_cm": 29.253648572497898,
+    "matched_cases": 90,
+    "cross_accuracy": 0.38333333333333336,
+    "cross_root_ade_cm": 28.248492358790504,
+    "cross_cases": 180
+  },
+  "identical_case_manifest": true,
+  "frozen_vq_unchanged": true
+}

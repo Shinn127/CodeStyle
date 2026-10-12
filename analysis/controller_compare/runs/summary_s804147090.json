@@ -1,0 +1,50 @@
+[
+  {
+    "style": "March",
+    "suffix": "SR",
+    "segment_id": 393,
+    "window_start": 1917920,
+    "seed": 804147090,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "March",
+    "matched": true,
+    "root_ade_cm": 5.294792175292969,
+    "pred_style": "March",
+    "pred_conf": 0.9999644756317139,
+    "pred_is_target": true,
+    "gen_ms_per_frame": 4.808493808316901
+  },
+  {
+    "style": "Neutral",
+    "suffix": "TR1",
+    "segment_id": 419,
+    "window_start": 2039995,
+    "seed": 804147090,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "Neutral",
+    "matched": true,
+    "root_ade_cm": 17.59368133544922,
+    "pred_style": "Neutral",
+    "pred_conf": 0.9999853372573853,
+    "pred_is_target": true,
+    "gen_ms_per_frame": 4.095075454157874
+  },
+  {
+    "style": "Roadrunner",
+    "suffix": "FW",
+    "segment_id": 544,
+    "window_start": 2656433,
+    "seed": 804147090,
+    "mode": "rollout",
+    "requantize": true,
+    "target_style": "Roadrunner",
+    "matched": true,
+    "root_ade_cm": 2.960517168045044,
+    "pred_style": "Roadrunner",
+    "pred_conf": 1.0,
+    "pred_is_target": true,
+    "gen_ms_per_frame": 3.9207326958906683
+  }
+]

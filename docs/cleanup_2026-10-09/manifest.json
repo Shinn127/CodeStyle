@@ -1,0 +1,1211 @@
+{
+  "status": "applied",
+  "root": "/home/shinn/桌面/multimedia/revision/NewCode",
+  "evidence": [
+    {
+      "path": "database_100sty_375_memmap_fid_full100",
+      "proof": "All feature bytes equal IND+OOD concatenation; every remapped label checked",
+      "frames": 7492226
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored",
+      "proof": "All feature/label bytes equal the unmirrored primary segments in order",
+      "frames": 3534258
+    }
+  ],
+  "protected_core_sha256": {
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/best.pt": "57f73a6cc0de2dfe6fb344da0191b4a35c053285ad9793df05706f17ff0b69a0",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/latest.pt": "73dcb59761da49e5608b013e421ab23c0cb5f2922f3a8275cc1cb8a7b95e4cde",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz": "c1d0adc61254f7a59bfb950efb3f19fc4dff354d577198c0126b3a2db9704809",
+    "checkpoints/flowmatch_tf150_staged_noise/best.pt": "931cc7732a4b5c3f1310d18020b8ed360c5da390cfb7cefb816a5c61015c5de6",
+    "checkpoints/flowmatch_tf150_staged_noise/latest.pt": "17444d158b44cbc2b7e4685955a0c960231ee4f0cc517990a6e20b8abe140fca",
+    "checkpoints/clip_recipe_scratch150/best.pt": "3ea04f0d0d73f49a537db5e019836649b29d11a88cd7c67aaa4585696ee24e13",
+    "checkpoints/clip_recipe_scratch150/latest.pt": "8222d6ba9f2a889e93525858a154bc687d87b43f6cd433fb096045f7c42ed332",
+    "checkpoints/clip_recipe_gt_history50/best.pt": "d039d7d520dcbb58d62fd72b7f4a56cd154722ae9cd4d1bf0a6bee0686b58a3f",
+    "checkpoints/clip_recipe_gt_history50/latest.pt": "5d7e98d815321405e0579bacccc1111a3c0d14485cd4b25af414d9360b0b4e0b",
+    "checkpoints/fid_feature_extractor_camdm100_mirror_60fps_240f/100style_position_classifier.pth": "bea49853cc29f93e92a2b89faccbdcb2e9583517548077bf399dfcbdc4cc86d6",
+    "cache/style_code_prior_vq150ep_repair_v2.npz": "b8f96a772e6979a334922574b9de6109ecf57100d68d93e21a5881bfdb0fdc3d",
+    "cache/vq_targets_vq150ep_repair_v2/meta.json": "0d13c0160040cbd2b45a5bce123360fb18d0152e2ca41477da28eddaee68f8a1"
+  },
+  "protected_dependencies": [
+    "checkpoints/clip_recipe_scratch150/latest.pt",
+    "checkpoints/flowmatch_style_paper_v3_smoke/A/best.pt",
+    "checkpoints/flowmatch_style_paper_v3_smoke/B/best.pt",
+    "checkpoints/flowmatch_tf150_staged_noise/epoch_0050.pt",
+    "checkpoints/flowmatch_tf50_short5/latest.pt",
+    "checkpoints/flowmatch_vqvae_controller_full_new/latest.pt",
+    "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/best.pt",
+    "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/norm_stats.npz",
+    "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/best.pt",
+    "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/norm_stats.npz",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/latest.pt",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/best.pt",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/epoch_0100.pt",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_phase1_100k/best.pt",
+    "checkpoints/vqvae_traj_motion_skip_mlp_375to291_32_4_2048_fp32/norm_stats.npz",
+    "checkpoints/vqvae_traj_motion_skip_mlp_375to291_32_4_2048_v4/norm_stats.npz"
+  ],
+  "protected_epoch_names": [
+    "epoch_0150.pt"
+  ],
+  "delete": [
+    {
+      "path": "database_100sty_375_memmap_fid_full100/segments.json",
+      "bytes": 553310,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_fid_full100/meta.json",
+      "bytes": 11596,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_fid_full100/Labels.i32",
+      "bytes": 29968904,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_fid_full100/X.f32",
+      "bytes": 11238339000,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_fid_full100/StyleNames.json",
+      "bytes": 1486,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored/segments.json",
+      "bytes": 262201,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored/meta.json",
+      "bytes": 16156,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored/Labels.i32",
+      "bytes": 14137032,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored/X.f32",
+      "bytes": 5301387000,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "database_100sty_375_memmap_unmirrored/StyleNames.json",
+      "bytes": 1327,
+      "reason": "Verified derived database"
+    },
+    {
+      "path": "cache/vq_targets_vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/meta.json",
+      "bytes": 608,
+      "reason": "Superseded cache; current repair_v2 preserved"
+    },
+    {
+      "path": "cache/vq_targets_vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/indices.u16",
+      "bytes": 452385024,
+      "reason": "Superseded cache; current repair_v2 preserved"
+    },
+    {
+      "path": "cache/style_code_prior_vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep.npz",
+      "bytes": 7696500,
+      "reason": "Superseded style prior; repair_v2 preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_decouple_p03/epoch_0010.pt",
+      "bytes": 71100325,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_decouple_p03/epoch_0020.pt",
+      "bytes": 71100325,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st_smoke/epoch_0001.pt",
+      "bytes": 71100069,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st_smoke/epoch_0002.pt",
+      "bytes": 71100069,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf50_short5/epoch_0005.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_retarget_p05_s25/epoch_0025.pt",
+      "bytes": 71100389,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_full100_v4/epoch_0030.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_full100_v4/epoch_0010.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_full100_v4/epoch_0040.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_full100_v4/epoch_0050.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_full100_v4/epoch_0020.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/mvae_375to291/epoch_0030.pt",
+      "bytes": 25642803,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/mvae_375to291/epoch_0010.pt",
+      "bytes": 25642803,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/mvae_375to291/epoch_0040.pt",
+      "bytes": 25642803,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/mvae_375to291/epoch_0050.pt",
+      "bytes": 25642803,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/mvae_375to291/epoch_0020.pt",
+      "bytes": 25642803,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/epoch_0030.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/epoch_0010.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/epoch_0040.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/epoch_0050.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full/epoch_0020.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0045.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0120.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0060.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0030.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0035.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0055.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0145.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0135.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0010.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0085.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0115.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0040.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0095.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0070.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0110.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0080.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0100.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0130.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0105.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0140.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0065.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0005.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0015.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0025.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0125.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0075.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0020.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_tf150_staged_noise/epoch_0090.pt",
+      "bytes": 71114157,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_retarget_p07_s25/epoch_0025.pt",
+      "bytes": 71100389,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/epoch_0030.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/epoch_0010.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/epoch_0040.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/epoch_0050.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_375to291_32_4_2048_full_new/epoch_0020.pt",
+      "bytes": 12078154,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_classifier_full100/epoch_0030.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_classifier_full100/epoch_0010.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_classifier_full100/epoch_0040.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_classifier_full100/epoch_0050.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/fid_feature_extractor_classifier_full100/epoch_0020.pt",
+      "bytes": 34013629,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_acc3_ft/epoch_0009.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_acc3_ft/epoch_0012.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/epoch_0050.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_phase1_100k/epoch_0006.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_phase1_100k/epoch_0003.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_phase1_100k/epoch_0009.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_decouple_p02/epoch_0010.pt",
+      "bytes": 71100325,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_decouple_p02/epoch_0020.pt",
+      "bytes": 71100325,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0045.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0030.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0035.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0010.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0040.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0050.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0005.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0015.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0025.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_gt_history50/epoch_0020.pt",
+      "bytes": 53999775,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0045.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0120.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0060.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0030.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0035.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0055.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0145.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0135.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0010.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0085.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0115.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0040.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0050.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0095.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0070.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0110.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0080.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0100.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0130.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0105.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0140.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0065.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0005.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0015.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0025.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0125.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0075.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0020.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150/epoch_0090.pt",
+      "bytes": 53999519,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0060.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0030.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0010.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0040.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0050.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0070.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0080.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0100.pt",
+      "bytes": 88435823,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0020.pt",
+      "bytes": 88435119,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full_new/epoch_0090.pt",
+      "bytes": 88435823,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/lmm_375to291/epoch_0030.pt",
+      "bytes": 10821907,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/lmm_375to291/epoch_0010.pt",
+      "bytes": 10821907,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/lmm_375to291/epoch_0040.pt",
+      "bytes": 10821907,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/lmm_375to291/epoch_0050.pt",
+      "bytes": 10821907,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/lmm_375to291/epoch_0020.pt",
+      "bytes": 10821907,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_repro140/epoch_0120.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_repro140/epoch_0110.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_repro140/epoch_0130.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_repro140/epoch_0140.pt",
+      "bytes": 53935159,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_mlp_375to291_32_4_2048_v4/epoch_0005.pt",
+      "bytes": 31021045,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0030.pt",
+      "bytes": 71100005,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0010.pt",
+      "bytes": 71100005,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0040.pt",
+      "bytes": 71100005,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0050.pt",
+      "bytes": 71100005,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0020.pt",
+      "bytes": 71100005,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full/epoch_0030.pt",
+      "bytes": 57149039,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full/epoch_0010.pt",
+      "bytes": 57149039,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full/epoch_0040.pt",
+      "bytes": 57149039,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full/epoch_0050.pt",
+      "bytes": 57149039,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_full/epoch_0020.pt",
+      "bytes": 57149039,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_vqvae_controller_retarget_p05_noise06_s25/epoch_0025.pt",
+      "bytes": 71100389,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0045.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0030.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0035.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0010.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0006.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0003.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0040.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0050.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0009.pt",
+      "bytes": 53934967,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0015.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0025.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048/epoch_0020.pt",
+      "bytes": 53935095,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0045.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0120.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0060.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0030.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0035.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0055.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0145.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0135.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0010.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0085.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0115.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0040.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0050.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0095.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0070.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0110.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0080.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0100.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0130.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0105.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0140.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0065.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0005.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0015.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0025.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0125.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0075.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0020.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_recipe_tf150/epoch_0090.pt",
+      "bytes": 53973783,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/clip_recipe_scratch150_preopt_ep8/epoch_0005.pt",
+      "bytes": 53999711,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "checkpoints/flowmatch_style_v3_short/A/epoch_0005.pt",
+      "bytes": 71119149,
+      "reason": "Unreferenced intermediate epoch; best/latest and run metadata preserved"
+    },
+    {
+      "path": "analysis/training_speed_2026-10-07/baseline_warm_trace.json.gz",
+      "bytes": 5570357,
+      "reason": "Bulky profiler trace; summary and profile table preserved"
+    },
+    {
+      "path": "analysis/training_speed_2026-10-07/optimized_guards_trace.json.gz",
+      "bytes": 4615262,
+      "reason": "Bulky profiler trace; summary and profile table preserved"
+    },
+    {
+      "path": "analysis/training_speed_2026-10-07/baseline_trace.json.gz",
+      "bytes": 5623404,
+      "reason": "Bulky profiler trace; summary and profile table preserved"
+    },
+    {
+      "path": "analysis/training_speed_2026-10-07/optimized_data_trace.json.gz",
+      "bytes": 4908678,
+      "reason": "Bulky profiler trace; summary and profile table preserved"
+    }
+  ],
+  "bytes": 26950465192,
+  "core_hashes_unchanged": true,
+  "archived_sources": [
+    "RECIPE_TF150_PLAN.md",
+    "FID_EXTRACTOR_AND_PAPER_PARITY.md",
+    "RECIPE_TF50_PLAN.md",
+    "STAGED_NOISE_TF150.md",
+    "DOWNSTREAM_RUNBOOK.md",
+    "PAPER_TEXT_AMENDMENTS.md",
+    "STYLE_REFINEMENT_RUNBOOK.md",
+    "REPAIR_RUNBOOK.md",
+    "RUN_STYLE_PRIOR_50EP.md",
+    "GOAL_STYLE_ACCURACY.md",
+    "TEACHER_FORCED_50E_PLAN.md",
+    "CLIP_RECIPE_REVISION_PLAN.md",
+    "run_train_flowmatch_recipe_tf50.sh",
+    "run_train_flowmatch_recipe_tf150.sh",
+    "run_train_fid_feature_extractor_head10.sh",
+    "train_lmm_ae_291to84plus32.py",
+    "run_train_lmm_ae_291to84plus32.sh",
+    "analysis/evaluate_repair_protocol.py",
+    "analysis/diagnose_short_controller.py",
+    "analysis/compare_horizons.py",
+    "analysis/matched_root_train_coverage_2026-10-05.json",
+    "analysis/run_goal_pipeline.sh",
+    "analysis/audit_recipe_training.py",
+    "analysis/SHORT_V3_FAILURE_ANALYSIS_2026-10-05.md",
+    "analysis/IMPLEMENTATION_AUDIT_2026-10-05.md",
+    "analysis/score_paths.py",
+    "analysis/run_paper_parity.sh",
+    "analysis/tf5_style_diagnosis_val16.json",
+    "analysis/short_v3_diagnosis_val32.json",
+    "analysis/smoke_repair_controller.py",
+    "analysis/summarize_paper_parity.py",
+    "analysis/IMPLEMENTATION_AUDIT_2026-10-05_checks.json",
+    "analysis/CAMDM_STYLE_EVAL_AUDIT_2026-10-05.md",
+    "analysis/diagnose_recipe_feedback.py",
+    "analysis/recipe_feedback_diagnostic_2026-10-06.json",
+    "analysis/recipe_interface_parity_2026-10-06.json",
+    "analysis/recipe_training_audit_2026-10-06.json",
+    "analysis/final_table.py",
+    "analysis/short_v3_diagnosis_val8.json",
+    "analysis/probe_recipe_donor_bias.py",
+    "analysis/STYLE_PRIOR_ANALYSIS_2026-10-05.md",
+    "analysis/probe_recipe_tf150_condition.py",
+    "analysis/run_goal_queue.sh",
+    "analysis/RECIPE_FAILURE_ANALYSIS_2026-10-06.md",
+    "analysis/benchmark_flowmatch_training.py",
+    "analysis/run_decouple_sweep.sh",
+    "analysis/full_compare.py",
+    "analysis/run_rollout_recovery.py",
+    "analysis/audit_unseen_recipe_tokens.py",
+    "analysis/diagnose_style_token.py",
+    "analysis/CROSS70_REASSESSMENT_2026-10-05.md",
+    "analysis/diagnose_recipe_failure.py",
+    "analysis/run_style_refinement.py",
+    "analysis/diagnose_rollout_smoothing.py",
+    "analysis/floor_metrics.py",
+    "analysis/fid_filtered.py",
+    "analysis/recipe_failure_diagnostic_2026-10-06.json",
+    "analysis/REPAIR_VERIFICATION_2026-10-05.md",
+    "analysis/run_repair_pipeline.py",
+    "analysis/run_decouple_sweep2.sh",
+    "analysis/TF5_STYLE_FAILURE_ANALYSIS_2026-10-05.md",
+    "analysis/analyze_recipe_tf150_results.py",
+    "analysis/recipe_failure_diagnostic_2026-10-06_pre_normalization_fix.json",
+    "analysis/clip_recipe_preflight_review_2026-10-07/REVIEW.md",
+    "analysis/clip_recipe_preflight_review_2026-10-07/prior_feasibility.json",
+    "analysis/clip_recipe_preflight_review_2026-10-07/donor_density.json",
+    "analysis/training_speed_2026-10-07/baseline_warm_profile.txt",
+    "analysis/training_speed_2026-10-07/optimized_data_profile.txt",
+    "analysis/training_speed_2026-10-07/baseline_profile.txt",
+    "analysis/training_speed_2026-10-07/final128.json",
+    "analysis/training_speed_2026-10-07/optimized_guards.json",
+    "analysis/training_speed_2026-10-07/cpu_tests.txt",
+    "analysis/training_speed_2026-10-07/practical_history_smoke.json",
+    "analysis/training_speed_2026-10-07/reference128.json",
+    "analysis/training_speed_2026-10-07/equivalence.json",
+    "analysis/training_speed_2026-10-07/practical_history_warm128.json",
+    "analysis/training_speed_2026-10-07/final128_profile.txt",
+    "analysis/training_speed_2026-10-07/optimized_guards_profile.txt",
+    "analysis/training_speed_2026-10-07/optimized128.json",
+    "analysis/training_speed_2026-10-07/baseline_warm.json",
+    "analysis/training_speed_2026-10-07/optimized128_profile.txt",
+    "analysis/training_speed_2026-10-07/profile_training.py",
+    "analysis/training_speed_2026-10-07/REPORT.md",
+    "analysis/training_speed_2026-10-07/baseline.json",
+    "analysis/training_speed_2026-10-07/optimized_data.json",
+    "analysis/training_speed_2026-10-07/host_gpu_tests.txt",
+    "analysis/recipe_tf150_results_2026-10-07/condition_probe.json",
+    "analysis/recipe_tf150_results_2026-10-07/per_target_diagnostics.csv",
+    "analysis/recipe_tf150_results_2026-10-07/validation_curve.csv",
+    "analysis/recipe_tf150_results_2026-10-07/donor_bias.csv",
+    "analysis/recipe_tf150_results_2026-10-07/training_and_style.png",
+    "analysis/recipe_tf150_results_2026-10-07/CLIP_RECIPE_REDERIVATION.md",
+    "analysis/recipe_tf150_results_2026-10-07/donor_bias.json",
+    "analysis/recipe_tf150_results_2026-10-07/REPORT.md",
+    "analysis/recipe_tf150_results_2026-10-07/audit.json",
+    "analysis/recipe_tf150_results_2026-10-07/cross_pair_pose_gap.json",
+    "analysis/unseen_recipe_audit_2026-10-06/case_manifest.json",
+    "analysis/unseen_recipe_audit_2026-10-06/token_and_ae_diagnostic.json",
+    "analysis/clip_recipe_failure_2026-10-08/probe.py",
+    "analysis/clip_recipe_failure_2026-10-08/practical_cpu_tests.txt",
+    "analysis/clip_recipe_failure_2026-10-08/coverage.py",
+    "analysis/clip_recipe_failure_2026-10-08/guidance.json",
+    "analysis/clip_recipe_failure_2026-10-08/SOLUTION.md",
+    "analysis/clip_recipe_failure_2026-10-08/validation_curve.csv",
+    "analysis/clip_recipe_failure_2026-10-08/practical_host_tests.txt",
+    "analysis/clip_recipe_failure_2026-10-08/coverage_cases.csv",
+    "analysis/clip_recipe_failure_2026-10-08/probe.json",
+    "analysis/clip_recipe_failure_2026-10-08/target_style_comparison.csv",
+    "analysis/clip_recipe_failure_2026-10-08/PRACTICAL_REVISION.md",
+    "analysis/clip_recipe_failure_2026-10-08/audit.json",
+    "analysis/clip_recipe_failure_2026-10-08/coverage.json",
+    "analysis/fp32_performance_2026-10-05/optimized512.json",
+    "analysis/fp32_performance_2026-10-05/rollout.json",
+    "analysis/fp32_performance_2026-10-05/baseline128.json",
+    "analysis/fp32_performance_2026-10-05/baseline512.json",
+    "analysis/training_speed_2026-10-07/before/train_flowmatch_vqvae_controller.py",
+    "analysis/training_speed_2026-10-07/before/style_code_prior.py",
+    "analysis/training_speed_2026-10-07/before/flowmatch_vqvae_controller.py",
+    "analysis/training_speed_2026-10-07/before/style_donor_bank.py",
+    "docs/archive/STYLE_PRIOR_FIX_PLAN.md",
+    "docs/archive/CHECKPOINT_MAP.md",
+    "docs/archive/README.md",
+    "docs/archive/STYLE_PRIOR_TRAINING_PLAN.md",
+    "docs/archive/RUN_100K_RESULTS.md",
+    "docs/archive/RUN_150EP_RESULTS.md",
+    "style_recipe_demo.json",
+    "cache/clip_recipe_revision_example.json",
+    "cache/zeroshot_style_recipes/zombie_zeroshot.json",
+    "cache/zeroshot_style_recipes/zombie_full.json",
+    "cache/zeroshot_style_recipes/zombie_anchor_armsfolded_full.json",
+    "cache/zeroshot_style_recipes/armsfolded_full.json"
+  ],
+  "source_archive": "docs/archive/legacy_sources_2026-10-09.zip",
+  "final_core_hashes_unchanged": true,
+  "test_results": {
+    "cpu": 236,
+    "gpu": 6,
+    "core": 101,
+    "cpu_subtests": 5,
+    "overlap_between_cpu_gpu": false
+  },
+  "smoke": {
+    "optimizer_updates": 4,
+    "fp32": true,
+    "tf32": false,
+    "frozen_vq_unchanged": true
+  },
+  "removed_runtime_cache_directories": [
+    "__pycache__",
+    ".pytest_cache",
+    "Utils/__pycache__",
+    "Visualization/__pycache__",
+    "analysis/__pycache__",
+    "arch/__pycache__",
+    "tests/__pycache__",
+    "analysis/training_speed_2026-10-07/__pycache__",
+    "analysis/clip_recipe_failure_2026-10-09/__pycache__",
+    "analysis/clip_recipe_failure_2026-10-08/__pycache__",
+    "analysis/training_speed_2026-10-09/before/__pycache__",
+    "analysis/training_speed_2026-10-07/before/__pycache__",
+    "Visualization/backends/__pycache__",
+    "Visualization/io/__pycache__"
+  ],
+  "runtime_cache_bytes": 2944350
+}

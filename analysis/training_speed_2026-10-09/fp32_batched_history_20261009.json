@@ -1,0 +1,93 @@
+{
+  "name": "fp32_batched_history_20261009",
+  "batches": 128,
+  "seconds": 2.7236779160011793,
+  "checkpoint_epoch": null,
+  "initialization": "from_scratch",
+  "warmup_updates": 128,
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "fp32": true,
+  "tf32": false,
+  "cold_ms_per_update": 81.32414944532229,
+  "peak_memory_mb": 1084.3935546875,
+  "metrics": {
+    "loss": 1.2228717803955078,
+    "flow_loss": 0.9986960291862488,
+    "recon_loss": 0.0,
+    "style_hist_loss": 11.020017623901367,
+    "style_entropy": 1.2585903406143188,
+    "selector_entropy": 1.2585903406143188,
+    "conditioning_entropy": 1.2585903406143188,
+    "recipe_fraction": 1.0,
+    "recipe_exemplars_mean": 2.982330322265625,
+    "recipe_shortfall_fraction": 0.0,
+    "recipe_bank_hit_fraction": 1.0,
+    "style_top1_prob": 0.40718933939933777,
+    "style_consistency_loss": 0.0,
+    "root_recon_loss": 0.0,
+    "style_prior_kl": 6.209651470184326,
+    "style_prior_target_entropy": 4.810368537902832,
+    "style_code_coverage": 0.11024954915046692,
+    "decoupled_fraction": 0.0,
+    "history_noise_fraction": 0.0,
+    "history_mask_fraction": 0.2027130126953125,
+    "history_style_fraction": 0.2979736328125,
+    "gt_target_fraction": 1.0,
+    "flow_time_mean": 0.300446093082428,
+    "latent_target_norm": 14.57820987701416,
+    "velocity_pred_norm": 39.7260627746582,
+    "velocity_target_norm": 23.05476951599121,
+    "target_pred_norm": 10.248124122619629,
+    "target_error": 9.862156867980957,
+    "target_weight_mean": 1.0,
+    "num_samples": 65536.0,
+    "matched_flow_loss": 0.5901142497249641,
+    "cross_flow_loss": 1.4315529104042912,
+    "matched_samples": 32723.0,
+    "cross_samples": 19528.0,
+    "donor_candidates_mean": 0.0,
+    "donor_phase_cost": 0.0,
+    "clean_history_flow_loss": 0.5901142497249641,
+    "clean_history_samples": 32723.0,
+    "mixed_style_history_flow_loss": 1.4315529104042912,
+    "mixed_style_history_samples": 19528.0,
+    "masked_history_flow_loss": 1.3688271840891983,
+    "masked_history_samples": 13285.0
+  },
+  "ms_per_update": 21.278733718759213,
+  "checks": {
+    "gt_targets": true,
+    "frozen_vq_unchanged": true,
+    "decoder_and_solver_unused": true,
+    "fp32_parameters": true,
+    "full_task_accounting": true,
+    "optimizer_updates": 256
+  },
+  "stages": {
+    "stage_cache": {
+      "cpu_ms": 4.590756999999954,
+      "self_cpu_ms": 3.191388000000472,
+      "cuda_ms": 0.4856690000000235
+    },
+    "stage_donor": {
+      "cpu_ms": 81.47006499999992,
+      "self_cpu_ms": 25.614972999999825,
+      "cuda_ms": 32.065538000001894
+    },
+    "stage_recipe": {
+      "cpu_ms": 89.41289599999998,
+      "self_cpu_ms": 68.62656099999717,
+      "cuda_ms": 2.4444100000004982
+    },
+    "stage_forward_loss": {
+      "cpu_ms": 60.173822999999686,
+      "self_cpu_ms": 16.50516299999747,
+      "cuda_ms": 77.59755299999888
+    },
+    "stage_optimizer": {
+      "cpu_ms": 3.9205710000001126,
+      "self_cpu_ms": 0.39632700000022303,
+      "cuda_ms": 0.838152999999933
+    }
+  }
+}

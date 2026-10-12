@@ -1,0 +1,18 @@
+[
+  {
+    "style": "Neutral",
+    "suffix": "FW",
+    "segment_id": 415,
+    "window_start": 2028922,
+    "seed": 42,
+    "mode": "reconstruct",
+    "requantize": true,
+    "target_style": "Neutral",
+    "matched": true,
+    "root_ade_cm": 2.3743715286254883,
+    "pred_style": "Neutral",
+    "pred_conf": 0.9999929666519165,
+    "pred_is_target": true,
+    "gen_ms_per_frame": 5.519967470839522
+  }
+]

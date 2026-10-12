@@ -1,0 +1,175 @@
+{
+  "info": {
+    "checkpoint": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/flowmatch_label_6tok_curriculum100/best.pt",
+    "normalization": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "source_entry_id": 412,
+    "initial_frame": 2007765,
+    "source_style": "Neutral",
+    "steps": 8,
+    "noise_std": 1.0,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90
+  },
+  "solver_outputs": {
+    "2": {
+      "endpoint_pose_std_cm": 0.4155842959880829,
+      "query_trace": [
+        {
+          "t": 0.0,
+          "endpoint_pose_std_cm": 0.20209574699401855
+        },
+        {
+          "t": 0.5,
+          "endpoint_pose_std_cm": 0.4155842661857605
+        }
+      ]
+    },
+    "4": {
+      "endpoint_pose_std_cm": 3.3955447673797607,
+      "query_trace": [
+        {
+          "t": 0.0,
+          "endpoint_pose_std_cm": 0.20209574699401855
+        },
+        {
+          "t": 0.25,
+          "endpoint_pose_std_cm": 1.5896632671356201
+        },
+        {
+          "t": 0.5,
+          "endpoint_pose_std_cm": 3.1814045906066895
+        },
+        {
+          "t": 0.75,
+          "endpoint_pose_std_cm": 3.3955447673797607
+        }
+      ]
+    },
+    "8": {
+      "endpoint_pose_std_cm": 5.915366172790527,
+      "query_trace": [
+        {
+          "t": 0.0,
+          "endpoint_pose_std_cm": 0.20209574699401855
+        },
+        {
+          "t": 0.125,
+          "endpoint_pose_std_cm": 0.6776748895645142
+        },
+        {
+          "t": 0.25,
+          "endpoint_pose_std_cm": 3.242337226867676
+        },
+        {
+          "t": 0.375,
+          "endpoint_pose_std_cm": 5.168400287628174
+        },
+        {
+          "t": 0.5,
+          "endpoint_pose_std_cm": 5.630429744720459
+        },
+        {
+          "t": 0.625,
+          "endpoint_pose_std_cm": 5.747219085693359
+        },
+        {
+          "t": 0.75,
+          "endpoint_pose_std_cm": 5.825035095214844
+        },
+        {
+          "t": 0.875,
+          "endpoint_pose_std_cm": 5.915365695953369
+        }
+      ]
+    },
+    "16": {
+      "endpoint_pose_std_cm": 6.107495307922363,
+      "query_trace": [
+        {
+          "t": 0.0,
+          "endpoint_pose_std_cm": 0.20209574699401855
+        },
+        {
+          "t": 0.0625,
+          "endpoint_pose_std_cm": 0.3354760706424713
+        },
+        {
+          "t": 0.125,
+          "endpoint_pose_std_cm": 0.7007955312728882
+        },
+        {
+          "t": 0.1875,
+          "endpoint_pose_std_cm": 1.709844708442688
+        },
+        {
+          "t": 0.25,
+          "endpoint_pose_std_cm": 3.916368007659912
+        },
+        {
+          "t": 0.3125,
+          "endpoint_pose_std_cm": 5.007936000823975
+        },
+        {
+          "t": 0.375,
+          "endpoint_pose_std_cm": 5.562263488769531
+        },
+        {
+          "t": 0.4375,
+          "endpoint_pose_std_cm": 5.758265495300293
+        },
+        {
+          "t": 0.5,
+          "endpoint_pose_std_cm": 5.854785442352295
+        },
+        {
+          "t": 0.5625,
+          "endpoint_pose_std_cm": 5.91740083694458
+        },
+        {
+          "t": 0.625,
+          "endpoint_pose_std_cm": 5.963079452514648
+        },
+        {
+          "t": 0.6875,
+          "endpoint_pose_std_cm": 5.998452186584473
+        },
+        {
+          "t": 0.75,
+          "endpoint_pose_std_cm": 6.023923873901367
+        },
+        {
+          "t": 0.8125,
+          "endpoint_pose_std_cm": 6.07280158996582
+        },
+        {
+          "t": 0.875,
+          "endpoint_pose_std_cm": 6.1156487464904785
+        },
+        {
+          "t": 0.9375,
+          "endpoint_pose_std_cm": 6.107495307922363
+        }
+      ]
+    }
+  },
+  "train_only_batch_donors": {
+    "samples": 1024,
+    "changed": 236,
+    "actual_cross_fraction": 0.23046875,
+    "matched_one_frame_pose_step_cm": 0.5097382068634033,
+    "cross_target_one_frame_pose_step_cm": 13.226564407348633,
+    "phase_direction_eligible": 227,
+    "phase_direction_opposite_fraction": 0.44052863121032715,
+    "same_target_style_has_nonopposite_candidate_fraction": 0.6059321761131287,
+    "gt_normalized_latent_step_std_mean": 0.21408548951148987,
+    "note": "Phase sign and whole-body step are diagnostic proxies, not proof of incorrect style transitions."
+  },
+  "model_state_unchanged": true,
+  "seed": 42,
+  "fp32": true
+}

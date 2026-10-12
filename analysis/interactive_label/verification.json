@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-10",
+  "cpu_targeted_tests": 7,
+  "headless": {
+    "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+    "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "source_entry_id": 416,
+    "initial_frame": 4062474,
+    "source_style": "Neutral",
+    "steps": 8,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90,
+    "frames": 120,
+    "final_style": "OnHeels",
+    "vq_unchanged": true,
+    "inference_ms_mean": 4.225452390660807,
+    "inference_ms_p95": 4.523106501073926,
+    "root_position": [
+      0.4757641851902008,
+      0.3249322772026062
+    ],
+    "root_yaw_degrees": 14.271573493195092
+  },
+  "gui": {
+    "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_tf150_staged_noise/best.pt",
+    "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "source_entry_id": 416,
+    "initial_frame": 4062474,
+    "source_style": "Neutral",
+    "steps": 8,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90,
+    "frames": 120,
+    "final_style": "OnHeels",
+    "vq_unchanged": true,
+    "inference_ms_mean": 5.3584188912116755,
+    "inference_ms_p95": 5.925681001099292,
+    "root_position": [
+      0.4757641851902008,
+      0.3249322772026062
+    ],
+    "root_yaw_degrees": 14.271573493195092
+  },
+  "source_sha256": {
+    "Utils/interactive_control.py": "9b1f040ab8b3415aa8e9c4ecaf4a3af788a9cd0f6cfd6ffd8acce5b4c39749eb",
+    "Visualization/cli/interactive_label_control.py": "b98e193616e8ad860eacdc1bf2f7dc9d9307ca29c52fca60b3181de18d8cdb6c",
+    "run_interactive_label_control.sh": "869c35107c447ada704bfbe22cb3c7c7479ffd33bb6e359c9d8ec242631bf434",
+    "tests/test_interactive_control.py": "39f3406c63cda4370f2e603aa51a3796f23bf9d5abee93092d88befd82482761"
+  },
+  "limitation": "Scripted 120-frame window/feedback checks and unit keyboard mapping; not a long interaction or style accuracy evaluation.",
+  "no_training": true
+}

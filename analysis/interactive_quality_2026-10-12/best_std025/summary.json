@@ -1,0 +1,80 @@
+{
+  "info": {
+    "checkpoint": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/flowmatch_label_6tok_curriculum100/best.pt",
+    "normalization": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "source_entry_id": 412,
+    "initial_frame": 2007765,
+    "source_style": "Neutral",
+    "steps": 8,
+    "noise_std": 0.25,
+    "seed": 42,
+    "fps": 60,
+    "fp32": true,
+    "tf32": false,
+    "feedback": "clip_quantize_decode",
+    "root": "predicted_velocity_integrated",
+    "styles": 90
+  },
+  "noise_rho": 0.0,
+  "protocol": "single_Neutral_keyboard_case_300f_seed42_not_benchmark",
+  "checkpoint_sha256": "2a70cfe208d9db2d65c6cd72db1d444e951e35dd1bc9bbac5de17411c6c242f8",
+  "raw_local": {
+    "second_difference_cm": 0.3442942500114441,
+    "step_p99_cm": 1.3250373601913452,
+    "step_max_cm": 1.9010109901428223
+  },
+  "continuous_local_same_feedback": {
+    "second_difference_cm": 0.3300620913505554,
+    "step_p99_cm": 1.376603364944458,
+    "step_max_cm": 1.9773719310760498
+  },
+  "raw_render": {
+    "second_difference_cm": 0.4725192189216614,
+    "step_p99_cm": 2.8202998638153076,
+    "step_max_cm": 3.06735897064209
+  },
+  "processed_render": {
+    "second_difference_cm": 0.35139408707618713,
+    "step_p99_cm": 3.4275147914886475,
+    "step_max_cm": 4.188035011291504
+  },
+  "glide": {
+    "name": "raw",
+    "frames": 300,
+    "root_speed_mean": 1.0661776065826416,
+    "pose_delta_mean": 0.5901758670806885,
+    "glide_fraction_locomotion": 0.10548523206751055,
+    "glide_longest_streak_frames": 5,
+    "right_steps": 5,
+    "left_steps": 7
+  },
+  "support": {
+    "raw": {
+      "contact_pairs": 550,
+      "coverage": 0.919732441471572,
+      "ground_proxy_speed_cm_s": 113.2547607421875
+    },
+    "processed": {
+      "contact_pairs": 550,
+      "coverage": 0.919732441471572,
+      "ground_proxy_speed_cm_s": 103.38829803466797
+    }
+  },
+  "ik_active_fraction": 0.5483333333333333,
+  "ik_fully_blended_fraction": 0.465,
+  "frozen_history_counterfactual": {
+    "2": {
+      "continuous_pose_std_cm": 0.0632394477725029,
+      "quantized_pose_std_cm": 0.11817386001348495,
+      "continuous_quantized_pose_gap_cm": 0.21947051584720612,
+      "unique_quantized_states": 29
+    },
+    "8": {
+      "continuous_pose_std_cm": 0.15641310811042786,
+      "quantized_pose_std_cm": 0.11796659231185913,
+      "continuous_quantized_pose_gap_cm": 0.17217420041561127,
+      "unique_quantized_states": 31
+    }
+  },
+  "vq_unchanged": true
+}

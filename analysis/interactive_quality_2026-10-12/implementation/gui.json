@@ -1,0 +1,44 @@
+{
+  "checkpoint": "/tmp/newcode_history_fast2_smoke_gpu_20261012/latest.pt",
+  "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "source_entry_id": 412,
+  "initial_frame": 2007765,
+  "source_style": "Neutral",
+  "steps": 8,
+  "noise_std": 1.0,
+  "seed": 42,
+  "fps": 60,
+  "fp32": true,
+  "tf32": false,
+  "feedback": "clip_quantize_decode",
+  "root": "predicted_velocity_integrated",
+  "styles": 90,
+  "history_conditioning": true,
+  "trajectory_policy": "smoothed_commands",
+  "frames": 60,
+  "final_style": "Old",
+  "vq_unchanged": true,
+  "inference_ms_mean": 4.694865538622253,
+  "inference_ms_p95": 4.9183829527464695,
+  "root_position": [
+    0.09398932009935379,
+    1.036903738975525
+  ],
+  "root_yaw_degrees": 25.691770607232932,
+  "render": {
+    "postprocess": true,
+    "foot_ik": true,
+    "foot_ik_active": true,
+    "smoothing_active": true,
+    "smooth_cutoff": 6.0,
+    "postprocess_ms_mean": 2.2210338846586333,
+    "contacts": 0,
+    "fully_locked": 0,
+    "candidates": 0,
+    "pelvis_offset": 0.013843004821341246,
+    "release_reasons": [
+      "reach",
+      "reach"
+    ]
+  }
+}

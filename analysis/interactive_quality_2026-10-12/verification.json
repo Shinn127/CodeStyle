@@ -1,0 +1,16 @@
+{
+  "source_sha256": {
+    "analysis/motion_quality_diagnosis/check_interactive_quality.py": "0f25110c82a50fc594932a37f509a5a35f2b25dc96c111245bfd104585eb5885",
+    "train_flowmatch_vqvae_controller.py": "7020914eb1da49722812701b9f750332eeb2a71a4e469f4478bac0deb74451bf",
+    "tests/test_feedback_training.py": "c08772c29db21ab38ff6edb74028762824510bec9e3c71c5514e80aab73086d7",
+    "Utils/interactive_control.py": "0dd5d413714951d30aeda2e5e3965ad7b91186b424212cda0919fbf1a0cff6ec",
+    "Visualization/pose_postprocess.py": "2edade7a683c90b8de8a55a8da14f51e71137d1faf70c14d4202690b9d423447"
+  },
+  "tests": "32 passed",
+  "gpu_probe_frames": 1200,
+  "seed": 42,
+  "fp32": true,
+  "formal_training_run": false,
+  "model_weights_changed": false,
+  "diagnosis_only": true
+}

@@ -1,0 +1,12 @@
+{
+  "source_sha256": {
+    "analysis/motion_quality_diagnosis/audit_no_loss_solution.py": "3ad454e2b45ef68031c7ab28dddbb3704d4f6d80b233cc2b4794382b3e6cbd13",
+    "analysis/motion_quality_diagnosis/check_interactive_quality.py": "0f25110c82a50fc594932a37f509a5a35f2b25dc96c111245bfd104585eb5885",
+    "analysis/interactive_quality_2026-10-12/NO_EXTRA_LOSS_SOLUTION.md": "3020439a142d13a8aaa3c109b264e209b1f2ac68253ec120182a2f99aebbd6e0"
+  },
+  "model_training_changes": false,
+  "formal_training_started": false,
+  "fp32": true,
+  "diagnostic_scope": "32-noise fixed-history solver comparisons, one 1024x5 train-only batch, one additional 300f keyboard probe, CPU replay and decoder hook",
+  "solution_status": "plan_only_not_implemented_or_training_verified"
+}
