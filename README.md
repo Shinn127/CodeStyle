@@ -4,6 +4,25 @@
 
 新版V2已实现：`clip→冻结VQ序列→temporal Es→TopK4 π→非线性code聚合→8 slot/global条件→逐层AdaLN/cross-attention→CFG flow→clip→quantize→decode`。Recipe从最终π进入同一条件路径；输出style/root约束作用于量化后的单次FM终点。已通过小数据回归和真实数据GPU smoke，正式Φ预训练和controller训练尚未执行。详见[V2运行说明](docs/CLIP_RECIPE_V2.md)和[主线方案](analysis/clip_recipe_failure_2026-10-09/NEXT_SOLUTION.md)。
 
+## 目录结构（2026-10-13 重组）
+
+```text
+NewCode/
+├── README.md  dataset.py  run_tests.py  pytest.ini   # 门口文件
+├── training/      # 14 个 train_* 入口（controller/VQ/classifier 训练）
+├── evaluation/    # 7 个 evaluate_*/simulate_realtime_* 入口（封存评估、实时模拟）
+├── tools/         # 8 个数据/缓存工具（generate_database、precompute_*、verify_*）
+├── scripts/       # 全部 shell 包装（38 个 run_*.sh，含 run_tests.sh）
+├── docs/          # 规划与运行说明（VQ_LABEL_TRAIN_PLAN、NOMIRROR_CHAIN 等）
+│   └── archive/   # 历史方案与已下线源码归档
+├── Utils/  arch/  Visualization/  tests/             # 库代码与回归
+├── analysis/      # 实验记录与报告（只增不改）
+├── checkpoints/  cache/  database_*/  eval_results/  # 生成资产（gitignore）
+└── .git/          # 独立仓库（2026-10-13 起，与父 revision 仓库解耦）
+```
+
+所有 shell 入口以 `ROOT_DIR` 定位资源，可从任意目录执行：`bash scripts/<name>.sh`。
+
 ## 环境与保留产物
 
 ```bash
@@ -34,10 +53,10 @@ bash scripts/run_tests.sh gpu --collect-only
 bash scripts/run_tests.sh core -k recipe
 ```
 
-回归只用disposable fixtures，不读取真实训练数据或启动完整训练。测试保持FP32/highest/noTF32，限制小fixture的CPU线程，并输出慢项。真实训练吞吐单独测试：
+回归只用disposable fixtures，不读取真实训练数据或启动完整训练。测试保持FP32/highest/noTF32，限制小fixture的CPU线程，并输出慢项。真实训练吞吐单独测试（现役工具；旧的 `profile_training.py` 已随 donor 清理归档）：
 
 ```bash
-python analysis/profile_training.py --streaming --name smoke_current --warmup 100 --updates 100
+python analysis/interactive_quality_2026-10-12/implementation/benchmark_training.py --updates 100
 ```
 
 该短测读取当前真实cache/train references，随机初始化临时controller，限定updates，不保存正式checkpoint。`--streaming`评估新样本及recipe首次构建，省略它则重复已预热样本，不能代表完整训练成本。最新新样本流66.85→47.09ms/update；实测与一致性核验见[批处理/recipe性能报告](analysis/pipeline_speed_2026-10-09/REPORT.md)，原field优化见[前次报告](analysis/training_speed_2026-10-09/REPORT.md)。
