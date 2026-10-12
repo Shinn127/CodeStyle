@@ -3,9 +3,14 @@
 > **2026-10-12 晚更新：donor 训练路径已全面移除。** 10 epoch 短训对比证明 donor 的跨风格合成目标
 > 损害闭环运动质量（tf10 donor-free：MPJPE 7.97 / jitter 0.57；phase10 含 donor：10.28 / 2.14；6tok：11.23 / 1.79）。
 > 本页下方描述中的 phase-aware donor bank、`--cross-donor-source`、`--decouple-*` 已不存在；
-> `run_train_flowmatch_history_phase10.sh` 现在以 donor-free 配置运行（history+rollout 部分保留）。
+> `run_train_flowmatch_history_phase10.sh` 在 2026-10-12 短暂以 donor-free 配置运行，随后于 2026-10-13 清理中删除（下方为历史记录）。
 > 归因证据见 [TF10_DIAGNOSIS.md](../analysis/interactive_quality_2026-10-12/TF10_DIAGNOSIS.md)，
 > 归档源码见 [docs/archive/donor_sources_2026-10-12/](archive/donor_sources_2026-10-12/README.md)。
+>
+> **2026-10-13 入口收敛**：本页实验用入口 `run_train_flowmatch_history_phase10.sh`（rollout）与
+> `run_train_flowmatch_history_tf10.sh`（纯TF）已在清理中删除；label 主线入口为
+> `scripts/run_train_flowmatch_history_obsnoise_tf100.sh`（100ep 纯TF + 观测噪声），
+> 短测/变体可用基础入口 `scripts/run_train_flowmatch_6tok_curriculum100.sh` 加环境变量复现。
 
 2026-10-12：代码修订及轻量验证完成，没有启动完整训练。原因及原始审计见 [诊断方案](../analysis/interactive_quality_2026-10-12/NO_EXTRA_LOSS_SOLUTION.md)。运动质量是否改善仍需短训后的固定 rollout 验证。
 
@@ -24,8 +29,9 @@
 在 NewCode 下执行，正式训练由用户启动：
 
 ```bash
-DRY_RUN=1 bash scripts/run_train_flowmatch_history_phase10.sh
-bash scripts/run_train_flowmatch_history_phase10.sh
+# 历史入口（已删除，记录保留）：phase10 以 donor-free 配置运行
+DRY_RUN=1 bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh   # 现行主线入口
+bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh
 ```
 
 | 项目 | 默认值 |
@@ -47,12 +53,12 @@ bash scripts/run_train_flowmatch_history_phase10.sh
 日志新增 `donor_opposite_fraction`、`donor_first_pose_step_cm`、`donor_target_style_counts/coverage`、实际 cross 比例和峰值显存。真实100批 smoke：cross≈17.7%，候选均值≈2.09、反向代理比例0、首目标 pose差≈11.6cm。相位门限避免了一类冲突，但大幅 style 改变仍可能造成跳变，不保证充分解耦。
 
 ```bash
-# 从零训练
-FROM_SCRATCH=1 OUT=checkpoints/flowmatch_label_history_phase10_scratch \
-  bash scripts/run_train_flowmatch_history_phase10.sh
-# 同目标/config/cache模式的 epoch 边界续训
-RESUME=checkpoints/flowmatch_label_history_phase10/latest.pt \
-  bash scripts/run_train_flowmatch_history_phase10.sh
+# 从零训练（现行入口；phase10 专用脚本已删除）
+FROM_SCRATCH=1 OUT=checkpoints/flowmatch_label_history_obsnoise_tf100_scratch \
+  bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh
+# 同目标/config/cache模式的 epoch 边界续训（示例：ODE4 历史 run）
+RESUME=checkpoints/flowmatch_label_history_ode4_100ep/latest.pt \
+  bash scripts/run_train_flowmatch_6tok_curriculum100.sh
 # 短训后手动切换交互模型；默认交互 checkpoint 仍保留旧 Label150
 FLOW_CKPT=checkpoints/<your_run>/best.pt \
   bash scripts/run_interactive_label_control.sh --smooth-plan

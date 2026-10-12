@@ -1,3 +1,5 @@
+> **2026-10-13 注**：本页入口 `run_train_flowmatch_skipcat_notoken.sh` 与 notoken 实验线已在清理中删除，正文保留为历史记录。
+
 # skip_cat_mlp + 无 motion token：50 epoch 短训结果（2026-10-11）
 
 运行：`checkpoints/flowmatch_label_skipcat_notoken/`（`run_train_flowmatch_skipcat_notoken.sh`，

@@ -36,7 +36,7 @@ FLOW_CKPT="${FLOW_CKPT:-${ROOT_DIR}/checkpoints/flowmatch_label_nomirror_150ep/b
 if [[ ! -f "${FLOW_CKPT}" ]]; then
   echo "Flow controller checkpoint not found: ${FLOW_CKPT}" >&2
   echo "Old controller checkpoints were removed by the 2026-10-12 cleanup; train one first" >&2
-  echo "(e.g. bash scripts/run_train_flowmatch_history_tf10.sh) and pass FLOW_CKPT=<out>/best.pt." >&2
+  echo "(e.g. bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh) and pass FLOW_CKPT=<out>/best.pt." >&2
   exit 2
 fi
 VQ_CKPT="${VQ_CKPT:-${VQVAE_CKPT:-${ROOT_DIR}/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt}}"

@@ -22,7 +22,7 @@ if [[ "${DRY_RUN:-0}" == 1 ]]; then exit 0; fi
 if [[ ! -f "${FLOW_CKPT}" ]]; then
   echo "Flow controller checkpoint not found: ${FLOW_CKPT}" >&2
   echo "Old controller checkpoints were removed by the 2026-10-12 cleanup; train one first" >&2
-  echo "(e.g. bash scripts/run_train_flowmatch_history_tf10.sh) and pass FLOW_CKPT=<out>/best.pt." >&2
+  echo "(e.g. bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh) and pass FLOW_CKPT=<out>/best.pt." >&2
   exit 2
 fi
 exec "${cmd[@]}"

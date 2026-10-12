@@ -5,3 +5,10 @@
 查看单个文件可用 `unzip -p`。不要整体解压覆盖当前代码。研究结果保留在eval_results与run的config/history中；当前说明见[README](../../README.md)，删除中间权重/派生数据见[清理记录](../cleanup_2026-10-09/README.md)。
 
 [CHECKPOINT_MAP_2026-10-10.md](CHECKPOINT_MAP_2026-10-10.md)是含镜像链路删除前的 checkpoints/cache 清单（2026-10-10 之后这些文件已不存在），仅作历史记录；当前资产命名与重建顺序见 [NOMIRROR_CHAIN.md](../NOMIRROR_CHAIN.md)。
+
+## 2026-10-13 新归档
+
+- [DONOR_FREE_TF_STYLE_PLAN.md](DONOR_FREE_TF_STYLE_PLAN.md)、[DONOR_FREE_TF_BLOCK50_PLAN.md](DONOR_FREE_TF_BLOCK50_PLAN.md)：
+  donor-free 风格响应/四帧块方案（重新构建 donor 数据后暂归档）。
+- [CLEANUP_HEAD10_2026-10-05.md](CLEANUP_HEAD10_2026-10-05.md)（+manifest JSON）、
+  [DATABASE_CHECK_2026-10-05.md](DATABASE_CHECK_2026-10-05.md)（+JSON）：早期清理与库检查记录。

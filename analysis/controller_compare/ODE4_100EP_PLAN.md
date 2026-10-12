@@ -1,11 +1,14 @@
 # ODE4 history 100-epoch 训练配置（2026-10-12 规划）
 
 新训练：donor-free、双帧 latent 历史条件、全链路 Euler4；课程 **50 TF + 20 ramp + 30 rollout**，
-共 100 epoch，从零训练。入口脚本 [run_train_flowmatch_history_ode4_100ep.sh](../../scripts/run_train_flowmatch_history_ode4_100ep.sh)。
+共 100 epoch，从零训练。入口脚本 `run_train_flowmatch_history_ode4_100ep.sh`（2026-10-13 清理中删除；
+同配置可用 `scripts/run_train_flowmatch_6tok_curriculum100.sh` 加 `FEEDBACK_START_EPOCH=51`、
+`FEEDBACK_RAMP_EPOCHS=20`、`FEEDBACK_PROBABILITY=1`、`FEEDBACK_SOLVER_STEPS=4` 复现）。
 
 ## 一、命令
 
 ```bash
+# 历史命令（入口已删除；见上注记的复现方式）
 cd /home/shinn/桌面/multimedia/revision/NewCode
 bash scripts/run_train_flowmatch_history_ode4_100ep.sh
 ```

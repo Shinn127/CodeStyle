@@ -28,7 +28,7 @@ Rollout阶段改善了部分root追踪和matched分类，但没有解决cross，
 - wrapper仍默认传入 `--ode-steps 8`，覆盖Python入口跟随checkpoint的逻辑；训练/验证实际为4。这个协议问题要修，但它解释不了Euler4验证本身的低cross。
 - `history_tf10` 等微调脚本在init缺失后静默退回从零、仍用5e-5。新计划必须明确初始化策略，禁止这个低LR回退。
 
-证据：[干预结果](../analysis/donor_free_replan_2026-10-12/style_intervention.json)、[验证曲线](../analysis/donor_free_replan_2026-10-12/validation_curve.png)、[CSV](../analysis/donor_free_replan_2026-10-12/validation_curve.csv)。
+证据：[干预结果](../../analysis/donor_free_replan_2026-10-12/style_intervention.json)、[验证曲线](../../analysis/donor_free_replan_2026-10-12/validation_curve.png)、[CSV](../../analysis/donor_free_replan_2026-10-12/validation_curve.csv)。
 
 ## 2. 重新推导失败机制
 

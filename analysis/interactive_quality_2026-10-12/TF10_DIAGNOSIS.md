@@ -1,11 +1,12 @@
 # TF-only + history10 短训诊断（2026-10-12）
 
-> 归因复核：下文保留历史数值，但TF10继承了donor-era模型权重，且比较同时涉及history、donor、rollout等变化，不能分别确证各因素因果作用，也不能证明从零matched-only TF有同样的cross能力。文中“必须保留donor/增加rollout”的建议已撤回；当前方案见 [无donor纯TF风格计划](../../docs/DONOR_FREE_TF_STYLE_PLAN.md)。
+> 归因复核：下文保留历史数值，但TF10继承了donor-era模型权重，且比较同时涉及history、donor、rollout等变化，不能分别确证各因素因果作用，也不能证明从零matched-only TF有同样的cross能力。文中“必须保留donor/增加rollout”的建议已撤回；当前方案见 [无donor纯TF风格计划](../../docs/archive/DONOR_FREE_TF_STYLE_PLAN.md)。
 
 对照实验：从 `flowmatch_label_6tok_curriculum100/best.pt` 初始化，只加 history 双帧条件，
 **纯 teacher forcing（epoch 全程 feedback_probability=0，训练不做 Euler/decode）**，
 **完全不用 donor（decouple_prob=0，无 cross-style 合成目标）**，10 epoch。
-入口脚本 [run_train_flowmatch_history_tf10.sh](../../scripts/run_train_flowmatch_history_tf10.sh)，
+入口脚本 `run_train_flowmatch_history_tf10.sh`（2026-10-13 清理中删除；现行主线入口为
+`scripts/run_train_flowmatch_history_obsnoise_tf100.sh`），
 输出 `checkpoints/flowmatch_label_history_tf10`（best=ep10，key [1, 6.5936]）。
 
 目的：把"history 条件"这一条单独摘出来，看它本身对运动质量和风格准确率的影响，

@@ -63,16 +63,17 @@ python analysis/interactive_quality_2026-10-12/implementation/benchmark_training
 
 ## 训练
 
-采用FP32、高精度matmul、无TF32、冻结VQ、normalized target FM。现有teacher-forced入口关闭reconstruction，stride1；正式style validation使用rollout。
+采用FP32、高精度matmul、无TF32、冻结VQ、normalized target FM。现有teacher-forced入口关闭reconstruction，stride1；正式style validation在训练内按 epoch 跑 rollout 验证（评估路径保留，训练课程不再依赖 rollout）。
 
 ```bash
-DRY_RUN=1 bash scripts/run_train_clip_recipe_practical.sh
+# 当前 label 主线（2026-10-13 起）：100 epoch 纯 teacher forcing + 观测噪声（方案A，batch 2048）。
+DRY_RUN=1 bash scripts/run_train_flowmatch_history_obsnoise_tf100.sh
 
-# 新主线：先Φ最多1000 updates，通过检索门限后controller从零最多50 epoch。
+# clip/recipe V2：先Φ最多1000 updates，通过检索门限后controller从零最多50 epoch。
 DRY_RUN=1 bash scripts/run_train_clip_recipe_v2.sh
 ```
 
-`practical`入口是已验证失败的history50配置，保留作诊断。新主线使用`run_train_clip_recipe_v2.sh`，默认独立目录`checkpoints/clip_recipe_v2`；训练阶段、门限、续训和测试命令见[V2运行说明](docs/CLIP_RECIPE_V2.md)。Label历史基线入口为 `run_train_flowmatch_tf150_staged_noise.sh`。
+基础 6-token 入口 `scripts/run_train_flowmatch_6tok_curriculum100.sh` 保留（可加环境变量复现 ODE4 / ramp / 短训等历史配置）。clip/recipe 主线使用`run_train_clip_recipe_v2.sh`，默认独立目录`checkpoints/clip_recipe_v2`；训练阶段、门限、续训和测试命令见[V2运行说明](docs/CLIP_RECIPE_V2.md)。Label 历史基线入口为 `run_train_flowmatch_tf150_staged_noise.sh`。
 
 V2新训练默认合并反传、GPU冻结Φ缓存、10 GiB只读数据预算及512整批CUDA field图；当前驻留数据约8.83 GiB，单模型短测峰值约10.3 GiB。交替相同新样本的对照35.46→23.48ms/update，耗时下降33.8%；短测不能保证总训练时间。`GPU_DATA_CACHE_GB`与`CUDA_FIELD_GRAPH=0/1`可调整新run；旧V2续训自动保留原执行参数。详见[FP32性能](docs/FP32_PERFORMANCE.md)。
 
@@ -85,9 +86,12 @@ V2新训练默认合并反传、GPU冻结Φ缓存、10 GiB只读数据预算及5
 （无donor纯TF的tf10短训 MPJPE 7.97 / jitter 0.57 / F.S. 0.72 vs 含donor 10.28 / 2.14 / 2.10）；
 `matched_root_targets`、StyleDonorBank、`--decouple-prob/--decouple-latent`、`--donor-*` 及全部
 donor 指标均已删除（源码归档于 [docs/archive/donor_sources_2026-10-12/](docs/archive/donor_sources_2026-10-12/README.md)），
-训练 objective 统一为 version 11，donor 时代 ckpt 不能 resume。history 短训入口仍为
-`run_train_flowmatch_history_phase10.sh`（rollout）与 `run_train_flowmatch_history_tf10.sh`（纯TF），
-见 [修订说明](docs/MOTION_HISTORY_REPAIR.md) 与 [TF10 归因](analysis/interactive_quality_2026-10-12/TF10_DIAGNOSIS.md)。
+训练 objective 统一为 version 11（加观测噪声为 12），donor 时代 ckpt 不能 resume。
+**2026-10-13 入口收敛**：观察噪声 10ep 短训（同起点同协议封存 72.90/15.88 vs 无噪声 55.50/0.82，
+MPJPE 11.36 vs 15.79）确认方案A有效，rollout 训练课程弃用；label 主线入口为
+`scripts/run_train_flowmatch_history_obsnoise_tf100.sh`（100ep 纯TF+噪声，batch2048）。
+各实验专用入口（phase10/tf10/ode4/obsnoise_100ep/notoken/motionrecon/practical）已删除，
+见 [修订说明](docs/MOTION_HISTORY_REPAIR.md) 与 [方案A报告](analysis/control_operators_study_2026-10-12/OBSERVATION_NOISE_PLAN_A.md)。
 
 **2026-10-12 checkpoint 清理**：旧 controller / 特征提取器 checkpoint 已全部删除（9.9G → 175M），
 仅保留 VQ150ep-nomirror（`best.pt`+`norm_stats.npz`）、240f 风格分类器与 150ep `latent_stats.npz`。

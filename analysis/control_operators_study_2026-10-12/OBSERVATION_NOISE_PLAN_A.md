@@ -25,9 +25,9 @@ motion_obs, latent_obs = feedback_state(z_gt + shift)      # clip → quantize �
 - 成本：每应用步一次 decode（TF 阶段 ≈ +2.1ms/step，即每 update +6.1ms）
 - 版本：objective 11（A=0）→ **12**（A>0）；resume 校验 `observation_noise_std` 字段
 
-入口脚本 [run_train_flowmatch_history_obsnoise_100ep.sh](../../scripts/run_train_flowmatch_history_obsnoise_100ep.sh)：
-50 TF + 20 ramp + 30 rollout、history、Euler4、`OBS_NOISE_STD=0.5`（默认）；
-`OBS_NOISE_STD=0` 即干净基线（A/B 用）。
+入口脚本 [run_train_flowmatch_history_obsnoise_tf100.sh](../../scripts/run_train_flowmatch_history_obsnoise_tf100.sh)：
+100ep 纯 TF、history、Euler4、`OBS_NOISE_STD=0.5`（默认）、`BATCH_SIZE=2048`（默认）。
+（50 TF + 20 ramp + 30 rollout 的 obsnoise_100ep 入口已随 rollout 方向收敛删除。）
 
 ## 二、实现正确性验证
 
@@ -72,9 +72,9 @@ motion_obs, latent_obs = feedback_state(z_gt + shift)      # clip → quantize �
 
 ## 四、后续建议
 
-1. **跑 A/B**：`OBS_NOISE_STD=0.5`（默认）vs `OBS_NOISE_STD=0`，其余完全一致，
-   两个 100ep run（各 ~2.3h）后比较封存 matched/cross、MPJPE/jitter/FS、闭环滑行。
-   若噪声版把 rollout 阶段的 jitter/FS 回升压住且质量不降，则考虑下一轮减少 rollout 占比。
+1. **100ep 正式训练（已启动，2026-10-13）**：纯 TF + 观测噪声（无 rollout），batch 2048、
+   lr 1e-3、100ep，入口见上；完成后按封存协议汇报 matched/cross/MPJPE/jitter/FS。
+   （原计划的 noise-vs-noiseless A/B 不再单独跑干净基线；10ep 对照已给出方向性结论。）
 2. 噪声幅度可调（0.25/0.5/0.75 扫）——校准显示真实随机误差 ≈1.25σ，0.5 起步合理。
 3. **#4 若要做**：需同时定义清楚 jitter/FS 的 slice 口径并与历史对齐后再改，属独立小任务。
 
@@ -106,7 +106,7 @@ clip→quantize→decode，seed42）：
   对照 tf10（donor 时代权重初始化、无噪声）jitter 0.568 / MPJPE 7.97 的位次属同类。
 - 成本：每 update 约 +6.1ms（TF 阶段每应用步一次 decode）；epoch 时间 65s vs 55s。
 - 结论：方案 A 价值已被短训证实，建议进入 100ep A/B 正式对照
-  （`OBS_NOISE_STD=0.5` vs `OBS_NOISE_STD=0`，入口 `scripts/run_train_flowmatch_history_obsnoise_100ep.sh`）。
+  （入口 `scripts/run_train_flowmatch_history_obsnoise_tf100.sh`，`OBS_NOISE_STD` 与 `BATCH_SIZE` 可覆盖）。
 
 产物：checkpoints/flowmatch_label_history_tf10_obsnoise/{best.pt=ep10, epoch_0005.pt, epoch_0010.pt}；
 封存 `eval_results/tf10_obsnoise_rollout/seen/`；对照 `eval_results/ode4_ep10_rollout/seen/`；

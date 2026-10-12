@@ -29,9 +29,8 @@ def main():
     args=parser.parse_args()
     if not 1<=args.updates<=100:parser.error('Updates must be in [1,100]')
     if not torch.cuda.is_available():parser.error('CUDA is required')
-    env=dict(os.environ,DRY_RUN='1',OUT=tempfile.mkdtemp(prefix='newcode_history_benchmark_'),DEVICE='cuda',
-        FEEDBACK_START_EPOCH='1',FEEDBACK_RAMP_EPOCHS='0',FEEDBACK_PROBABILITY='.25')
-    command=subprocess.check_output(['bash',str(ROOT/'scripts'/'run_train_flowmatch_history_phase10.sh'),
+    env=dict(os.environ,DRY_RUN='1',OUT=tempfile.mkdtemp(prefix='newcode_history_benchmark_'),DEVICE='cuda')
+    command=subprocess.check_output(['bash',str(ROOT/'scripts'/'run_train_flowmatch_history_obsnoise_tf100.sh'),
         '--epochs','1','--max-train-batches',str(args.updates),'--max-val-batches','1',
         '--tf-val-every','0','--no-motion-quality-selection'],env=env,text=True)
     tokens=shlex.split(next(line for line in command.splitlines() if line.startswith('[Run] '))[6:])
