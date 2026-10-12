@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
         "--vq-target-cache",
         type=Path,
         default=script_dir / "cache" / "vq_targets_vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048",
-        help="VQ target cache directory produced by precompute_vq_targets.py",
+        help="VQ target cache directory produced by tools/precompute_vq_targets.py",
     )
     parser.add_argument(
         "--out",

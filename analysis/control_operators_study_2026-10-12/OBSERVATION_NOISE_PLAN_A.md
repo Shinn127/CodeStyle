@@ -77,3 +77,37 @@ motion_obs, latent_obs = feedback_state(z_gt + shift)      # clip → quantize �
    若噪声版把 rollout 阶段的 jitter/FS 回升压住且质量不降，则考虑下一轮减少 rollout 占比。
 2. 噪声幅度可调（0.25/0.5/0.75 扫）——校准显示真实随机误差 ≈1.25σ，0.5 起步合理。
 3. **#4 若要做**：需同时定义清楚 jitter/FS 的 slice 口径并与历史对齐后再改，属独立小任务。
+
+## 五、10ep 纯 TF A/B 短训结果（2026-10-13 完成）
+
+同起点（均从零）、同模型、同数据/课程（epoch 1–10 全程 p=0 纯 TF；噪声版在 TF 滚动态加
+U[0,0.5] 观测噪声）、同封存协议（1000 matched / 5000 cross，240f@60fps，std1，Euler4，
+clip→quantize→decode，seed42）：
+
+| 指标（封存 test） | obsnoise A=0.5 | ODE4 无噪声 ep10 | Δ |
+|---|---:|---:|---:|
+| matched style acc | **72.90 ± 7.36%** | 55.50 ± 9.11% | +17.4pp |
+| cross style acc | **15.88 ± 2.28%** | 0.82 ± 0.33% | +15.1pp |
+| matched RootADE | **8.86cm** | 12.85cm | −4.0cm |
+| cross RootADE | **10.05cm** | 13.47cm | −3.4cm |
+| MPJPE std1（同 manifest） | **11.36cm** | 15.79cm | −4.4cm |
+| jitter（同 manifest） | 0.638cm | 0.526cm | +0.11 |
+| foot sliding（同 manifest） | 0.736cm | 0.714cm | +0.02 |
+
+训练内 5ep 间隔验证同方向：ep5 = 65.19/16.30 vs 33.33/0.93；ep10 = 69.26/11.85 vs 53.33/0.74
+（cross 在 ep5→ep10 训练内回落，封存仍 15.88%，属采样差异范围内的波动）。
+
+读法：
+
+- 观测噪声把纯 TF 阶段的教学信号从"复制 GT 下一帧"变成了"从自身可复现的失真观测中恢复"，
+  且失真严格落在推理反馈流形上（clip→Q→decode）。同协议下它让 10ep 从零模型在闭环指标上
+  与 ODE4（无噪声、从零、10ep）拉开决定性差距，并同时改善 MPJPE/轨迹误差。
+- jitter 略高于无噪声基线，但后者 cross≈0.8% 基本未学会风格跟随（近冻结策略天然低抖动）；
+  对照 tf10（donor 时代权重初始化、无噪声）jitter 0.568 / MPJPE 7.97 的位次属同类。
+- 成本：每 update 约 +6.1ms（TF 阶段每应用步一次 decode）；epoch 时间 65s vs 55s。
+- 结论：方案 A 价值已被短训证实，建议进入 100ep A/B 正式对照
+  （`OBS_NOISE_STD=0.5` vs `OBS_NOISE_STD=0`，入口 `scripts/run_train_flowmatch_history_obsnoise_100ep.sh`）。
+
+产物：checkpoints/flowmatch_label_history_tf10_obsnoise/{best.pt=ep10, epoch_0005.pt, epoch_0010.pt}；
+封存 `eval_results/tf10_obsnoise_rollout/seen/`；对照 `eval_results/ode4_ep10_rollout/seen/`；
+探针 `analysis/motion_quality_diagnosis/probes/mpjpe_tf10_obsnoise_ns1.0.json`、`mpjpe_ode4_ep10_ns1.0.json`。

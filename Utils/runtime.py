@@ -104,7 +104,7 @@ def require_unmirrored_db(db_path: Path) -> None:
 
     Mirrored augmentation is not used for training: the generated mirror segments distort
     the mesh, so every training/precompute entry must consume an unmirrored database
-    (`filter_memmap_db.py`, or `generate_database_100sty.py` without `--mirror`).
+    (`filter_memmap_db.py`, or `tools/generate_database_100sty.py` without `--mirror`).
     """
     db_path = Path(db_path)
     validate_memmap_db_dir(db_path)

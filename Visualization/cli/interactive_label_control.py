@@ -67,7 +67,7 @@ def load_session(args):
         raise FileNotFoundError(
             f'Flow controller checkpoint not found: {args.flow_ckpt}\n'
             'Old controller checkpoints were removed by the 2026-10-12 cleanup; train one '
-            '(e.g. bash run_train_flowmatch_history_tf10.sh) and pass --flow-ckpt <out>/best.pt.')
+            '(e.g. bash scripts/run_train_flowmatch_history_tf10.sh) and pass --flow-ckpt <out>/best.pt.')
     checkpoint=load_checkpoint(args.flow_ckpt,map_location='cpu');config=checkpoint.get('args',{})
     if config.get('conditioning_mode','label')!='label':raise ValueError('Use a label-model checkpoint for this entry')
     kind,base_path=_resolve_base_ckpt_path(args.vqvae_ckpt,None,flow_args=config,flow_ckpt_path=args.flow_ckpt)

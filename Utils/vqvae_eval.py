@@ -216,7 +216,7 @@ def evaluate_vqvae(
 
     FID is deliberately not computed here: the paper's FID runs frames through a trained
     feature extractor, so reporting a Fréchet distance on raw pose frames would be a
-    different quantity under the same name. Use `evaluate_motion_375to291.py`, which wires
+    different quantity under the same name. Use `evaluation/evaluate_motion_375to291.py`, which wires
     the extractor and the bootstrap CI, when FID is needed.
     """
     spans = select_eval_windows(

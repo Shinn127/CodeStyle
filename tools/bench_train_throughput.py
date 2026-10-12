@@ -1,6 +1,6 @@
 """Throughput benchmark: separates data-pipeline cost from model cost.
 
-Run: python bench_train_throughput.py [--num-workers 8] [--batch-size 512] [--batches 60]
+Run: python tools/bench_train_throughput.py [--num-workers 8] [--batch-size 512] [--batches 60]
 """
 
 from __future__ import annotations

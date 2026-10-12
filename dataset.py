@@ -87,7 +87,7 @@ def load_motion375_metadata(memmap_dir: str | Path) -> Motion375Metadata:
         raise ValueError(
             f"Unsupported schema_version={schema_version} in {meta_path}; this codebase "
             f"reads schema v{MEMMAP_SCHEMA_VERSION} only. Rebuild the database with "
-            f"generate_database_100sty.py."
+            f"tools/generate_database_100sty.py."
         )
     if meta.get("format") != MEMMAP_FORMAT:
         raise ValueError(
@@ -1164,7 +1164,7 @@ def build_train_val_test_datasets(
                 f"{unsplit} of {len(base.segments or [])} segments in "
                 f"{base.db_path / MEMMAP_SEGMENTS_FILE} carry no split. The in-distribution "
                 f"database always assigns train/val/test to every segment; rebuild it with "
-                f"generate_database_100sty.py."
+                f"tools/generate_database_100sty.py."
             )
         train_starts = _build_sample_starts_from_segments(train_segments, seq_len=seq_len, stride=stride)
         val_starts = _build_sample_starts_from_segments(val_segments, seq_len=seq_len, stride=stride)

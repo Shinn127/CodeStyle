@@ -259,7 +259,7 @@ def _resolve_selected_slots(
     if "use_style_code_selector" in flow_config and not bool(flow_config["use_style_code_selector"]):
         raise ValueError(
             "The resolved flow config disables use_style_code_selector, so the generated recipe would not be accepted "
-            "by simulate_realtime_flowmatch_control.py."
+            "by evaluation/simulate_realtime_flowmatch_control.py."
         )
     return slots
 

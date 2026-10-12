@@ -22,8 +22,8 @@
 `require_unmirrored_db(db)` = 原 `validate_memmap_db_dir` + 拒绝含镜像的库（`segments.json`
 里任何 `mirror=true`，或 `meta.mirror_layout` 不是 `none`）。已接入全部训练与预计算入口：
 `training/train_basic_vqvae_375to291.py`、`training/train_flowmatch_vqvae_controller.py`、
-`train_fid_feature_extractor_{camdm,recon,head10}.py`、`training/train_clip_recipe_v2.py`、
-`training/train_motion_style_metric.py`、`precompute_{vq_targets,style_code_prior}.py`，以及
+`training/train_fid_feature_extractor_{camdm,recon,head10}.py`、`training/train_clip_recipe_v2.py`、
+`training/train_motion_style_metric.py`、`tools/precompute_{vq_targets,style_code_prior}.py`，以及
 lmm / mann / diffusion / mvae 等旧基线 trainer。评估入口不做此限制（冻结输入诊断可能
 需要历史库），但其 DB 默认值同样已切到无镜像库。
 

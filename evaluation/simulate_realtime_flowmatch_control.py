@@ -8,7 +8,7 @@ Workflow:
   4) Show side-by-side real-time visualization, defaulting to GenoView.
 
 Example:
-  python NewCode/simulate_realtime_flowmatch_control.py \
+  python NewCode/evaluation/simulate_realtime_flowmatch_control.py \
     --db NewCode/database_100sty_375_memmap_nomirror \
     --flow-ckpt NewCode/checkpoints/<your_run>/best.pt \
     --vqvae-ckpt NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt \
