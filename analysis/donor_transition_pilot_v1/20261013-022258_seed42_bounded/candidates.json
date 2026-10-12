@@ -1,0 +1,442 @@
+{
+  "pair_stats": {
+    "anchor_candidates": 320,
+    "group_scan": {
+      "ArmsAboveHead->ArmsBehindBack:BW": 2,
+      "ArmsAboveHead->ArmsBehindBack:SW": 1,
+      "ArmsAboveHead->ArmsFolded:BW": 1,
+      "ArmsAboveHead->Neutral:BW": 0,
+      "ArmsAboveHead->Neutral:SW": 0,
+      "ArmsBehindBack->ArmsAboveHead:BW": 0,
+      "ArmsBehindBack->ArmsAboveHead:SW": 1,
+      "ArmsBehindBack->ArmsFolded:BW": 4,
+      "ArmsBehindBack->ArmsFolded:FW": 5,
+      "ArmsBehindBack->Neutral:BW": 0,
+      "ArmsBehindBack->Neutral:SW": 2,
+      "ArmsFolded->ArmsAboveHead:BW": 0,
+      "ArmsFolded->ArmsBehindBack:BW": 3,
+      "ArmsFolded->ArmsBehindBack:FW": 5,
+      "ArmsFolded->Neutral:BW": 0,
+      "Neutral->ArmsAboveHead:BW": 0,
+      "Neutral->ArmsAboveHead:SW": 0,
+      "Neutral->ArmsBehindBack:BW": 0,
+      "Neutral->ArmsBehindBack:SW": 2,
+      "Neutral->ArmsFolded:BW": 0
+    },
+    "groups_available": 20,
+    "groups_unavailable": 16,
+    "per_group_selected": {
+      "ArmsAboveHead->ArmsBehindBack:BW": 1,
+      "ArmsAboveHead->ArmsBehindBack:SW": 1,
+      "ArmsAboveHead->ArmsFolded:BW": 1,
+      "ArmsAboveHead->Neutral:BW": 0,
+      "ArmsAboveHead->Neutral:SW": 0,
+      "ArmsBehindBack->ArmsAboveHead:BW": 0,
+      "ArmsBehindBack->ArmsAboveHead:SW": 1,
+      "ArmsBehindBack->ArmsFolded:BW": 0,
+      "ArmsBehindBack->ArmsFolded:FW": 0,
+      "ArmsBehindBack->Neutral:BW": 0,
+      "ArmsBehindBack->Neutral:SW": 0,
+      "ArmsFolded->ArmsAboveHead:BW": 0,
+      "ArmsFolded->ArmsBehindBack:BW": 0,
+      "ArmsFolded->ArmsBehindBack:FW": 0,
+      "ArmsFolded->Neutral:BW": 0,
+      "Neutral->ArmsAboveHead:BW": 0,
+      "Neutral->ArmsAboveHead:SW": 0,
+      "Neutral->ArmsBehindBack:BW": 0,
+      "Neutral->ArmsBehindBack:SW": 0,
+      "Neutral->ArmsFolded:BW": 0
+    },
+    "selected_pairs": 4
+  },
+  "pairs": [
+    {
+      "a": 4341,
+      "boundary_rot_rms_deg": 23.4156436920166,
+      "d": 3849,
+      "delta": -492,
+      "entry_a": 25,
+      "entry_b": 33,
+      "handover_window": [
+        4375,
+        4471
+      ],
+      "label_a": 3,
+      "label_b": 4,
+      "local_vel_vec_rms_diag": 1.0857880115509033,
+      "max_event_err": 2.0,
+      "moving_status": "moving",
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "pair_rank": 0,
+      "phase_distance": 65.01056521144906,
+      "phase_valid_fraction": 1.0,
+      "source_path_a": "/home/shinn/桌面/Projects/data/100style/ArmsAboveHead_BW.bvh",
+      "source_path_b": "/home/shinn/桌面/Projects/data/100style/ArmsBehindBack_BW.bvh",
+      "source_start_a": 349,
+      "source_start_b": 423,
+      "source_stop_a": 6696,
+      "source_stop_b": 7393,
+      "speed_rms": 0.09928205957558482,
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsBehindBack",
+      "suffix": "BW",
+      "support_conflict_frames": 0,
+      "total_events_in_window": 9,
+      "unmatched_events": 0,
+      "world_vel_vec_rms_diag": 1.1370753049850464,
+      "yaw_rms": 0.4787828983307415
+    },
+    {
+      "a": 2565,
+      "boundary_rot_rms_deg": 30.899690628051758,
+      "d": 2262,
+      "delta": -303,
+      "entry_a": 30,
+      "entry_b": 38,
+      "handover_window": [
+        2599,
+        2695
+      ],
+      "label_a": 3,
+      "label_b": 4,
+      "local_vel_vec_rms_diag": 0.4866666793823242,
+      "max_event_err": 2.0,
+      "moving_status": "moving",
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__SW__a2565_d2262",
+      "pair_rank": 1,
+      "phase_distance": 171.30796877147503,
+      "phase_valid_fraction": 1.0,
+      "source_path_a": "/home/shinn/桌面/Projects/data/100style/ArmsAboveHead_SW.bvh",
+      "source_path_b": "/home/shinn/桌面/Projects/data/100style/ArmsBehindBack_SW.bvh",
+      "source_start_a": 436,
+      "source_start_b": 457,
+      "source_stop_a": 5103,
+      "source_stop_b": 5038,
+      "speed_rms": 0.09403874288455703,
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsBehindBack",
+      "suffix": "SW",
+      "support_conflict_frames": 0,
+      "total_events_in_window": 12,
+      "unmatched_events": 0,
+      "world_vel_vec_rms_diag": 1.0749255418777466,
+      "yaw_rms": 0.4723048180327546
+    },
+    {
+      "a": 4341,
+      "boundary_rot_rms_deg": 19.566852569580078,
+      "d": 3709,
+      "delta": -632,
+      "entry_a": 25,
+      "entry_b": 49,
+      "handover_window": [
+        4375,
+        4471
+      ],
+      "label_a": 3,
+      "label_b": 6,
+      "local_vel_vec_rms_diag": 0.5350578427314758,
+      "max_event_err": 2.0,
+      "moving_status": "moving",
+      "pair_id": "ArmsAboveHead__ArmsFolded__BW__a4341_d3709",
+      "pair_rank": 2,
+      "phase_distance": 25.288086221039386,
+      "phase_valid_fraction": 1.0,
+      "source_path_a": "/home/shinn/桌面/Projects/data/100style/ArmsAboveHead_BW.bvh",
+      "source_path_b": "/home/shinn/桌面/Projects/data/100style/ArmsFolded_BW.bvh",
+      "source_start_a": 349,
+      "source_start_b": 417,
+      "source_stop_a": 6696,
+      "source_stop_b": 7449,
+      "speed_rms": 0.08963937664149445,
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsFolded",
+      "suffix": "BW",
+      "support_conflict_frames": 0,
+      "total_events_in_window": 9,
+      "unmatched_events": 1,
+      "world_vel_vec_rms_diag": 0.7068066596984863,
+      "yaw_rms": 0.2683984308626264
+    },
+    {
+      "a": 2248,
+      "boundary_rot_rms_deg": 30.871505737304688,
+      "d": 2551,
+      "delta": 303,
+      "entry_a": 38,
+      "entry_b": 30,
+      "handover_window": [
+        2282,
+        2378
+      ],
+      "label_a": 4,
+      "label_b": 3,
+      "local_vel_vec_rms_diag": 0.44585540890693665,
+      "max_event_err": 2.0,
+      "moving_status": "moving",
+      "pair_id": "ArmsBehindBack__ArmsAboveHead__SW__a2248_d2551",
+      "pair_rank": 3,
+      "phase_distance": 171.8028510876354,
+      "phase_valid_fraction": 1.0,
+      "source_path_a": "/home/shinn/桌面/Projects/data/100style/ArmsBehindBack_SW.bvh",
+      "source_path_b": "/home/shinn/桌面/Projects/data/100style/ArmsAboveHead_SW.bvh",
+      "source_start_a": 457,
+      "source_start_b": 436,
+      "source_stop_a": 5038,
+      "source_stop_b": 5103,
+      "speed_rms": 0.0912817689484613,
+      "style_a": "ArmsBehindBack",
+      "style_b": "ArmsAboveHead",
+      "suffix": "SW",
+      "support_conflict_frames": 0,
+      "total_events_in_window": 8,
+      "unmatched_events": 1,
+      "world_vel_vec_rms_diag": 1.1026233434677124,
+      "yaw_rms": 0.45419198594311133
+    }
+  ],
+  "seed": 42,
+  "span_frames": 348,
+  "unavailable_groups": [
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 51,
+          "split": "train"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsFolded",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 35,
+          "split": "train"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsBehindBack",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 51,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsFolded",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 35,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsBehindBack",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 51,
+          "split": "train"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 51,
+          "split": "train"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 35,
+          "split": "train"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 35,
+          "split": "train"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 418,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 30,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 418,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "Neutral",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 30,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsAboveHead",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 38,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsBehindBack",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 38,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    }
+  ]
+}

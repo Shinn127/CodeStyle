@@ -1,0 +1,1178 @@
+{
+  "artifacts": [
+    {
+      "path": "identity.json",
+      "sha256": "ed9fde83e48cd86c3b55dc7c76b5ad65f021e9efa123037fdb1e3fb6a0a4665e"
+    },
+    {
+      "path": "quality_thresholds.json",
+      "sha256": "9d3e95af38fefc94ed58d62b9070873e73fea82fff860922d54f0d43c17dc918"
+    },
+    {
+      "path": "calibration.json",
+      "sha256": "22b52bcad1588ef619e08099901fafeb3d06a8ad649b2ef58b93278affa087f3"
+    },
+    {
+      "path": "candidates.json",
+      "sha256": "c4c993477307c4f6c14c828fd8a53a90531afe39b930e3bc760a34772d5cb233"
+    },
+    {
+      "path": "rejections.json",
+      "sha256": "bfd04d1fd2dbe622cf966c455e69a966d9c232cb675249321f34a062de54b062"
+    },
+    {
+      "file": "videos/reject_ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849_T24.mp4",
+      "kind": "rejected",
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "path": "videos/reject_ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849_T24.mp4",
+      "sha256": "d6ccbda7514fa8185289a3e39b7df683d60d2436491d750dc0e9984b220f2036",
+      "t_frames": 24
+    },
+    {
+      "path": "report.md",
+      "sha256": "4ebe303e77e432590dba9cea28e057f069824f932dc78d884968d6b90c89c577"
+    }
+  ],
+  "budget_used": {
+    "gpu_seconds_vq": 0.5702267800006666,
+    "peak_vram_mb": 2106.79150390625,
+    "wall_seconds": 37.96981430053711
+  },
+  "budgets": {
+    "max_accepted": 4,
+    "max_gpu_seconds": 120.0,
+    "max_pairs": 4,
+    "max_total_seconds": 1800.0,
+    "max_videos": 2
+  },
+  "calibration": {
+    "gpu_seconds": 0.43530694999935804,
+    "raw_contact_hard_gate_failure_fraction": 0.0,
+    "windows": 78
+  },
+  "candidates": {
+    "file": "candidates.json",
+    "selected": 4,
+    "sha256": "c4c993477307c4f6c14c828fd8a53a90531afe39b930e3bc760a34772d5cb233"
+  },
+  "complete": true,
+  "config": {
+    "blend": "slerp alpha(u)=6u^5-15u^4+10u^3 at work-local frames 119..119+T",
+    "calibration_plan": {
+      "others": [
+        {
+          "style": "Angry",
+          "suffix": "BW",
+          "windows": 6
+        },
+        {
+          "style": "BouncyLeft",
+          "suffix": "FW",
+          "windows": 6
+        },
+        {
+          "style": "DuckFoot",
+          "suffix": "BW",
+          "windows": 6
+        },
+        {
+          "style": "HighKnees",
+          "suffix": "FW",
+          "windows": 6
+        },
+        {
+          "style": "March",
+          "suffix": "SW",
+          "windows": 6
+        },
+        {
+          "style": "Old",
+          "suffix": "BW",
+          "windows": 6
+        },
+        {
+          "style": "Proud",
+          "suffix": "SW",
+          "windows": 6
+        },
+        {
+          "style": "Rushed",
+          "suffix": "FW",
+          "windows": 6
+        }
+      ],
+      "targets": [
+        {
+          "style": "Neutral",
+          "suffixes": [
+            "BW",
+            "SW"
+          ],
+          "windows": 6
+        },
+        {
+          "style": "ArmsAboveHead",
+          "suffixes": [
+            "BW",
+            "SW"
+          ],
+          "windows": 6
+        },
+        {
+          "style": "ArmsFolded",
+          "suffixes": [
+            "FW",
+            "BW"
+          ],
+          "windows": 6
+        },
+        {
+          "style": "ArmsBehindBack",
+          "suffixes": [
+            "FW",
+            "BW",
+            "SW"
+          ],
+          "windows": 6
+        }
+      ],
+      "total_windows": 102
+    },
+    "command_schedule": "row r predicts motion frame raw_frame_ids[r]+1 (=a-1+r); A while k<k_switch; k_switch = a+59 = first blend sample (alpha=0); first B row = row 60",
+    "contact_rule": "stable runs height<=proxy+2cm & speed<=0.10m/s >=3 frames, bridged <=2 failing frames under exit caps h<=proxy+4cm, v<=0.20m/s",
+    "ik": "two-bone lower-limb, root/pelvis fixed, correction<=3cm, joint delta<=10deg",
+    "lead_context": 61,
+    "prefix_rows": 60,
+    "row_mapping": "row r -> motion state a-2+r, trajectory context centered at a-1+r",
+    "styles": [
+      "Neutral",
+      "ArmsAboveHead",
+      "ArmsFolded",
+      "ArmsBehindBack"
+    ],
+    "suffix_rows": 240,
+    "suffixes": [
+      "FW",
+      "BW",
+      "SW"
+    ]
+  },
+  "generator_code": {
+    "Utils/donor_transition.py": "99c98f43a80223deff50bb418ca388c7dc913a8ff5f1ce8e89556d05cc14c269",
+    "Utils/donor_transition_quality.py": "d49d88736836aa5457bb4130e0a1e02102fd71d36d637ec34c6615e2707fb291",
+    "tests/test_donor_transition.py": "e842bf671d629caf83c255b9834af846f65aa14ff1caf4bf5428eb012f09651a",
+    "tools/build_donor_transition_dataset.py": "b900f4b2661279526ae400c84f19c8f0fb01c7f2a5bccfcdb689eddd05c80882"
+  },
+  "identity": {
+    "passed": true,
+    "windows": 3
+  },
+  "inputs": {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror",
+    "db_labels_sha256": "bdf3a6624c6c7d0eb2917bc1e83a3e277aa5f059bcce4083fef6c2933fa07c93",
+    "db_meta_sha256": "03ca960553bb5a1744dd38564eb91281cf5ecfb79a2f5ead3e22212769c8acd9",
+    "db_segments_sha256": "c3987af0f1c91568b24756e6c8f24f69833995236d33bc0a89b67b772e540dd0",
+    "db_styles_sha256": "1b39935d78b91a8d4311b6b63cc4ee8e62dc7f75a317ec87960d519524f33357",
+    "norm_stats": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "norm_stats_sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4",
+    "vq_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+    "vq_ckpt_sha256": "825be6785b3e7fc258c196f49b70b3874af792c6aaf4a2912a5bdd5765a9962c"
+  },
+  "pairs_materialized": [
+    "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+    "ArmsAboveHead__ArmsBehindBack__SW__a2565_d2262",
+    "ArmsAboveHead__ArmsFolded__BW__a4341_d3709",
+    "ArmsBehindBack__ArmsAboveHead__SW__a2248_d2551"
+  ],
+  "proxies": {
+    "LeftFoot": 0.07119473963975906,
+    "LeftToeBase": 0.01799960732460022,
+    "RightFoot": 0.07036949068307877,
+    "RightToeBase": 0.011560074985027313
+  },
+  "quality_status": "complete_zero_accepted",
+  "reference_hard_gate_findings": [
+    {
+      "decision": "gate kept unchanged and enforced on every sample; the finding is delivered with the reference distribution, p50/p90/p99/max and per-joint offenders instead of lowering or skipping the gate",
+      "gate": "raw_bone_length_full_skeleton",
+      "guide_rule": "section 5.1: >20% real-reference failure means the rule/applicability is a problem to deliver, not to relax",
+      "limit_m": 0.0001,
+      "reference_failure_fraction": 0.44871794871794873
+    }
+  ],
+  "rejections": [
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 39
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.10756541043519974
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 10.913130370949094
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 6.483841258586605
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3337.644529901294
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.616651143146166
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.4860926958776586
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.0891515042917154
+        },
+        {
+          "check": "raw_ground_penetration",
+          "limit": 0.01,
+          "value": 0.010590359568595886
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.08795249802233672
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "t_frames": 24
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 39
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.10756541043519974
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3337.644529901294
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.772314302465151
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.4860926958776586
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.0891515042917154
+        },
+        {
+          "check": "raw_ground_penetration",
+          "limit": 0.01,
+          "value": 0.010590359568595886
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.08820182578984227
+        },
+        {
+          "check": "b_suffix_max_pose",
+          "limit": 0.08,
+          "value": 0.2907496033529414
+        },
+        {
+          "check": "b_suffix_root_tilt",
+          "limit": 5.0,
+          "value": 6.7055956418076
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "t_frames": 36
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 39
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.10756541043519974
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3337.644529901294
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.7218684864181367
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.4860926958776586
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.0891515042917154
+        },
+        {
+          "check": "raw_ground_penetration",
+          "limit": 0.01,
+          "value": 0.010590359568595886
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.09464449844821697
+        },
+        {
+          "check": "b_suffix_max_pose",
+          "limit": 0.08,
+          "value": 0.4690663521230361
+        },
+        {
+          "check": "b_suffix_root_tilt",
+          "limit": 5.0,
+          "value": 6.7055956418076
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "t_frames": 48
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 10
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.2738927900791168
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 28.65056610107422
+        },
+        {
+          "check": "bone_length",
+          "limit": 0.0001,
+          "value": 0.00017943978309631348
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 11.304551559994845
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_mean",
+          "limit": 1.903690797287388,
+          "value": 1.9791635018466092
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 6.735554962859119
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_mean",
+          "limit": 1.1260123210526454,
+          "value": 1.175460143164272
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 117.57897345873265
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 6438.511666202012
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__SW__a2565_d2262",
+      "t_frames": 24
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 11
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.28144675493240356
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 29.950172424316406
+        },
+        {
+          "check": "bone_length",
+          "limit": 0.0001,
+          "value": 0.00018024444580078125
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 10.139275558877774
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 5.573193850919749
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 158.4374397409527
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 8276.37130038407
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_mean",
+          "limit": 573.7520706609304,
+          "value": 930.2516447082229
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.48409317015141473
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__SW__a2565_d2262",
+      "t_frames": 36
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 11
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.28144675493240356
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 29.950172424316406
+        },
+        {
+          "check": "bone_length",
+          "limit": 0.0001,
+          "value": 0.0001811385154724121
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 10.139275558877774
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 5.573193850919749
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 158.4374397409527
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 8276.37130038407
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_mean",
+          "limit": 573.7520706609304,
+          "value": 930.2516447082229
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.5355792951799526
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__SW__a2565_d2262",
+      "t_frames": 48
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 32
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.1456598937511444
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 21.161428451538086
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3152.284155291511
+        },
+        {
+          "check": "raw_continuity_world_lin_jerk_mps3_max",
+          "limit": 2283.7798304399735,
+          "value": 3155.227169384743
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.630888599036063
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.6256122764347083
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.08839545677002497
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.08875205938220475
+        },
+        {
+          "check": "b_suffix_max_pose",
+          "limit": 0.08,
+          "value": 0.2641770017875463
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsFolded__BW__a4341_d3709",
+      "t_frames": 24
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 40
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.13930079340934753
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 23.170507431030273
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3152.284155291511
+        },
+        {
+          "check": "raw_continuity_world_lin_jerk_mps3_max",
+          "limit": 2283.7798304399735,
+          "value": 3155.227169384743
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.499294783597977
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.6256122764347083
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.08839545677002497
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.08962040362734053
+        },
+        {
+          "check": "b_suffix_max_pose",
+          "limit": 0.08,
+          "value": 0.2684498086464219
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsFolded__BW__a4341_d3709",
+      "t_frames": 36
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 42
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.13930079340934753
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 23.170507431030273
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 3152.284155291511
+        },
+        {
+          "check": "raw_continuity_world_lin_jerk_mps3_max",
+          "limit": 2283.7798304399735,
+          "value": 3155.227169384743
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.4866081930150431
+        },
+        {
+          "check": "raw_contact_slip_max",
+          "limit": 0.14717630536581716,
+          "value": 1.6256122764347083
+        },
+        {
+          "check": "raw_contact_anchor_drift",
+          "limit": 0.016194275177066786,
+          "value": 0.08839545677002497
+        },
+        {
+          "check": "b_suffix_mean_pose",
+          "limit": 0.03,
+          "value": 0.09031257701617963
+        },
+        {
+          "check": "b_suffix_max_pose",
+          "limit": 0.08,
+          "value": 0.24715274281252714
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsAboveHead__ArmsFolded__BW__a4341_d3709",
+      "t_frames": 48
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 20
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.4217006266117096
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 50.73127746582031
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 11.753711529189086
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_mean",
+          "limit": 1.903690797287388,
+          "value": 2.0571674998316896
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 6.96427625244384
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_mean",
+          "limit": 1.1260123210526454,
+          "value": 1.2230126915902202
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 141.93133525345965
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_mean",
+          "limit": 19.32085931845357,
+          "value": 20.59639345029354
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 8285.26803016123
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsBehindBack__ArmsAboveHead__SW__a2248_d2551",
+      "t_frames": 24
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 20
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.4217006266117096
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 50.73127746582031
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 8.748950932095221
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 4.986628454290267
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 141.93133525345965
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_mean",
+          "limit": 19.32085931845357,
+          "value": 20.59639345029354
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 8285.26803016123
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_mean",
+          "limit": 573.7520706609304,
+          "value": 1072.7741236871645
+        },
+        {
+          "check": "raw_contact_slip_p95",
+          "limit": 0.09877574786835189,
+          "value": 0.586920284468424
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsBehindBack__ArmsAboveHead__SW__a2248_d2551",
+      "t_frames": 36
+    },
+    {
+      "failures": [
+        {
+          "check": "ik_unreachable",
+          "limit": 0,
+          "value": 37
+        },
+        {
+          "check": "ik_correction",
+          "limit": 0.03,
+          "value": 0.4217006266117096
+        },
+        {
+          "check": "ik_joint_delta",
+          "limit": 10.0,
+          "value": 50.73127746582031
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_max",
+          "limit": 8.333596081036792,
+          "value": 16.478981821191123
+        },
+        {
+          "check": "raw_continuity_local_pos_step_cm_mean",
+          "limit": 1.903690797287388,
+          "value": 2.3485976318024777
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_max",
+          "limit": 4.923208692458045,
+          "value": 9.252077711793854
+        },
+        {
+          "check": "raw_continuity_local_lin_vel_mps_mean",
+          "limit": 1.1260123210526454,
+          "value": 1.3407235773463146
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_max",
+          "limit": 85.61455729888178,
+          "value": 246.0902387780135
+        },
+        {
+          "check": "raw_continuity_local_lin_acc_mps2_mean",
+          "limit": 19.32085931845357,
+          "value": 27.031157445547393
+        },
+        {
+          "check": "raw_continuity_local_lin_jerk_mps3_max",
+          "limit": 2280.2985013599746,
+          "value": 13461.89077288847
+        }
+      ],
+      "ok": false,
+      "pair_id": "ArmsBehindBack__ArmsAboveHead__SW__a2248_d2551",
+      "t_frames": 48
+    }
+  ],
+  "review_status": "pending",
+  "root_policy": "copy_source_full_root",
+  "run_id": "20261013-022258_seed42_bounded",
+  "runtime": {
+    "chunk_rows": 2048,
+    "cuda": "13.2",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 5070 Ti",
+    "dtype": "float32",
+    "ffmpeg": "system",
+    "matmul_precision": "highest",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "python": "3.13.15",
+    "tf32": false,
+    "torch": "2.13.0+cu132",
+    "vector_quantize_pytorch": "1.31.4"
+  },
+  "samples": [],
+  "schema": "donor_transition_pilot_v1",
+  "seed": 42,
+  "started": "2026-10-13 02:23:00",
+  "threshold_file": "quality_thresholds.json",
+  "threshold_file_sha256": "9d3e95af38fefc94ed58d62b9070873e73fea82fff860922d54f0d43c17dc918",
+  "time_rate": 1,
+  "train_eligible": false,
+  "transition_frames_attempted": [
+    24,
+    36,
+    48
+  ],
+  "unavailable_groups": [
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 51,
+          "split": "train"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsFolded",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 415,
+          "split": "val"
+        },
+        {
+          "entry_id": 35,
+          "split": "train"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsBehindBack",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 51,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsFolded",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 27,
+          "split": "val"
+        },
+        {
+          "entry_id": 35,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsBehindBack",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 51,
+          "split": "train"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 51,
+          "split": "train"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 35,
+          "split": "train"
+        },
+        {
+          "entry_id": 415,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "Neutral",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 35,
+          "split": "train"
+        },
+        {
+          "entry_id": 27,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "ArmsAboveHead",
+      "suffix": "FW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 418,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "Neutral",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 30,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsAboveHead",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 418,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "Neutral",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 30,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsAboveHead",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 54,
+          "split": "val"
+        },
+        {
+          "entry_id": 38,
+          "split": "train"
+        }
+      ],
+      "style_a": "ArmsFolded",
+      "style_b": "ArmsBehindBack",
+      "suffix": "SW"
+    },
+    {
+      "segments": [
+        {
+          "entry_id": 38,
+          "split": "train"
+        },
+        {
+          "entry_id": 54,
+          "split": "val"
+        }
+      ],
+      "style_a": "ArmsBehindBack",
+      "style_b": "ArmsFolded",
+      "suffix": "SW"
+    }
+  ],
+  "unresolved": [
+    "zero accepted samples: every constructed (pair, duration) attempt failed at least one frozen machine gate; no threshold was relaxed and no sample was fabricated",
+    "dominant rejection drivers: ik_unreachable=12, ik_correction=12, raw_continuity_local_lin_jerk_mps3_max=12, raw_contact_slip_p95=9, ik_joint_delta=9, raw_continuity_local_pos_step_cm_max=7",
+    "reference hard-gate finding recorded: raw_bone_length_full_skeleton failure_fraction=0.449 (gate unchanged)"
+  ],
+  "version": "donor_transition_pilot_v1.0",
+  "videos": [
+    {
+      "file": "videos/reject_ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849_T24.mp4",
+      "kind": "rejected",
+      "pair_id": "ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849",
+      "path": "videos/reject_ArmsAboveHead__ArmsBehindBack__BW__a4341_d3849_T24.mp4",
+      "sha256": "d6ccbda7514fa8185289a3e39b7df683d60d2436491d750dc0e9984b220f2036",
+      "t_frames": 24
+    }
+  ]
+}

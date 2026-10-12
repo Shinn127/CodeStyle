@@ -1,0 +1,58 @@
+{
+  "atol": 0.0002,
+  "passed": true,
+  "rtol": 1e-05,
+  "windows": [
+    {
+      "db_frame_start": 2012727,
+      "entry_id": 413,
+      "frametime": 0.016667,
+      "frametime_ok": true,
+      "normalized_max_abs_diff": 0.0,
+      "passed": true,
+      "raw_max_abs_diff": 0.0,
+      "raw_mean_abs_diff": 0.0,
+      "row_mapping": "row r -> trajectory source_start+60+r, motion source_start+59+r",
+      "rows": 7734,
+      "source_start": 380,
+      "source_stop": 8235,
+      "split": "train",
+      "style": "Neutral",
+      "suffix": "BW"
+    },
+    {
+      "db_frame_start": 212097,
+      "entry_id": 51,
+      "frametime": 0.016667,
+      "frametime_ok": true,
+      "normalized_max_abs_diff": 0.0,
+      "passed": true,
+      "raw_max_abs_diff": 0.0,
+      "raw_mean_abs_diff": 0.0,
+      "row_mapping": "row r -> trajectory source_start+60+r, motion source_start+59+r",
+      "rows": 6771,
+      "source_start": 392,
+      "source_stop": 7284,
+      "split": "train",
+      "style": "ArmsFolded",
+      "suffix": "FW"
+    },
+    {
+      "db_frame_start": 154668,
+      "entry_id": 38,
+      "frametime": 0.016667,
+      "frametime_ok": true,
+      "normalized_max_abs_diff": 0.0,
+      "passed": true,
+      "raw_max_abs_diff": 0.0,
+      "raw_mean_abs_diff": 0.0,
+      "row_mapping": "row r -> trajectory source_start+60+r, motion source_start+59+r",
+      "rows": 4460,
+      "source_start": 457,
+      "source_stop": 5038,
+      "split": "train",
+      "style": "ArmsBehindBack",
+      "suffix": "SW"
+    }
+  ]
+}

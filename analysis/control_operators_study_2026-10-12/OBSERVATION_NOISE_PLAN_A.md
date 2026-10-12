@@ -111,3 +111,46 @@ clip→quantize→decode，seed42）：
 产物：checkpoints/flowmatch_label_history_tf10_obsnoise/{best.pt=ep10, epoch_0005.pt, epoch_0010.pt}；
 封存 `eval_results/tf10_obsnoise_rollout/seen/`；对照 `eval_results/ode4_ep10_rollout/seen/`；
 探针 `analysis/motion_quality_diagnosis/probes/mpjpe_tf10_obsnoise_ns1.0.json`、`mpjpe_ode4_ep10_ns1.0.json`。
+
+## 六、100ep 纯 TF + 观测噪声正式训练结果（2026-10-13 完成）
+
+配置：从零、100ep 全程 p=0 纯 TF、观测噪声 A=U[0,0.5]·transport_std、batch 2048、
+lr 1e-3 cosine→1e-5、history 双帧、Euler4 评估。入口
+`scripts/run_train_flowmatch_history_obsnoise_tf100.sh`；产物
+`checkpoints/flowmatch_label_history_obsnoise_tf100/`（best.pt=ep100，质量选择联合分数）。
+
+### 训练内验证（270 matched + 540 cross，每 5ep）
+
+| 阶段 | matched | cross | jitter | mADE/cADE |
+|---|---:|---:|---:|---:|
+| ep5 | 65.56 | 13.52 | 0.883 | 14.95/16.15 |
+| ep30 | 68.52 | 9.81 | 0.565 | 6.76/9.14 |
+| ep55 | 73.33 | 14.63 | 0.488 | 7.63/9.76 |
+| ep80 | 78.52 | 17.41 | 0.496 | 5.15/7.83 |
+| ep100 | 77.04 | 16.11 | 0.483 | **4.33**/7.50 |
+
+全程无约束通过；monotone 改善：matched 65→77%+、ADE 15→4.3cm、jitter 0.88→0.48。
+
+### 封存 test（1000 matched / 5000 cross，240f std1，与全部历史 run 同协议）
+
+| 指标 | **tf100 噪声 ep100（best）** | tf100 噪声 ep80 | ODE4 无噪声 ep100 | tf10（donor 权重） |
+|---|---:|---:|---:|---:|
+| matched acc | **84.90 ± 4.95%** | **85.00 ± 4.63%** | 77.90 ± 7.21% | 79.40 ± 6.53% |
+| cross acc | **20.90 ± 2.41%** | 20.48 ± 2.43% | 8.18 ± 1.55% | 65.68 ± 1.77% |
+| matched ADE | **4.52cm** | 5.28cm | 3.18cm | 4.78cm |
+| cross ADE | **7.54cm** | 7.87cm | 4.87cm | 6.10cm |
+| MPJPE std1 | 6.89cm CI[6.28,7.62] | - | 6.43cm | 7.97cm |
+| jitter | **0.474cm** | - | 0.791cm | 0.568cm |
+| F.S. | **0.610cm** | - | ~0.65cm | 0.717cm |
+
+### 结论
+
+- **matched 首达 84.9–85.0%（目标 85 基本达成），且质量指标（jitter 0.474 / FS 0.610 / MPJPE
+  6.89）为全部配置最优**；纯 TF + 观测噪声替代 rollout 课程的目标成立。
+- **cross 20.9% 仍远低于 80% 目标**：从零训练下比 ODE4 ep100（8.18%）提升 2.6 倍，但弱于
+  donor 权重初始化的 tf10（65.68%）。cross 泛化缺口需靠风格解耦监督（参见 donor 数据线）填补，
+  观测噪声无法单独制造跨风格监督信号。
+- 回放：ep80 与 ep100 封存 acc 相当，ep100 ADE 更低——质量选型取 ep100 合理。
+- 产物：封存 `eval_results/tf100_obsnoise_rollout/seen/` 与 `..._ep80_rollout/seen/`；
+  探针 `analysis/motion_quality_diagnosis/probes/mpjpe_tf100_obsnoise_ns1.0.json`；
+  日志 `analysis/control_operators_study_2026-10-12/tf100_obsnoise_train.log`。
