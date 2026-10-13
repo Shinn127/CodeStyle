@@ -17,7 +17,8 @@ set -euo pipefail
 # FLOW_LAYERS=2 OUT=checkpoints/flowmatch_label_history_obsnoise_tf100.
 #
 # Batch: 2048 by default (sqrt-scaled lr 1e-3 from the 5e-4@512 base). Set BATCH_SIZE=1024
-# LR=7e-4 to reproduce the earlier scale.
+# LR=7e-4 to reproduce the earlier scale. For short pilots set EPOCHS=10 and keep the LR on
+# the sqrt rule for the chosen batch (512 -> 5e-4); lr-schedule-epochs follows EPOCHS.
 # See analysis/control_operators_study_2026-10-12/OBSERVATION_NOISE_PLAN_A.md.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -25,6 +26,7 @@ export OUT="${OUT:-${ROOT_DIR}/checkpoints/flowmatch_label_history_obsnoise_tf10
 export LR="${LR:-1e-3}"
 export BATCH_SIZE="${BATCH_SIZE:-2048}"
 export FLOW_LAYERS="${FLOW_LAYERS:-6}"
+export EPOCHS="${EPOCHS:-100}"
 # Pure teacher forcing: p=0 means no feedback window ever (no epoch enters the ramp).
 export FEEDBACK_START_EPOCH=1
 export FEEDBACK_RAMP_EPOCHS=0
@@ -36,7 +38,7 @@ if [[ -n "${INIT_CKPT:-}" ]]; then
   extra+=(--init-ckpt "${INIT_CKPT}")
 fi
 bash "${ROOT_DIR}/scripts/run_train_flowmatch_6tok_curriculum100.sh" \
-  --epochs 100 --lr-schedule-epochs 100 --seq-len 6 --history-conditioning \
+  --epochs "${EPOCHS}" --lr-schedule-epochs "${EPOCHS}" --seq-len 6 --history-conditioning \
   --train-feedback-context \
   --observation-noise-std "${OBS_NOISE_STD}" \
   --flow-layers "${FLOW_LAYERS}" \
