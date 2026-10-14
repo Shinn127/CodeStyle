@@ -91,12 +91,14 @@ def main() -> None:
         gates={}, pairs={},
     )
 
-    # Gate 1: d2r mean and p95 must both go down, CI upper < 0 (mean) / < 0 (p95 statistic:
-    # per-source p95, bootstrapped as a paired difference of that per-source statistic).
+    # Gate 1: ||d2r|| mean and p95 must both drop. Both keys are per-source arrays
+    # (mean of frame-level values / p95 of frame-level values); the paired bootstrap resamples
+    # the difference of their means, matching the aggregate the report table shows
+    # (`aggregate.d2r_local.per_source_mean` / `.per_source_p95`). CI upper < 0 = confirmed drop.
     g1 = {}
     ok1 = True
-    for key, statistic in (("d2r_local_mean", "mean"), ("d2r_local_p95", "median")):
-        pair = paired_bootstrap(series(b0, key), series(b1, key), statistic=statistic)
+    for key in ("d2r_local_mean", "d2r_local_p95"):
+        pair = paired_bootstrap(series(b0, key), series(b1, key), statistic="mean")
         confirmed = pair["ci"][1] < 0.0
         g1[key] = dict(**pair, confirmed_drop=confirmed,
                        relative_change=ratio_change(pair["b0_absolute"], pair["b1_absolute"]))
