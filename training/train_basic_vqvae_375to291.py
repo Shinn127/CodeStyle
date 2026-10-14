@@ -93,6 +93,10 @@ METRIC_KEYS = (
     "codebook_loss",
     "commitment_loss",
     "code_align_loss",
+    "latent_margin_loss",
+    "boundary_distance",
+    "roundtrip_loss",
+    "roundtrip_drift",
     "latent_code_gap",
     "perplexity",
     "dead_codes_reset",
@@ -114,6 +118,9 @@ def epoch_pass(
     latent_vel_weight: float,
     root_weight: float = 0.0,
     code_align_weight: float = 0.0,
+    latent_margin_weight: float = 0.0,
+    latent_margin_target: float = 0.05,
+    roundtrip_weight: float = 0.0,
     optimizer: Optional[torch.optim.Optimizer] = None,
     scaler: Optional[torch.cuda.amp.GradScaler] = None,
     grad_clip: float = 0.0,
@@ -178,6 +185,9 @@ def epoch_pass(
                 latent_l1_weight=latent_l1_weight,
                 latent_vel_weight=latent_vel_weight,
                 code_align_weight=code_align_weight,
+                latent_margin_weight=latent_margin_weight,
+                latent_margin_target=latent_margin_target,
+                roundtrip_weight=roundtrip_weight,
             )
             loss = loss_dict["loss"] / denom
 
@@ -219,7 +229,11 @@ def epoch_pass(
                 f"root={to_float(loss_dict['root_loss']):.6f} "
                 f"z_l1={to_float(loss_dict['latent_l1_loss']):.6f} "
             f"align={to_float(loss_dict['code_align_loss']):.6f} "
-            f"z_gap={to_float(loss_dict['latent_code_gap']):.6f} "
+                f"z_gap={to_float(loss_dict['latent_code_gap']):.6f} "
+                f"bd={to_float(loss_dict['boundary_distance']):.6f} "
+                f"margin={to_float(loss_dict['latent_margin_loss']):.6f} "
+                f"rt={to_float(loss_dict['roundtrip_loss']):.6f} "
+                f"rt_drift={to_float(loss_dict['roundtrip_drift']):.6f} "
                 f"z_vel={to_float(loss_dict['latent_vel_loss']):.6f} "
                 f"ppl={to_float(loss_dict['perplexity']):.3f} "
                 f"dead_reset={to_float(loss_dict['dead_codes_reset']):.0f} "
@@ -382,7 +396,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--recon-weight", type=float, default=3.0)
     parser.add_argument("--vq-weight", type=float, default=1.0)
     parser.add_argument("--code-align-weight", type=float, default=0.0,
-        help="Weight of the continuous/discrete decode alignment; 0 keeps the paper recipe")
+        help=("Weight of the continuous-vs-discrete decode consistency term: the decoder must "
+              "reproduce the quantized path from the continuous latent (see compute_loss); "
+              "0 keeps the paper recipe."))
+    parser.add_argument("--latent-margin-weight", type=float, default=0.0,
+        help=("Weight of a hinge that pushes each encoder output away from its Voronoi "
+              "boundary (the measured codec failure mode: median exact boundary distance 0.011 "
+              "vs code spacing 0.154, so any equal-norm disturbance flips the code). Trains the "
+              "encoder only; the EMA codebook has no gradient."))
+    parser.add_argument("--latent-margin-target", type=float, default=0.05,
+        help="Target boundary distance (raw latent units) for --latent-margin-weight.")
+    parser.add_argument("--roundtrip-weight", type=float, default=0.0,
+        help=("Weight of the re-encode consistency term: decode the prediction, re-encode it "
+              "(with the GT trajectory block) and pull the result back to the code it came "
+              "from. Directly minimizes out-of-cell drift under self-feedback."))
     parser.add_argument("--vel-weight", type=float, default=15.0)
     parser.add_argument(
         "--acc-weight",
@@ -410,6 +437,11 @@ def parse_args() -> argparse.Namespace:
         ),
     )
 
+    parser.add_argument("--init-ckpt", type=Path, default=None,
+        help=("Warm start: initialise encoder/decoder from this checkpoint while starting a "
+              "fresh run (fresh optimizer/scheduler, epoch 1). When the codebook size differs "
+              "from the checkpoint's, quantizer buffers are dropped and re-initialised by "
+              "k-means on the first batch."))
     add_common_logging_args(
         parser,
         defaults=CommonLoggingDefaults(val_every=1, log_interval=500),
@@ -603,6 +635,24 @@ def main() -> None:
     val_loader = prepared.val_loader
 
     model = build_model(args, device=device)
+    if args.init_ckpt is not None:
+        # Warm start: load encoder/decoder weights only, keep a fresh optimizer/scheduler and
+        # start at epoch 1. When the codebook size changed the quantizer buffers are dropped
+        # so the library re-initialises the new table with k-means on the first batch.
+        initial = load_checkpoint(args.init_ckpt)
+        initial_args = initial.get("args") or {}
+        state = dict(initial["model"])
+        drop_quantizer = int(initial_args.get("num_embeddings", -1)) != int(args.num_embeddings)
+        if drop_quantizer:
+            state = {k: v for k, v in state.items() if not k.startswith("quantizer.")}
+        missing, unexpected = model.load_state_dict(state, strict=False)
+        real_missing = [k for k in missing if not k.startswith("quantizer.")]
+        if unexpected or real_missing:
+            raise ValueError(
+                f"init-ckpt incompatible: missing={real_missing}, unexpected={unexpected}")
+        print(
+            f"[Info] init from       : {args.init_ckpt} "
+            f"({'encoder/decoder only, codebook re-initialised' if drop_quantizer else 'full state'})")
     optimizer, use_fused_adamw = build_optimizer(model=model, args=args, device=device)
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs, eta_min=args.min_lr)
     scaler = build_grad_scaler(
@@ -725,6 +775,9 @@ def main() -> None:
             latent_l1_weight=args.latent_l1_weight,
             latent_vel_weight=args.latent_vel_weight,
             code_align_weight=args.code_align_weight,
+            latent_margin_weight=args.latent_margin_weight,
+            latent_margin_target=args.latent_margin_target,
+            roundtrip_weight=args.roundtrip_weight,
             root_weight=args.root_weight,
             optimizer=optimizer,
             scaler=scaler,
@@ -757,6 +810,9 @@ def main() -> None:
                         latent_l1_weight=args.latent_l1_weight,
                         latent_vel_weight=args.latent_vel_weight,
                         code_align_weight=args.code_align_weight,
+                        latent_margin_weight=args.latent_margin_weight,
+                        latent_margin_target=args.latent_margin_target,
+                        roundtrip_weight=args.roundtrip_weight,
                         root_weight=args.root_weight,
                         optimizer=None,
                         scaler=None,

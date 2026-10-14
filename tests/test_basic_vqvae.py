@@ -265,3 +265,50 @@ class ControlNetworkTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BoundaryMarginAndRoundtripTests(unittest.TestCase):
+    """VQ-side code-stability auxiliaries (2026-10-14 code-fidelity revision)."""
+
+    @staticmethod
+    def _build() -> BasicVQVAE375to291:
+        torch.manual_seed(0)
+        return BasicVQVAE375to291(
+            input_dim=375, traj_dim=84, motion_dim=291, input_mode="traj_motion",
+            hidden_dim=32, encoder_layers=2, decoder_hidden_dim=32, decoder_layers=2,
+            num_latents=4, code_dim=4, num_embeddings=32, commitment_cost=0.25,
+            use_rotation_trick=True, kmeans_init=False, dead_code_threshold=0,
+        )
+
+    def test_margin_and_roundtrip_are_inert_at_zero_and_add_metrics(self):
+        model = self._build().eval()
+        x = torch.randn(2, 4, 375)
+        with_zero = model.compute_loss(x, latent_margin_weight=0.0, roundtrip_weight=0.0)
+        default = model.compute_loss(x)
+        self.assertAlmostEqual(float(with_zero["loss"]), float(default["loss"]), places=6)
+        for key in ("latent_margin_loss", "boundary_distance", "roundtrip_loss", "roundtrip_drift"):
+            self.assertEqual(float(with_zero[key]), 0.0)
+
+    def test_margin_hinge_reacts_to_boundary_distance_and_trains_the_encoder_only(self):
+        model = self._build()
+        x = torch.randn(2, 4, 375)
+        out = model.compute_loss(x, latent_margin_weight=1.0, latent_margin_target=0.05)
+        self.assertGreaterEqual(float(out["latent_margin_loss"]), 0.0)
+        out["loss"].backward()
+        self.assertTrue(any(p.grad is not None and p.grad.abs().sum() > 0
+                            for p in model.encoder.parameters()))
+        # The EMA codebook is a buffer, not a parameter: there is nothing to receive a
+        # gradient. (It still evolves via the EMA forward update, which is by design.)
+        self.assertEqual(len(list(model.quantizer.parameters())), 0)
+
+    def test_roundtrip_term_pulls_reencoded_latent_to_the_assigned_code(self):
+        model = self._build()
+        x = torch.randn(2, 3, 375)
+        out = model.compute_loss(x, roundtrip_weight=1.0)
+        self.assertGreaterEqual(float(out["roundtrip_loss"]), 0.0)
+        self.assertGreaterEqual(float(out["roundtrip_drift"]), 0.0)
+        out["loss"].backward()
+        self.assertTrue(any(p.grad is not None and p.grad.abs().sum() > 0
+                            for p in model.decoder.parameters()))
+        self.assertTrue(any(p.grad is not None and p.grad.abs().sum() > 0
+                            for p in model.encoder.parameters()))

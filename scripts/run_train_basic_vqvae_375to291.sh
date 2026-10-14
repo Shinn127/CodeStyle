@@ -54,6 +54,15 @@ ROOT_WEIGHT="${ROOT_WEIGHT:-3.0}"
 # Continuous/discrete code alignment: the decoder must reproduce the *quantized* path from
 # the continuous latent, so the two code paths stay interchangeable. 0 restores the paper recipe.
 CODE_ALIGN_WEIGHT="${CODE_ALIGN_WEIGHT:-2.0}"
+# Code-stability auxiliaries (2026-10-14): keep encoder outputs off the Voronoi boundary
+# (margin hinge) and pull the re-encoded decoder output back to its code (roundtrip). The
+# measured failure mode is boundary survival, so these two are the direct levers.
+LATENT_MARGIN_WEIGHT="${LATENT_MARGIN_WEIGHT:-0.0}"
+LATENT_MARGIN_TARGET="${LATENT_MARGIN_TARGET:-0.05}"
+ROUNDTRIP_WEIGHT="${ROUNDTRIP_WEIGHT:-0.0}"
+# Warm start (encoder/decoder only); codebook re-initialises when the size changes.
+INIT_CKPT="${INIT_CKPT:-}"
+NUM_EMBEDDINGS="${NUM_EMBEDDINGS:-2048}"
 EVAL_EVERY="${EVAL_EVERY:-10}"
 # Primary metric: reported in the logs and stored as best_metric. It is always part of the
 # gate below, but never decides alone.
@@ -102,6 +111,10 @@ cmd=(
   --latent-vel-weight "${LATENT_VEL_WEIGHT}"
   --root-weight "${ROOT_WEIGHT}"
   --code-align-weight "${CODE_ALIGN_WEIGHT}"
+  --latent-margin-weight "${LATENT_MARGIN_WEIGHT}"
+  --latent-margin-target "${LATENT_MARGIN_TARGET}"
+  --roundtrip-weight "${ROUNDTRIP_WEIGHT}"
+  --num-embeddings "${NUM_EMBEDDINGS}"
   --eval-every "${EVAL_EVERY}"
   --eval-metric "${EVAL_METRIC}"
   --best-metrics "${BEST_METRICS}"
@@ -115,6 +128,7 @@ cmd=(
 ru_append_bool_flag cmd "${TF32}" --tf32 --no-tf32
 ru_append_if_enabled cmd "${LOAD_INTO_MEMORY}" --load-into-memory
 ru_append_if_enabled cmd "${NORM_STATS}" --norm-stats "${NORM_STATS}"
+ru_append_if_enabled cmd "${INIT_CKPT}" --init-ckpt "${INIT_CKPT}"
 ru_append_bool_flag cmd "${COMPILE}" --compile --no-compile
 ru_append_bool_flag cmd "${USE_ROTATION_TRICK}" --use-rotation-trick --no-use-rotation-trick
 ru_append_bool_flag cmd "${KMEANS_INIT}" --kmeans-init --no-kmeans-init

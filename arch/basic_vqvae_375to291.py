@@ -759,10 +759,18 @@ class BasicVQVAE375to291(nn.Module):
         latent_vel_weight: float = 0.0,
         root_weight: float = 0.0,
         code_align_weight: float = 0.0,
+        latent_margin_weight: float = 0.0,
+        roundtrip_weight: float = 0.0,
+        latent_margin_target: float = 0.05,
     ) -> dict[str, torch.Tensor]:
         if code_align_weight < 0.0:
             raise ValueError(f"code_align_weight must be >= 0, got {code_align_weight}")
-        details = self.forward(x, return_details=True, continuous_decode=code_align_weight > 0.0)
+        if latent_margin_weight < 0.0:
+            raise ValueError(f"latent_margin_weight must be >= 0, got {latent_margin_weight}")
+        if roundtrip_weight < 0.0:
+            raise ValueError(f"roundtrip_weight must be >= 0, got {roundtrip_weight}")
+        details = self.forward(x, return_details=True,
+                               continuous_decode=code_align_weight > 0.0 or roundtrip_weight > 0.0)
         pred = details["motion_hat"]
         latent = details["latent"]
 
@@ -848,9 +856,63 @@ class BasicVQVAE375to291(nn.Module):
                 raise RuntimeError("code_align_weight requires the continuous decode")
             code_align_loss = torch.mean((continuous_hat - pred.detach()).square())
 
+        # Boundary margin: the measured failure mode of this codec is that the encoder output
+        # lives almost ON its Voronoi boundary (median exact boundary distance 0.011 vs cell
+        # spacing 0.154), so ANY equal-norm disturbance flips the code. Push each encoder
+        # output away from the boundary with a hinge; the codebook is an EMA buffer (no grad)
+        # so this trains the encoder only. Exact signed distance toward the second-nearest
+        # code: (||z-c2||^2 - ||z-c1||^2) / (2 ||c1-c2||).
+        latent_margin_loss = pred.new_zeros(())
+        boundary_distance = pred.new_zeros(())
+        if latent_margin_weight > 0.0:
+            embed = self.quantizer.embedding_weight.detach()
+            if embed.dim() == 3 and embed.size(0) == 1:
+                embed = embed[0]
+            z_flat = latent_bt.reshape(-1, self.code_dim)
+            # Chunked nearest/second-nearest search: [B*T*32, 2048] distance matrices otherwise
+            # dominate activation memory at batch 512.
+            idx1 = torch.empty(z_flat.size(0), dtype=torch.long, device=z_flat.device)
+            d1 = torch.empty(z_flat.size(0), device=z_flat.device)
+            d2 = torch.empty_like(d1)
+            idx2 = torch.empty_like(idx1)
+            for begin in range(0, z_flat.size(0), 8192):
+                end = min(begin + 8192, z_flat.size(0))
+                dist = torch.cdist(z_flat[begin:end].float(), embed.float())
+                d1[begin:end], idx1[begin:end] = dist.min(dim=-1)
+                # Non-inplace masking: scatter_ would bump `dist`'s version counter and break
+                # the autograd graph that cdist recorded.
+                masked = dist.masked_fill(
+                    torch.nn.functional.one_hot(idx1[begin:end], dist.size(-1)).bool(),
+                    float('inf'))
+                d2[begin:end], idx2[begin:end] = masked.min(dim=-1)
+            c1 = embed[idx1]
+            c2 = embed[idx2]
+            gap12 = (c1 - c2).norm(dim=-1).clamp_min(1e-9)
+            signed = (d2.square() - d1.square()) / (2.0 * gap12)
+            boundary_distance = signed.mean()
+            latent_margin_loss = torch.relu(float(latent_margin_target) - signed).mean()
+
+        # Roundtrip consistency: feed the decoder's own output back through the encoder and
+        # ask it to return to the code it came from (the controller's closed loop does exactly
+        # this re-encode). Supervising towards the quantized code (not the continuous encoder
+        # output) directly minimizes out-of-cell drift, i.e. code flips under self-feedback.
+        roundtrip_loss = pred.new_zeros(())
+        roundtrip_drift = pred.new_zeros(())
+        if roundtrip_weight > 0.0:
+            if self.input_mode == "traj_motion":
+                feedback = torch.cat((x[..., : self.traj_dim], pred), dim=-1)
+            else:
+                feedback = pred
+            z_rt = self.encoder(feedback.reshape(-1, self.encoder_input_dim))
+            target_code = details["quantized_latent"].detach().reshape(-1, self.latent_dim)
+            roundtrip_drift = (z_rt - target_code).norm(dim=-1).mean()
+            roundtrip_loss = (z_rt - target_code).square().mean()
+
         total = (
             recon_weight * recon_loss
             + code_align_weight * code_align_loss
+            + latent_margin_weight * latent_margin_loss
+            + roundtrip_weight * roundtrip_loss
             + vq_weight * details["vq_loss"]
             + vel_weight * vel_loss
             + acc_weight * acc_loss
@@ -870,6 +932,10 @@ class BasicVQVAE375to291(nn.Module):
             "codebook_loss": details["codebook_loss"],
             "commitment_loss": details["commitment_loss"],
             "code_align_loss": code_align_loss,
+            "latent_margin_loss": latent_margin_loss,
+            "boundary_distance": boundary_distance,
+            "roundtrip_loss": roundtrip_loss,
+            "roundtrip_drift": roundtrip_drift,
             "latent_code_gap": latent_code_gap,
             "perplexity": details["perplexity"],
             "dead_codes_reset": details["dead_codes_reset"],
