@@ -106,3 +106,51 @@ EPOCHS=10 BATCH_SIZE=512 LR=5e-4 STYLE_FILM=1 bash scripts/run_train_flowmatch_h
 # 冒烟日志/产物（一次性）
 analysis/flow_layers_study_2026-10-13/film_smoke.log  # /tmp/film_smoke 为当次输出目录
 ```
+
+## 6. 10ep 短训结果：FiLM + field dropout 0.2（2026-10-14）
+
+配置：6 层、bs512、lr 5e-4、10ep、纯 TF + 观测噪声 0.5、**FiLM 开**、
+**DROPOUT=0（selector）/ FIELD_DROPOUT=0.2（transformer）**、seed 42、从零。
+（dropout 需求来自用户："只要 transformer 的 dropout 设置为 0.2"；为此把原单一
+`dropout` 拆为 selector/field 两个参数，并修复 `StyleCodeSelector.dropout_prob`
+从未写入导致随机 selector 仍走确定性 style-table 快路径的潜在缺陷。）
+
+- 产物：`checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/`（best=ep10）
+- 训练成本：189s/epoch × 10，峰值 8.88GB（film OFF 同配方 171s / 8.65GB）
+- 训练内验证：ep5 71.11/57.04 → ep10 82.22/59.26（joint 8.04，两轮均过约束）
+- FiLM 确实学到非恒等调制：proj2 权重非零率 100%，|max| 0.69
+
+### 封存 test（1000 matched / 5000 cross，240f std1 Euler4）
+
+| 指标 | **FiLM + do0.2** | film OFF 对照 | Δ |
+|---|---:|---:|---:|
+| matched acc | **87.10% [81.34, 91.94]** | 83.60% [78.12, 88.60] | +3.50pp |
+| cross acc | **65.18% [63.29, 66.82]** | 31.72% [28.93, 34.27] | **+33.46pp（CI 不重叠）** |
+| matched ADE | 8.18cm | 5.30cm | +2.87cm |
+| cross ADE | 9.30cm | 6.74cm | +2.56cm |
+| MPJPE | 10.21cm [9.32, 11.18] | 7.57cm [6.97, 8.24] | **+2.64cm（劣化）** |
+| local MPJPE | 4.43cm | 4.14cm | +0.29cm |
+| jitter | 0.699cm | 0.560cm | +0.139cm |
+| world F.S. | 0.769cm | 0.625cm | +0.144cm |
+
+历史参照：<br>
+- 2 层 10ep 试点：72.90 / 15.88；2 层 100ep 主线：84.90 / 20.90（质量最优 jitter .474 / FS .610）
+- **本 run 的 cross 65.18% 是全部 label 主线（非 donor）配置的最高值**——也是 10ep 预算内首次把 cross 推过 60%。
+
+### 判读
+
+1. **风格注入方向被证实有效**：FiLM 让 cross 从 ~32%（depth-only）跳到 65%（+33.5pp、CI 不重叠），
+   matched 同时 +3.5pp。之前"conditioning 影响很弱"的问题在结构上被 FiLM 的直连调制路径打破。
+2. **代价在质量指标**：MPJPE +2.6cm、jitter/FS +0.14、ADE +2.6~2.9cm。风格跟随增强伴随
+   轨迹跟随变松，是当前主要待调项；10ep 的 dropout 训练也尚未收敛充分（ep5→10 质量指标
+   仍在快速下降：mADE 13.8→7.8）。
+3. **混淆提示**：本 run vs 对照同时变了两件事（FiLM、field dropout 0.2）。严格归因需补两条
+   隔离跑：`FiLM 开 + dropout 0` 与 `FiLM 关 + dropout 0.2`（各 ~30min）。
+4. 建议下一步（待用户定）：
+   - 先补 `FiLM 开 + dropout 0`：与现有对照构成单变量（只差 FiLM），确定 FiLM 净效应；
+   - 质量回收路线：更长训练（质量指标仍在降）、降 dropout（0.1）、或 FiLM+CFG 组合；
+   - 若质量不可回收，cross 65% 与 2 层主线 20.9% 的差距表明：需要在新水平上重做质量-风格联合选型。
+
+产物与日志：`eval_results/tf10_l6_film_obsnoise_rollout/seen/`、
+`analysis/motion_quality_diagnosis/probes/mpjpe_tf10_l6_film_obsnoise_ns1.0.json`、
+`analysis/style_film_2026-10-13/tf10_l6_film_train.log`、`tf10_l6_film_sealed_eval.log`。

@@ -1149,7 +1149,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--flow-layers", type=int, default=2)
     parser.add_argument("--flow-heads", type=int, default=4)
     parser.add_argument("--flow-ffn-dim", type=int, default=1024)
-    parser.add_argument("--dropout", type=float, default=0.0)
+    parser.add_argument("--dropout", type=float, default=0.0,
+        help=("Dropout of the style selector. Unset --field-dropout inherits this value, "
+              "preserving the legacy single-knob behavior."))
+    parser.add_argument("--field-dropout", type=float, default=None,
+        help=("Dropout of the transformer/field only. Defaults to --dropout; set separately "
+              "(e.g. --dropout 0 --field-dropout 0.2) to train a stochastic field without "
+              "perturbing the selector."))
     parser.add_argument("--prediction-mode", type=str, choices=["velocity", "target"], default="target")
     parser.add_argument("--flow-loss-space", choices=["normalized", "transport"], default="normalized")
     parser.add_argument("--inference-requantize", action=argparse.BooleanOptionalAction, default=True)
@@ -1382,6 +1388,12 @@ def main() -> None:
         raise ValueError(f"--feedback-probability must be in [0,1], got {args.feedback_probability}")
     if not np.isfinite(args.observation_noise_std) or args.observation_noise_std < 0.0:
         raise ValueError(f"--observation-noise-std must be finite and >= 0, got {args.observation_noise_std}")
+    # Resolve the field dropout before the run config is written: it is a resume-critical
+    # field, and storing the raw None would make the saved config ambiguous.
+    if args.field_dropout is None:
+        args.field_dropout = float(args.dropout)
+    if not np.isfinite(args.field_dropout) or not 0.0 <= args.field_dropout < 1.0:
+        raise ValueError(f"--field-dropout must be finite and in [0,1), got {args.field_dropout}")
     if args.unroll_steps == 1:
         if (args.feedback_start_epoch != 1 or args.feedback_ramp_epochs != 0
                 or args.feedback_probability != 1.0):
@@ -1691,7 +1703,7 @@ def main() -> None:
             "root_recon_weight", "recon_weight", "style_hist_weight", "style_entropy_weight",
             "style_consistency_weight", "inference_requantize", "inference_latent_clip", "solver_steps",
             "noise_std", "seed", "batch_size", "microbatch_size", "lr", "min_lr", "weight_decay",
-            "epochs", "dropout", "matmul_precision", "tf32", "cudnn_benchmark", "grad_clip", "fp32_math_attention",
+            "epochs", "dropout", "field_dropout", "matmul_precision", "tf32", "cudnn_benchmark", "grad_clip", "fp32_math_attention",
             "stride", "style_slot_indices", "style_prior_loss", "style_selector_topk",
             "style_selector_temperature", "target_time_eps", "rollout_val_every", "val_every",
             "max_train_batches", "max_val_batches", "enforce_same_label", "val_ratio", "test_ratio",
@@ -1733,6 +1745,9 @@ def main() -> None:
                                motion_quality_selection=False,quality_max_jitter=.5,quality_max_local_fs=.8,quality_max_world_fs=1.,gpu_data_cache_gb=0.,cache_teacher_motion=False)
         legacy_defaults['use_style_film'] = False
         legacy_defaults.update(feedback_start_epoch=1, feedback_ramp_epochs=0, feedback_probability=1.0)
+        if 'field_dropout' not in prior_args:
+            # Legacy runs had a single dropout knob and the field inherited it.
+            prior_args['field_dropout'] = prior_args.get('dropout', args.field_dropout)
         for name in resume_fields:
             if prior_args.get(name, legacy_defaults.get(name)) != getattr(args, name):
                 raise ValueError(f"Resume configuration mismatch: {name}")

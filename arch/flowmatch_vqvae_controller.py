@@ -138,6 +138,9 @@ class StyleCodeSelector(nn.Module):
         self.hidden_dim = int(hidden_dim)
         self.topk = int(topk)
         self.temperature = float(temperature)
+        # Read by the deterministic fast-path guard in `compute_loss`/`unrolled_flow_loss`:
+        # a stochastic selector must not reuse the batched style table across steps.
+        self.dropout_prob = float(dropout)
         if prototype_normalization not in ('layernorm', 'none'):
             raise ValueError('prototype_normalization must be layernorm or none')
         self.prototype_normalization = prototype_normalization
@@ -641,6 +644,7 @@ class FlowMatchVQVAEController(nn.Module):
         field_arch: str = "transformer",
         history_conditioning: bool = False,
         use_style_film: bool = False,
+        field_dropout: float | None = None,
     ):
         super().__init__()
         self.vqvae = vqvae
@@ -668,6 +672,17 @@ class FlowMatchVQVAEController(nn.Module):
         self.use_style_film = bool(use_style_film)
         if self.use_style_film and field_arch != "transformer":
             raise ValueError("Style FiLM modulation requires the transformer field")
+        # `dropout` applies to the style selector (and is the fallback for the field when
+        # `field_dropout` is unset); `field_dropout` isolates the transformer/field dropout so
+        # e.g. a stochastic field can be trained without perturbing the selector.
+        if not math.isfinite(float(dropout)) or not 0.0 <= float(dropout) < 1.0:
+            raise ValueError(f"dropout must be finite and in [0,1), got {dropout}")
+        if field_dropout is None:
+            self.field_dropout = float(dropout)
+        else:
+            if not math.isfinite(float(field_dropout)) or not 0.0 <= float(field_dropout) < 1.0:
+                raise ValueError(f"field_dropout must be finite and in [0,1), got {field_dropout}")
+            self.field_dropout = float(field_dropout)
         self.prediction_mode = resolve_flowmatch_prediction_mode(prediction_mode)
         self.target_time_eps = float(target_time_eps)
         if flow_loss_space is None:
@@ -749,7 +764,7 @@ class FlowMatchVQVAEController(nn.Module):
             num_heads=flow_heads,
             ff_hidden_dim=flow_ffn_dim,
             num_layers=flow_layers,
-            dropout=dropout,
+            dropout=self.field_dropout,
             use_motion_token=self.use_motion_token,
             use_style_film=self.use_style_film,
         )
@@ -1641,6 +1656,7 @@ def build_flowmatch_controller(
     field_arch: str = "transformer",
     history_conditioning: bool = False,
     use_style_film: bool = False,
+    field_dropout: float | None = None,
 ) -> FlowMatchVQVAEController:
     return FlowMatchVQVAEController(
         vqvae=vqvae,
@@ -1670,6 +1686,7 @@ def build_flowmatch_controller(
         field_arch=field_arch,
         history_conditioning=history_conditioning,
         use_style_film=use_style_film,
+        field_dropout=field_dropout,
     )
 
 
@@ -1714,6 +1731,7 @@ def build_flowmatch_controller_from_config(
         field_arch=str(config.get("field_arch", "transformer")),
         history_conditioning=bool(config.get("history_conditioning", False)),
         use_style_film=bool(config.get("use_style_film", False)),
+        field_dropout=config.get("field_dropout"),
     )
     model.field.fp32_math_attention = bool(config.get('fp32_math_attention', False))
     return model

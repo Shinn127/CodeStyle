@@ -30,6 +30,11 @@ export EPOCHS="${EPOCHS:-100}"
 # STYLE_FILM=1 enables the per-layer style FiLM on the transformer generation query
 # (zero-initialized, so the run starts at the unmodulated field and trains the modulation).
 export STYLE_FILM="${STYLE_FILM:-0}"
+# DROPOUT applies to the style selector; unset FIELD_DROPOUT makes the field inherit it.
+# Set FIELD_DROPOUT separately (e.g. DROPOUT=0 FIELD_DROPOUT=0.2) to train only the
+# transformer with dropout while the selector stays deterministic (keeps its fast path).
+export DROPOUT="${DROPOUT:-0}"
+export FIELD_DROPOUT="${FIELD_DROPOUT:-}"
 # Pure teacher forcing: p=0 means no feedback window ever (no epoch enters the ramp).
 export FEEDBACK_START_EPOCH=1
 export FEEDBACK_RAMP_EPOCHS=0
@@ -43,11 +48,15 @@ fi
 if [[ "${STYLE_FILM}" == "1" ]]; then
   extra+=(--use-style-film)
 fi
+if [[ -n "${FIELD_DROPOUT}" ]]; then
+  extra+=(--field-dropout "${FIELD_DROPOUT}")
+fi
 bash "${ROOT_DIR}/scripts/run_train_flowmatch_6tok_curriculum100.sh" \
   --epochs "${EPOCHS}" --lr-schedule-epochs "${EPOCHS}" --seq-len 6 --history-conditioning \
   --train-feedback-context \
   --observation-noise-std "${OBS_NOISE_STD}" \
   --flow-layers "${FLOW_LAYERS}" \
+  --dropout "${DROPOUT}" \
   --batch-size "${BATCH_SIZE}" \
   --gpu-data-cache-gb "${GPU_DATA_CACHE_GB:-8}" --cache-teacher-motion \
   --motion-quality-selection \
