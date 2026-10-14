@@ -1,0 +1,200 @@
+{
+ "protocol": "docs/VQ_SOURCE_AGENT_EXECUTION_PLAN.md S0",
+ "git": {
+  "commit": "5cdc6e345024d3ec5e81022693d167edb2fd063a",
+  "branch": "main",
+  "dirty": true
+ },
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "source_checkpoint": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+  "sha256": "825be6785b3e7fc258c196f49b70b3874af792c6aaf4a2912a5bdd5765a9962c",
+  "epoch": 90,
+  "epoch_ok": true,
+  "best_metric": 1.2583311208089192,
+  "recipe": {
+   "num_embeddings": 2048,
+   "num_latents": 32,
+   "code_dim": 4,
+   "ema_decay": 0.99,
+   "ema_eps": 1e-05,
+   "encoder_arch": "skip_cat_mlp",
+   "decoder_arch": "skip_cat_mlp",
+   "input_mode": "traj_motion",
+   "encoder_layers": 6,
+   "decoder_layers": 6,
+   "hidden_dim": 512,
+   "decoder_hidden_dim": 512,
+   "dead_code_threshold": 2,
+   "kmeans_init": true,
+   "use_rotation_trick": true,
+   "commitment_cost": 0.25
+  },
+  "recipe_ok": true,
+  "source_run_config_sha256": "8aa25b6c1841702bd297fee3b3884cd55bf10e2b27a01ea4eae84cff045b1f18",
+  "quantizer_tensors": {
+   "quantizer.vq._codebook.initted": [
+    [],
+    "torch.bool"
+   ],
+   "quantizer.vq._codebook.cluster_size": [
+    [
+     1,
+     2048
+    ],
+    "torch.float32"
+   ],
+   "quantizer.vq._codebook.embed_avg": [
+    [
+     1,
+     2048,
+     4
+    ],
+    "torch.float32"
+   ],
+   "quantizer.vq._codebook.embed": [
+    [
+     1,
+     2048,
+     4
+    ],
+    "torch.float32"
+   ]
+  },
+  "ema_buffers_present": true
+ },
+ "init_ckpt_restore": {
+  "dropped_quantizer": false,
+  "missing_keys": [],
+  "checkpoint_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "restored_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "bitwise_match": true
+ },
+ "norm": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4",
+  "mean_sha256": "8c533f7caee05064037459170ad8c1e97be69c36f090c58888dcfa94871e7fea",
+  "std_sha256": "88257cf1c354bf6b2acc0c92e91a0c02b88e10f203b727e7568cac6a02d6fa52"
+ },
+ "db": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror",
+  "num_frames": 3534258,
+  "segments_total": 729,
+  "splits": {
+   "train": 549,
+   "val": 90,
+   "test": 90
+  },
+  "mirrored_segments": 0,
+  "database_role": "in_distribution",
+  "ood_db_used": false,
+  "train_windows": 2644949,
+  "val_windows": 440724,
+  "test_windows": 443482,
+  "split_mode": "auto",
+  "split_source": "segments.json#suffix_balanced_rotation_per_style",
+  "train_steps_per_epoch": 5165,
+  "expected_updates_10ep": 51650
+ },
+ "experiment": {
+  "seq_len": 8,
+  "stride": 1,
+  "batch_size": 512,
+  "epochs": 10,
+  "eval_every": 1,
+  "save_every": 5,
+  "lr": 0.0001,
+  "min_lr": 1e-05,
+  "seed": 42,
+  "loader_seed": 4242,
+  "recon_weight": 3.0,
+  "vq_weight": 1.0,
+  "vel_weight": 15.0,
+  "root_weight": 3.0,
+  "code_align_weight": 2.0,
+  "latent_l1_weight": 0.01,
+  "latent_vel_weight": 0.1,
+  "latent_margin_weight": 0.0,
+  "roundtrip_weight": 0.0,
+  "teacher_align_weight": 0.0,
+  "decoder_only": 0,
+  "amp_dtype": "fp32",
+  "tf32": 0,
+  "matmul_precision": "highest",
+  "compile": 0
+ },
+ "dry_run_B0": {
+  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-decoder-only --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
+  "checks": {
+   "init_ckpt": true,
+   "norm_stats": true,
+   "acc_weight": true,
+   "seq_len": true,
+   "loader_seed": true,
+   "epochs": true,
+   "out_dir": true
+  },
+  "passed": true,
+  "out_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_s0check"
+ },
+ "dry_run_B1": {
+  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 5.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-decoder-only --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
+  "checks": {
+   "init_ckpt": true,
+   "norm_stats": true,
+   "acc_weight": true,
+   "seq_len": true,
+   "loader_seed": true,
+   "epochs": true,
+   "out_dir": true
+  },
+  "passed": true,
+  "out_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_s0check"
+ },
+ "fixed_val12": {
+  "starts": [
+   1577711,
+   863033,
+   2213202,
+   2767679,
+   0,
+   1017090,
+   1571505,
+   2594553,
+   361924,
+   1751145,
+   3182886,
+   1379468
+  ],
+  "source_entry_ids": [
+   323,
+   184,
+   451,
+   571,
+   0,
+   212,
+   322,
+   525,
+   82,
+   360,
+   658,
+   286
+  ],
+  "archived_json": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_code_stability_2026-10-14/audit/baseline_val12.json",
+  "archived_sha256": "cf0e19422a6c3d1effabec83c17263c61d470252e786b43129ef4898f0b5b64e",
+  "archived_residual_sha256": "9640b14bd8e6e8aabf638f83b309f112cfcaee50ca3d3c3b9570f92ebfb4b573",
+  "match_archived": true
+ },
+ "verdict": "BLOCKED",
+ "blockers": [
+  "working tree dirty at S0 time (recorded; new commits change the id)"
+ ]
+}

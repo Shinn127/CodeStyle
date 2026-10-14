@@ -1,0 +1,6 @@
+{
+ "path": "/home/shinn/\u684c\u9762/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+ "sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4",
+ "mean_sha256": "8c533f7caee05064037459170ad8c1e97be69c36f090c58888dcfa94871e7fea",
+ "std_sha256": "88257cf1c354bf6b2acc0c92e91a0c02b88e10f203b727e7568cac6a02d6fa52"
+}

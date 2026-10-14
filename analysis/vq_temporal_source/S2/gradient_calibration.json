@@ -1,0 +1,202 @@
+{
+ "protocol": "COMMON.md section 5: 4 train batches B16xT8, no optimizer.step, EMA frozen",
+ "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+ "checkpoint_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "state_unchanged": true,
+ "base_weights": {
+  "recon_type": "l1",
+  "temporal_loss_type": "l1",
+  "recon_weight": 3.0,
+  "vq_weight": 1.0,
+  "vel_weight": 15.0,
+  "root_weight": 3.0,
+  "code_align_weight": 2.0,
+  "latent_l1_weight": 0.01,
+  "latent_vel_weight": 0.1,
+  "latent_margin_weight": 0.0,
+  "roundtrip_weight": 0.0
+ },
+ "seed": 4242,
+ "batch_size": 16,
+ "seq_len": 8,
+ "device": "cuda",
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "git": {
+  "commit": "5cdc6e345024d3ec5e81022693d167edb2fd063a",
+  "branch": "main",
+  "dirty": true
+ },
+ "per_batch": [
+  {
+   "batch": 0,
+   "num_windows": 16,
+   "frames": 8,
+   "first_meta": {
+    "source_entry_id": 344,
+    "suffix": "SR",
+    "start": 1675479
+   },
+   "last_meta": {
+    "source_entry_id": 603,
+    "suffix": "SW",
+    "start": 2906816
+   },
+   "loss_base": 0.5519830584526062,
+   "loss_acc_value": 0.03277534991502762,
+   "encoder": {
+    "norm_base": 6.201967239379883,
+    "norm_acc": 0.49125921726226807,
+    "cosine": 0.5322051048278809,
+    "base_per_window": 0.3876229524612427,
+    "acc_per_window": 0.030703701078891754
+   },
+   "decoder": {
+    "norm_base": 3.8696775436401367,
+    "norm_acc": 0.06829913705587387,
+    "cosine": 0.13052193820476532,
+    "base_per_window": 0.24185484647750854,
+    "acc_per_window": 0.004268696065992117
+   }
+  },
+  {
+   "batch": 1,
+   "num_windows": 16,
+   "frames": 8,
+   "first_meta": {
+    "source_entry_id": 225,
+    "suffix": "TR1",
+    "start": 1086096
+   },
+   "last_meta": {
+    "source_entry_id": 276,
+    "suffix": "BW",
+    "start": 1323364
+   },
+   "loss_base": 0.5439809560775757,
+   "loss_acc_value": 0.031211277469992638,
+   "encoder": {
+    "norm_base": 7.1872782707214355,
+    "norm_acc": 0.4567974805831909,
+    "cosine": 0.4779227375984192,
+    "base_per_window": 0.4492048919200897,
+    "acc_per_window": 0.028549842536449432
+   },
+   "decoder": {
+    "norm_base": 4.328484535217285,
+    "norm_acc": 0.06303433328866959,
+    "cosine": 0.11799393594264984,
+    "base_per_window": 0.2705302834510803,
+    "acc_per_window": 0.003939645830541849
+   }
+  },
+  {
+   "batch": 2,
+   "num_windows": 16,
+   "frames": 8,
+   "first_meta": {
+    "source_entry_id": 491,
+    "suffix": "TR1",
+    "start": 2444489
+   },
+   "last_meta": {
+    "source_entry_id": 395,
+    "suffix": "TR1",
+    "start": 1926139
+   },
+   "loss_base": 0.5511420965194702,
+   "loss_acc_value": 0.03326140344142914,
+   "encoder": {
+    "norm_base": 5.134623050689697,
+    "norm_acc": 0.42080751061439514,
+    "cosine": 0.6082159280776978,
+    "base_per_window": 0.3209139406681061,
+    "acc_per_window": 0.026300469413399696
+   },
+   "decoder": {
+    "norm_base": 4.066924571990967,
+    "norm_acc": 0.06801898777484894,
+    "cosine": 0.1375403106212616,
+    "base_per_window": 0.2541827857494354,
+    "acc_per_window": 0.004251186735928059
+   }
+  },
+  {
+   "batch": 3,
+   "num_windows": 16,
+   "frames": 8,
+   "first_meta": {
+    "source_entry_id": 612,
+    "suffix": "TR1",
+    "start": 2936792
+   },
+   "last_meta": {
+    "source_entry_id": 617,
+    "suffix": "FR",
+    "start": 2952676
+   },
+   "loss_base": 0.49113333225250244,
+   "loss_acc_value": 0.02893672324717045,
+   "encoder": {
+    "norm_base": 5.860954761505127,
+    "norm_acc": 0.4612465500831604,
+    "cosine": 0.45846349000930786,
+    "base_per_window": 0.36630967259407043,
+    "acc_per_window": 0.028827909380197525
+   },
+   "decoder": {
+    "norm_base": 3.898130178451538,
+    "norm_acc": 0.061276137828826904,
+    "cosine": 0.06613346934318542,
+    "base_per_window": 0.24363313615322113,
+    "acc_per_window": 0.0038297586143016815
+   }
+  }
+ ],
+ "encoder": {
+  "norm_base_mean": 6.096205830574036,
+  "norm_base_std": 0.7385135498604537,
+  "norm_acc_mean": 0.45752768963575363,
+  "norm_acc_std": 0.025002753006752344,
+  "ratio_mean": 0.07585492721348523,
+  "ratio_std": 0.007207735080735349,
+  "weight_for_10pct_mean": 1.3316824130389486,
+  "weight_for_30pct_mean": 3.995047239116846,
+  "cosine_mean": 0.5192018151283264,
+  "cosine_min": 0.45846349000930786,
+  "stable": true
+ },
+ "decoder": {
+  "norm_base_mean": 4.040804207324982,
+  "norm_base_std": 0.18240234239545386,
+  "norm_acc_mean": 0.06515714898705482,
+  "norm_acc_std": 0.0030671975959955917,
+  "ratio_mean": 0.01616419816457814,
+  "ratio_std": 0.0011493734284719055,
+  "weight_for_10pct_mean": 6.218331877192994,
+  "weight_for_30pct_mean": 18.65499563157898,
+  "cosine_mean": 0.11304741352796555,
+  "cosine_min": 0.06613346934318542,
+  "stable": true
+ },
+ "overlap_window": {
+  "lo": 6.218331877192994,
+  "hi": 3.995047239116846
+ },
+ "selection_rule": "geometric midpoint of the gap between the two 10-30% windows",
+ "achieved_at_recommended": {
+  "encoder_ratio_at_recommended": 0.3780761282174531,
+  "decoder_ratio_at_recommended": 0.08056559649189038
+ },
+ "recommended_acc_weight": 4.9842,
+ "risk_flags": [
+  "no ACC_WEIGHT satisfies 10-30% on both encoder and decoder (gap=[3.995,6.218]); using gap geometric midpoint 4.9842"
+ ]
+}
