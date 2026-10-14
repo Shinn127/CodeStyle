@@ -29,7 +29,12 @@ venv/
 # -----------------------------------------------------------------------------
 # Model weights, datasets, derived numeric payloads (large binaries stay local)
 # -----------------------------------------------------------------------------
-/checkpoints/
+# checkpoints/ holds large weights (*.pt) and stats blobs (*.npz, both ignored below), but
+# also the small per-run text evidence: config.json (exact run configuration), history.jsonl
+# (per-epoch training curves) and rollout_style_validation_cases.json (validation manifest).
+# Re-include the subdirectories so those text files are versioned while the weights are not.
+/checkpoints/*
+!/checkpoints/*/
 /cache/
 /database_100sty_375_memmap*/
 /data/
