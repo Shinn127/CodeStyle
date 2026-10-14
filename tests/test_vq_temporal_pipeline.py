@@ -154,7 +154,7 @@ ACTIVITY_DEFAULTS = (
 
 def _synthetic_probe(
     *, ids, d2r, jitter_q, jitter_c, jitter_gt, fs_world, fs_local_q, mpjpe, local_mpjpe,
-    root_ade, d2e=None, activity_scale=1.0, style_correct=None,
+    root_ade, d2e=None, activity_scale=1.0, style_correct=None, checkpoint=None,
 ):
     """Minimal payload honouring every key s4_acceptance reads (schema mirrors the probe)."""
     ids = list(ids)
@@ -215,6 +215,7 @@ def _synthetic_probe(
         **{f"activity_q.{key}": {"mean": float(value) * activity_scale} for key, value in ACTIVITY_DEFAULTS},
     }
     return dict(
+        checkpoint=str(checkpoint) if checkpoint else None,
         per_source=per_source,
         aggregate=aggregate,
         style_proxy=dict(accuracy=float(style_correct.mean()), per_source=[
@@ -222,19 +223,61 @@ def _synthetic_probe(
     )
 
 
-def _run_s4(tmp_path, b0, b1):
+def _synthetic_run(tmp_path, arm, *, acc_weight, mutate=None):
+    """Write a minimal run dir (config.json) + manifest.json + probe payload scaffold.
+
+    `mutate` can override manifest fields to exercise the INVALID_EXPERIMENT contracts.
+    """
+    run_dir = tmp_path / f"run_{arm}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    ckpt = run_dir / "epoch_0010.pt"
+    ckpt.write_bytes(b"stub")
+    config = dict(
+        seq_len=8, stride=1, batch_size=512, epochs=10, lr=1e-4, min_lr=1e-5,
+        seed=42, loader_generator_seed=4242, acc_weight=acc_weight,
+        out_dir=str(run_dir),
+    )
+    (run_dir / "config.json").write_text(json.dumps(config))
+    manifest = dict(
+        arm=arm, run_dir=str(run_dir),
+        contract=dict(pinned=dict(seq_len=8, epochs=10), acc_weight_expected=acc_weight,
+                      acc_weight_actual=acc_weight),
+        init_checkpoint=dict(path="/x/init.pt", sha256="init-file", state_sha256="init-state"),
+        final_checkpoint=dict(path=str(ckpt), sha256="final", state_sha256=f"final-{arm}"),
+        dataset=dict(db_sha256="db", split_sha256="split", vq_state_sha256="vq"),
+        norm_stats=dict(path="/x/norm.npz", sha256="norm"),
+        epochs=[], integrity=dict(total_updates=51650.0),
+    )
+    if mutate:
+        mutate(manifest)
+    manifest_path = run_dir / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest))
+    return dict(run_dir=run_dir, ckpt=ckpt, manifest=manifest, manifest_path=manifest_path)
+
+
+def _run_s4(tmp_path, b0, b1, *, manifest_b0=None, manifest_b1=None):
     module = _load_s4_module()
     b0_path, b1_path = tmp_path / "b0.json", tmp_path / "b1.json"
     out = tmp_path / "acceptance.json"
     b0_path.write_text(json.dumps(b0))
     b1_path.write_text(json.dumps(b1))
+    if manifest_b0 is None or manifest_b1 is None:
+        raise ValueError("contract gate is mandatory: pass both manifests")
     old = sys.argv
-    sys.argv = ["s4", "--b0", str(b0_path), "--b1", str(b1_path), "--out", str(out)]
+    sys.argv = ["s4", "--b0", str(b0_path), "--b1", str(b1_path),
+                "--b0-manifest", str(manifest_b0), "--b1-manifest", str(manifest_b1),
+                "--out", str(out)]
     try:
         module.main()
     finally:
         sys.argv = old
     return json.loads(out.read_text())
+
+
+def _default_runs(tmp_path, *, b1_mutate=None, b0_mutate=None):
+    r0 = _synthetic_run(tmp_path, "B0", acc_weight=0.0, mutate=b0_mutate)
+    r1 = _synthetic_run(tmp_path, "B1", acc_weight=4.9842, mutate=b1_mutate)
+    return r0, r1
 
 
 IDS = list(range(1, 13))
@@ -243,39 +286,116 @@ IDS = list(range(1, 13))
 def test_s4_passes_when_every_gate_is_met(tmp_path):
     rng = np.random.default_rng(0)
     noise = rng.normal(scale=0.01, size=12)
+    r0, r1 = _default_runs(tmp_path)
     b0 = _synthetic_probe(
         ids=IDS, d2r=0.40 + noise, d2e=0.35 + noise, jitter_q=0.40 + noise,
         jitter_c=0.12 + noise, jitter_gt=0.09 + noise, fs_world=0.49 + noise,
         fs_local_q=0.25 + noise, mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
-        activity_scale=1.0,
+        activity_scale=1.0, checkpoint=r0["ckpt"],
     )
     b1 = _synthetic_probe(
         ids=IDS, d2r=0.28 + noise, d2e=0.35 + noise, jitter_q=0.30 + noise,
         jitter_c=0.11 + noise, jitter_gt=0.09 + noise, fs_world=0.47 + noise,
         fs_local_q=0.24 + noise, mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
-        activity_scale=1.0,
+        activity_scale=1.0, checkpoint=r1["ckpt"],
     )
-    report = _run_s4(tmp_path, b0, b1)
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
     assert report["verdict"] == "PASS", json.dumps(report["gates"], indent=1)
+    assert report["gates"]["g0_contract"]["result"] == "PASS"
     assert report["gates"]["g1_d2r_down"]["result"] == "PASS"
     assert report["pairs"]["d2r_local_mean"]["point"] == pytest.approx(-0.12, abs=0.02)
+
+
+def test_s4_invalid_experiment_when_contract_breaks(tmp_path):
+    """Different initialization/dataset must short-circuit to INVALID_EXPERIMENT, never PASS."""
+    rng = np.random.default_rng(3)
+    noise = rng.normal(scale=0.01, size=12)
+
+    def break_init(manifest):
+        manifest["init_checkpoint"]["state_sha256"] = "different-init"
+
+    def break_db(manifest):
+        manifest["dataset"]["db_sha256"] = "different-db"
+
+    r0, r1 = _default_runs(tmp_path, b1_mutate=break_init)
+    b0 = _synthetic_probe(ids=IDS, d2r=0.40 + noise, jitter_q=0.40 + noise, jitter_c=0.12 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r0["ckpt"])
+    b1 = _synthetic_probe(ids=IDS, d2r=0.28 + noise, jitter_q=0.30 + noise, jitter_c=0.11 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.47 + noise, fs_local_q=0.24 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r1["ckpt"])
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
+    assert report["verdict"] == "INVALID_EXPERIMENT"
+    assert report["gates"]["g0_contract"]["result"] == "FAIL"
+    assert report["manifest_checks"]["checks"]["same_init_state_sha"]["ok"] is False
+
+    # Same-updates-but-different-DB must also be caught (the exact hole the audit found).
+    r0, r1 = _default_runs(tmp_path / "second", b1_mutate=break_db)
+    assert r0["manifest"]["integrity"]["total_updates"] == r1["manifest"]["integrity"]["total_updates"]
+    b0["checkpoint"] = str(r0["ckpt"])
+    b1["checkpoint"] = str(r1["ckpt"])
+    report = _run_s4(tmp_path / "second", b0, b1,
+                     manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
+    assert report["verdict"] == "INVALID_EXPERIMENT"
+    assert report["manifest_checks"]["checks"]["same_dataset_sha"]["ok"] is False
+
+
+def test_s4_invalid_when_config_diff_exceeds_acc_weight(tmp_path):
+    rng = np.random.default_rng(4)
+    noise = rng.normal(scale=0.01, size=12)
+    r0, r1 = _default_runs(tmp_path)
+    config = json.loads((r1["run_dir"] / "config.json").read_text())
+    config["seq_len"] = 4  # not an allowed difference
+    (r1["run_dir"] / "config.json").write_text(json.dumps(config))
+    b0 = _synthetic_probe(ids=IDS, d2r=0.40 + noise, jitter_q=0.40 + noise, jitter_c=0.12 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r0["ckpt"])
+    b1 = _synthetic_probe(ids=IDS, d2r=0.28 + noise, jitter_q=0.30 + noise, jitter_c=0.11 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.47 + noise, fs_local_q=0.24 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r1["ckpt"])
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
+    assert report["verdict"] == "INVALID_EXPERIMENT"
+    assert "seq_len" in report["manifest_checks"]["config_diff_keys"]
+
+
+def test_s4_probe_checkpoint_must_belong_to_its_manifest_run(tmp_path):
+    rng = np.random.default_rng(5)
+    noise = rng.normal(scale=0.01, size=12)
+    r0, r1 = _default_runs(tmp_path)
+    b0 = _synthetic_probe(ids=IDS, d2r=0.40 + noise, jitter_q=0.40 + noise, jitter_c=0.12 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r1["ckpt"])  # B0 probe points at B1's run
+    b1 = _synthetic_probe(ids=IDS, d2r=0.28 + noise, jitter_q=0.30 + noise, jitter_c=0.11 + noise,
+                          jitter_gt=0.09 + noise, fs_world=0.47 + noise, fs_local_q=0.24 + noise,
+                          mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+                          checkpoint=r1["ckpt"])
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
+    assert report["verdict"] == "INVALID_EXPERIMENT"
+    assert report["manifest_checks"]["checks"]["probe_b0_is_from_manifest_run"]["ok"] is False
 
 
 def test_s4_fails_on_activity_collapse(tmp_path):
     rng = np.random.default_rng(1)
     noise = rng.normal(scale=0.01, size=12)
+    r0, r1 = _default_runs(tmp_path)
     b0 = _synthetic_probe(
         ids=IDS, d2r=0.40 + noise, jitter_q=0.40 + noise, jitter_c=0.12 + noise,
         jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
         mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+        checkpoint=r0["ckpt"],
     )
     b1 = _synthetic_probe(
         ids=IDS, d2r=0.28 + noise, jitter_q=0.30 + noise, jitter_c=0.11 + noise,
         jitter_gt=0.09 + noise, fs_world=0.47 + noise, fs_local_q=0.24 + noise,
         mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
-        activity_scale=0.85,
+        activity_scale=0.85, checkpoint=r1["ckpt"],
     )
-    report = _run_s4(tmp_path, b0, b1)
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
     assert report["verdict"] == "FAIL"
     assert report["gates"]["g6_activity"]["result"] == "FAIL"
 
@@ -283,17 +403,20 @@ def test_s4_fails_on_activity_collapse(tmp_path):
 def test_s4_inconclusive_when_no_separation(tmp_path):
     rng = np.random.default_rng(2)
     noise = rng.normal(scale=0.01, size=12)
+    r0, r1 = _default_runs(tmp_path)
     b0 = _synthetic_probe(
         ids=IDS, d2r=0.40 + noise, jitter_q=0.40 + noise, jitter_c=0.12 + noise,
         jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
         mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+        checkpoint=r0["ckpt"],
     )
     b1 = _synthetic_probe(
         ids=IDS, d2r=0.40 + noise, jitter_q=0.395 + noise, jitter_c=0.12 + noise,
         jitter_gt=0.09 + noise, fs_world=0.49 + noise, fs_local_q=0.25 + noise,
         mpjpe=1.58 + noise, local_mpjpe=1.07 + noise, root_ade=0.85 + noise,
+        checkpoint=r1["ckpt"],
     )
-    report = _run_s4(tmp_path, b0, b1)
+    report = _run_s4(tmp_path, b0, b1, manifest_b0=r0["manifest_path"], manifest_b1=r1["manifest_path"])
     assert report["verdict"] == "INCONCLUSIVE"
     assert report["gates"]["g3_jitter_drop"]["result"] == "FAIL"
 

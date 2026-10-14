@@ -2,6 +2,8 @@
  "label": "ep5",
  "b0": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B0_ep5.json",
  "b1": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B1_ep5.json",
+ "b0_manifest": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep/manifest.json",
+ "b1_manifest": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep/manifest.json",
  "protocol": "COMMON.md section 7 (pre-registered before B0/B1 started)",
  "thresholds": {
   "jitter_drop_required": 0.15,
@@ -12,6 +14,77 @@
   "style_drop_limit": 0.02
  },
  "gates": {
+  "g0_contract": {
+   "name": "B0/B1 contract: manifests + configs identical except ACC_WEIGHT",
+   "result": "PASS",
+   "detail": {
+    "passed": true,
+    "checks": {
+     "same_total_updates": {
+      "ok": true,
+      "detail": "51650 vs 51650"
+     },
+     "same_init_state_sha": {
+      "ok": true,
+      "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+     },
+     "same_init_ckpt_file_sha": {
+      "ok": true,
+      "detail": "825be6785b3e7fc2… vs 825be6785b3e7fc2…"
+     },
+     "same_dataset_sha": {
+      "ok": true,
+      "detail": "6d308e18f05285e6… vs 6d308e18f05285e6…"
+     },
+     "same_split_sha": {
+      "ok": true,
+      "detail": "c3987af0f1c91568… vs c3987af0f1c91568…"
+     },
+     "same_vq_state_sha": {
+      "ok": true,
+      "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+     },
+     "same_norm_sha": {
+      "ok": true,
+      "detail": "bfbe62d548b525de… vs bfbe62d548b525de…"
+     },
+     "same_pinned_protocol": {
+      "ok": true,
+      "detail": "pinned dicts equal"
+     },
+     "acc_is_single_variable": {
+      "ok": true,
+      "detail": "B0=0.0 B1=4.9842 (each arm must match its own manifest expectation, and they differ)"
+     },
+     "probe_b0_is_from_manifest_run": {
+      "ok": true,
+      "detail": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep/epoch_0005.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep"
+     },
+     "probe_b1_is_from_manifest_run": {
+      "ok": true,
+      "detail": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep/epoch_0005.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep"
+     },
+     "config_diff_only_allowed": {
+      "ok": true,
+      "detail": "differing keys: ['acc_weight', 'out_dir']; allowed: ['acc_weight', 'out_dir']"
+     }
+    },
+    "config_diff_keys": [
+     "acc_weight",
+     "out_dir"
+    ],
+    "allowed_config_diff": [
+     "acc_weight",
+     "out_dir"
+    ],
+    "acc_weight_arms": [
+     0.0,
+     4.9842
+    ],
+    "total_updates": 51650
+   },
+   "note": "mandatory; failure -> INVALID_EXPERIMENT, never a quality verdict"
+  },
   "g1_d2r_down": {
    "name": "d2r mean & p95 both drop (95% CI upper < 0)",
    "result": "PASS",
@@ -337,6 +410,72 @@
    "draws": 1000
   }
  },
+ "manifest_checks": {
+  "passed": true,
+  "checks": {
+   "same_total_updates": {
+    "ok": true,
+    "detail": "51650 vs 51650"
+   },
+   "same_init_state_sha": {
+    "ok": true,
+    "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+   },
+   "same_init_ckpt_file_sha": {
+    "ok": true,
+    "detail": "825be6785b3e7fc2… vs 825be6785b3e7fc2…"
+   },
+   "same_dataset_sha": {
+    "ok": true,
+    "detail": "6d308e18f05285e6… vs 6d308e18f05285e6…"
+   },
+   "same_split_sha": {
+    "ok": true,
+    "detail": "c3987af0f1c91568… vs c3987af0f1c91568…"
+   },
+   "same_vq_state_sha": {
+    "ok": true,
+    "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+   },
+   "same_norm_sha": {
+    "ok": true,
+    "detail": "bfbe62d548b525de… vs bfbe62d548b525de…"
+   },
+   "same_pinned_protocol": {
+    "ok": true,
+    "detail": "pinned dicts equal"
+   },
+   "acc_is_single_variable": {
+    "ok": true,
+    "detail": "B0=0.0 B1=4.9842 (each arm must match its own manifest expectation, and they differ)"
+   },
+   "probe_b0_is_from_manifest_run": {
+    "ok": true,
+    "detail": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep/epoch_0005.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep"
+   },
+   "probe_b1_is_from_manifest_run": {
+    "ok": true,
+    "detail": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep/epoch_0005.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep"
+   },
+   "config_diff_only_allowed": {
+    "ok": true,
+    "detail": "differing keys: ['acc_weight', 'out_dir']; allowed: ['acc_weight', 'out_dir']"
+   }
+  },
+  "config_diff_keys": [
+   "acc_weight",
+   "out_dir"
+  ],
+  "allowed_config_diff": [
+   "acc_weight",
+   "out_dir"
+  ],
+  "acc_weight_arms": [
+   0.0,
+   4.9842
+  ],
+  "total_updates": 51650
+ },
  "continuous_contrast": {
   "jitter": {
    "b0": 0.1232395946812563,
@@ -419,7 +558,6 @@
    }
   }
  },
- "manifest_checks": null,
  "verdict": "FAIL",
- "verdict_note": "PASS = every registered gate met and d2r CIs exclude 0 below; FAIL = confirmed reversal or registered veto; INCONCLUSIVE = budget-limited/no separation"
+ "verdict_note": "INVALID_EXPERIMENT = the mandatory g0 contract did not hold (quality gates are diagnostic only); PASS = every registered gate met and d2r CIs exclude 0 below; FAIL = confirmed reversal or registered veto; INCONCLUSIVE = budget-limited/no separation"
 }

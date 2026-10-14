@@ -146,6 +146,19 @@ first-eval-always-accepts 语义在 10ep 短跑下可能把 best 冻结在 ep1�
 小样本 CI 未跨 0 的判据记"未确认"；全部判据通过且无否决 → PASS；有明确反向证据 → FAIL；
 预算内无区分度 → INCONCLUSIVE。负结果完整归档。
 
+### 7.1 契约闸门 g0 强制化（审计后加固，2026-10-14 傍晚）
+
+独立审计指出初版 `s4_acceptance.py` 的 manifest 检查是可选且只由 `same_total_updates` 决定，
+不同初始化/数据只要更新数相同仍可能 PASS。已修复为**必填** `g0_contract`：两份 manifest + 各自
+`config.json` 全字段核对（初始状态指纹、init 文件 sha、DB/split/VQ 状态指纹、norm sha、pinned
+协议、acc 单变量模式、probe 来源目录、config 差异键 ⊆ {out_dir, acc_weight}），任一不符 →
+**INVALID_EXPERIMENT**，不进入质量判定。
+
+时点与影响：该加固发生在 B0/B1 完成之后；它收紧的是"契约不满足时的短路"，不改变任何质量门的
+阈值或方向。用真实 manifest/config 重跑后 g0 全部 12 项 PASS，两臂判定仍为 FAIL，结论不变。
+同批修复：`best.pt` epoch 改为从 `history.jsonl` 动态读取（更正初版报告"均停在 ep1"的错误，
+实际 B0 best=ep1、B1 best=ep3）；连续 AE 对照的措辞更正（见 S4/REPORT.md §3）。
+
 ## 8. 边界
 
 - 不读 test 做任何选择；历史 test 探针已用，不能称 untouched。

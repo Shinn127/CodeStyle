@@ -4,9 +4,15 @@ Paired comparison of the two probe JSONs: per-source values are paired by source
 and resampled together (bootstrap seed 42, 1000 draws). All thresholds were registered
 before the runs started; this script only evaluates them.
 
+The g0_contract gate is MANDATORY: both manifests must be supplied, and everything except
+ACC_WEIGHT must be provably identical (init state, dataset/split/VQ fingerprints, norm,
+pinned protocol, per-arm config.json diff, actual updates). Any mismatch yields
+INVALID_EXPERIMENT and can never produce a quality PASS.
+
   python analysis/vq_temporal_source/s4_acceptance.py \
       --b0 <B0 probe json> --b1 <B1 probe json> \
-      [--b0-manifest ... --b1-manifest ...] [--out S4/acceptance_ep10.json]
+      --b0-manifest <B0 manifest.json> --b1-manifest <B1 manifest.json> \
+      --out S4/acceptance_ep10.json
 """
 from __future__ import annotations
 
@@ -29,10 +35,17 @@ FS_REGRESSION_LIMIT = 0.005          # gate 4: world/local FS <= +0.5%
 D2E_LIMIT = 0.005                    # gate 2: ||d2 e_q|| <= +0.5%
 ACTIVITY_DROP_LIMIT = 0.05           # gate 6: proxies >= -5%
 STYLE_DROP_LIMIT = 0.02              # gate 7: style proxy accuracy -2pp
+# The whole point of the A/B is a single variable: these are the only config.json keys
+# allowed to differ between the two runs.
+CONFIG_DIFF_ALLOWED = frozenset({"out_dir", "acc_weight"})
+MANIFEST_REQUIRED_FIELDS = (
+    "run_dir", "contract", "init_checkpoint", "final_checkpoint",
+    "dataset", "norm_stats", "epochs", "integrity",
+)
 
 
 def paired_bootstrap(b0: np.ndarray, b1: np.ndarray, *, statistic: str) -> dict:
-    """CI for B1-B0 (mean or p95-of-per-source) resampling sources with replacement."""
+    """CI for B1-B0 (mean or median of the per-source differences) resampling sources."""
     diff = b1 - b0
     rng = np.random.default_rng(BOOTSTRAP_SEED)
     n = len(diff)
@@ -61,12 +74,95 @@ def gate(name: str, passed: bool, detail: dict, *, note: str = "") -> dict:
     return dict(name=name, result="PASS" if passed else "FAIL", detail=detail, note=note)
 
 
+def load_manifest(path: Path) -> dict:
+    manifest = json.loads(Path(path).read_text())
+    missing = [key for key in MANIFEST_REQUIRED_FIELDS if key not in manifest]
+    if missing:
+        raise KeyError(f"manifest {path} lacks required fields: {missing}")
+    return manifest
+
+
+def contract_gate(b0: dict, b1: dict, m0: dict, m1: dict) -> dict:
+    """Mandatory g0: prove the two runs differ ONLY in ACC_WEIGHT.
+
+    Reads both manifest.json records plus each run's own config.json (written by the trainer
+    and committed next to the checkpoints). Fails closed: every check must hold.
+    """
+    checks: dict[str, dict] = {}
+
+    def add(name: str, ok: bool, detail) -> None:
+        checks[name] = {"ok": bool(ok), "detail": detail}
+
+    def short(value) -> str:
+        return f"{str(value)[:16]}…"
+
+    total0 = int(m0["integrity"]["total_updates"])
+    total1 = int(m1["integrity"]["total_updates"])
+    add("same_total_updates", total0 == total1, f"{total0} vs {total1}")
+
+    init0 = m0["init_checkpoint"]["state_sha256"]
+    init1 = m1["init_checkpoint"]["state_sha256"]
+    add("same_init_state_sha", init0 == init1, f"{short(init0)} vs {short(init1)}")
+    file0 = m0["init_checkpoint"]["sha256"]
+    file1 = m1["init_checkpoint"]["sha256"]
+    add("same_init_ckpt_file_sha", file0 == file1, f"{short(file0)} vs {short(file1)}")
+
+    for dataset_key, name in (("db_sha256", "same_dataset_sha"),
+                              ("split_sha256", "same_split_sha"),
+                              ("vq_state_sha256", "same_vq_state_sha")):
+        value0 = m0["dataset"].get(dataset_key)
+        value1 = m1["dataset"].get(dataset_key)
+        add(name, value0 is not None and value0 == value1, f"{short(value0)} vs {short(value1)}")
+
+    norm0 = m0["norm_stats"]["sha256"]
+    norm1 = m1["norm_stats"]["sha256"]
+    add("same_norm_sha", norm0 == norm1, f"{short(norm0)} vs {short(norm1)}")
+
+    pinned0 = m0["contract"]["pinned"]
+    pinned1 = m1["contract"]["pinned"]
+    pinned_diff = {key: (pinned0.get(key), pinned1.get(key))
+                   for key in sorted(set(pinned0) | set(pinned1))
+                   if pinned0.get(key) != pinned1.get(key)}
+    add("same_pinned_protocol", pinned0 == pinned1, pinned_diff or "pinned dicts equal")
+
+    acc0 = float(m0["contract"]["acc_weight_actual"])
+    acc1 = float(m1["contract"]["acc_weight_actual"])
+    add("acc_is_single_variable",
+        acc0 == float(m0["contract"]["acc_weight_expected"])
+        and acc1 == float(m1["contract"]["acc_weight_expected"])
+        and acc0 != acc1,
+        f"B0={acc0} B1={acc1} (each arm must match its own manifest expectation, and they differ)")
+
+    add("probe_b0_is_from_manifest_run",
+        Path(b0["checkpoint"]).resolve().parent == Path(m0["run_dir"]).resolve(),
+        f"{b0['checkpoint']} under {m0['run_dir']}")
+    add("probe_b1_is_from_manifest_run",
+        Path(b1["checkpoint"]).resolve().parent == Path(m1["run_dir"]).resolve(),
+        f"{b1['checkpoint']} under {m1['run_dir']}")
+
+    configs = []
+    for manifest in (m0, m1):
+        config_path = Path(manifest["run_dir"]) / "config.json"
+        if not config_path.exists():
+            raise FileNotFoundError(f"config.json missing next to the run: {config_path}")
+        configs.append(json.loads(config_path.read_text()))
+    diff_keys = sorted(key for key in set(configs[0]) | set(configs[1])
+                       if configs[0].get(key) != configs[1].get(key))
+    add("config_diff_only_allowed", set(diff_keys) <= CONFIG_DIFF_ALLOWED,
+        f"differing keys: {diff_keys}; allowed: {sorted(CONFIG_DIFF_ALLOWED)}")
+
+    return dict(passed=all(item["ok"] for item in checks.values()),
+                checks=checks, config_diff_keys=diff_keys,
+                allowed_config_diff=sorted(CONFIG_DIFF_ALLOWED),
+                acc_weight_arms=[acc0, acc1], total_updates=total0)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--b0", type=Path, required=True)
     ap.add_argument("--b1", type=Path, required=True)
-    ap.add_argument("--b0-manifest", type=Path, default=None)
-    ap.add_argument("--b1-manifest", type=Path, default=None)
+    ap.add_argument("--b0-manifest", type=Path, required=True)
+    ap.add_argument("--b1-manifest", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--label", default="ep10")
     args = ap.parse_args()
@@ -77,18 +173,31 @@ def main() -> None:
     ids1 = [c["source_entry_id"] for c in b1["per_source"]]
     if ids0 != ids1:
         raise RuntimeError(f"probe sources are not paired: {ids0} vs {ids1}")
+    m0 = load_manifest(args.b0_manifest)
+    m1 = load_manifest(args.b1_manifest)
 
     def series(payload, key):
         return per_source_metric(payload, key).astype(np.float64)
 
     report: dict = dict(
         label=args.label, b0=str(args.b0.resolve()), b1=str(args.b1.resolve()),
+        b0_manifest=str(args.b0_manifest.resolve()), b1_manifest=str(args.b1_manifest.resolve()),
         protocol="COMMON.md section 7 (pre-registered before B0/B1 started)",
         thresholds=dict(jitter_drop_required=JITTER_DROP_REQUIRED,
                         quality_regression_limit=QUALITY_REGRESSION_LIMIT,
                         fs_regression_limit=FS_REGRESSION_LIMIT, d2e_limit=D2E_LIMIT,
                         activity_drop_limit=ACTIVITY_DROP_LIMIT, style_drop_limit=STYLE_DROP_LIMIT),
         gates={}, pairs={},
+    )
+
+    # Gate 0 (mandatory): the contract. Runs BEFORE any quality claim; on failure the verdict
+    # is INVALID_EXPERIMENT and the quality gates below stay diagnostic-only.
+    contract = contract_gate(b0, b1, m0, m1)
+    report["manifest_checks"] = contract
+    report["gates"]["g0_contract"] = gate(
+        "B0/B1 contract: manifests + configs identical except ACC_WEIGHT",
+        contract["passed"], contract,
+        note="mandatory; failure -> INVALID_EXPERIMENT, never a quality verdict",
     )
 
     # Gate 1: ||d2r|| mean and p95 must both drop. Both keys are per-source arrays
@@ -227,27 +336,9 @@ def main() -> None:
         for g, v in groups.items()
     }
 
-    # Manifest cross-checks: identical updates and matched configs except acc.
-    if args.b0_manifest and args.b1_manifest:
-        m0 = json.loads(args.b0_manifest.read_text())
-        m1 = json.loads(args.b1_manifest.read_text())
-        checks = dict(
-            same_total_updates=m0["integrity"]["total_updates"] == m1["integrity"]["total_updates"],
-            total_updates=m0["integrity"]["total_updates"],
-            acc_weight=(m0["contract"]["acc_weight_actual"], m1["contract"]["acc_weight_actual"]),
-            same_dataset_sha=m0["dataset"]["db_sha256"] == m1["dataset"]["db_sha256"],
-            same_init_state=m0["init_checkpoint"]["state_sha256"] == m1["init_checkpoint"]["state_sha256"],
-        )
-        report["manifest_checks"] = checks
-        if not checks["same_total_updates"]:
-            report["gates"]["g0_updates"] = gate("B0/B1 actual updates identical", False, checks)
-        else:
-            report["gates"]["g0_updates"] = gate("B0/B1 actual updates identical", True, checks)
-    else:
-        report["manifest_checks"] = None
-
-    # Verdict: all registered gates PASS -> PASS; a confirmed reversal on gate 1, a >3% quality
-    # regression, a >5% activity drop or a style collapse -> FAIL; otherwise INCONCLUSIVE.
+    # Verdict: contract failure is a hard stop (INVALID_EXPERIMENT, no quality claim);
+    # otherwise a confirmed reversal on gate 1, a >3% quality regression, a >5% activity drop
+    # or a style collapse -> FAIL; all registered gates met -> PASS; else INCONCLUSIVE.
     g1_reversed = any(v["ci"][0] > 0 for v in g1.values())
     hard_fail = (
         g1_reversed
@@ -258,7 +349,9 @@ def main() -> None:
     all_pass = all(g["result"] == "PASS" for g in report["gates"].values()) and not any(
         v["confirmed_drop"] is False for v in g1.values()
     )
-    if hard_fail:
+    if not contract["passed"]:
+        verdict = "INVALID_EXPERIMENT"
+    elif hard_fail:
         verdict = "FAIL"
     elif all_pass:
         verdict = "PASS"
@@ -266,7 +359,8 @@ def main() -> None:
         verdict = "INCONCLUSIVE"
     report["verdict"] = verdict
     report["verdict_note"] = (
-        "PASS = every registered gate met and d2r CIs exclude 0 below; "
+        "INVALID_EXPERIMENT = the mandatory g0 contract did not hold (quality gates are "
+        "diagnostic only); PASS = every registered gate met and d2r CIs exclude 0 below; "
         "FAIL = confirmed reversal or registered veto; INCONCLUSIVE = budget-limited/no separation"
     )
 

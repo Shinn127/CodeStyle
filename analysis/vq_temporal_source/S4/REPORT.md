@@ -20,7 +20,7 @@
 - **最终状态指纹**：B0 `376bb1651c71fdc5…` / B1 `ea111ea2ff2c79d7…`（量化器均已改变 → 新 VQ 身份）
 - **tests**：`tests/test_vq_temporal_pipeline.py`（CPU 12 项：wrapper 可解析性、A/B pin、S4 门逻辑、val12 选定、探针 schema；GPU 1 项）；全量回归 `bash scripts/run_tests.sh cpu` = 422 passed；GPU 套件见 S4/gpu_tests.log
 - **per-source_metrics / CI**：本报告 §1–§4 及 `acceptance_*.json`（12 源配对 bootstrap，seed=42，1000 次）
-- **unexpected_behaviors**：① 入口脚本 `--no-decoder-only` 真实缺陷（本实验启动时暴露，已修复 + 回归测试）；② B1 的连续 AE 路径同向恶化（c.local_mpjpe +22%）→ 收益不是量化残差特有，而是解码器整体变平滑；③ B1 端点 codec 往返翻码率上升（0.605→0.682）；④ B0/B1 的 `best.pt` 均停在 ep1（首评接受语义），主分析已按预注册改用固定终点。
+- **unexpected_behaviors**：① 入口脚本 `--no-decoder-only` 真实缺陷（本实验启动时暴露，已修复 + 回归测试）；② B1 的连续 AE 路径未同步变平滑（c.jitter +2.0%），但两条路径的姿态精度均明显受损（c.local_mpjpe +22.2%、c.fs_world +15.0%）——量化路径的 Δ²r/jitter 下降不能用“解码器整体变平滑”解释，而是新的 E/Q/D 组合改变了量化解码运动的时间特性；③ B1 端点 codec 往返翻码率上升（0.605→0.682），说明 jitter 下降不依赖更稳定的码身份；④ `best.pt` 停在各自的最后一次 gate 接受 epoch（B0 best=ep1（接受 epoch: [1]），B1 best=ep3（接受 epoch: [1, 3]），由 history.jsonl 读出），主分析按预注册使用固定终点 epoch_0010.pt。
 - **decision**：**FAIL**（见 §1）；否决规则触发：以运动/精度代价换低 jitter，且 jitter 降幅未达 15% 预注册阈值。**不自动续到 150ep。**
 - **next_authorization_needed**：S5 分支选择（S5a 位置空间二阶损失 / S5b 接触约束 / S5c 相对边界几何 / S5d 短历史 decoder）或其它改动，均需用户显式授权；本轮到此停止。
 
@@ -28,7 +28,7 @@
 
 | 判据 | 结果 | 关键数字 |
 |---|---|---|
-| B0/B1 actual updates identical | PASS | updates=51650.0 acc=[0.0, 4.9842] |
+| B0/B1 contract: manifests + configs identical except ACC_WEIGHT | PASS | 全部 12 项一致；updates=51650.0；acc=[0.0, 4.9842]；config 差异键=['acc_weight', 'out_dir'] |
 | d2r mean & p95 both drop (95% CI upper < 0) | PASS | mean 0.4170→0.3703cm (-11.19%); p95 1.3316→1.1729cm (-11.92%) |
 | ||d2 e_q|| mean change <= +0.5% | PASS | ‖Δ²e_q‖ 0.4250→0.3812cm (-10.31%) |
 | official quantized jitter drop >= 15% | FAIL | jitter 0.4382→0.3952cm (-9.82%; 要求 ≤ -15%) |
@@ -52,6 +52,10 @@
 
 ## 3. 连续 AE 对照（区分"量化残差收益"与"两条路径共同变平滑"）
 
+读法：连续路径 jitter +2.0%（未变平滑），而连续路径的 local MPJPE +22.2%、world 足滑 +15.0%，
+与量化路径的姿态精度损失同量级。因此本轮 Δ²r/jitter 下降**不能**归因为“解码器整体变平滑”，
+它是新的 E/Q/D 组合改变量化解码运动时间特性的结果，且代价（关节位置精度）在两条路径上同时存在。
+
 | 连续路径指标 | B0 | B1 | 变化 |
 |---|---:|---:|---|
 | jitter | 0.1251 | 0.1277 | +2.03% |
@@ -74,11 +78,26 @@
 
 - GT jitter = 0.0917cm；GT world 足滑 = 0.0907cm
 
-## 6. Manifest 交叉核验
+## 6. 契约闸门 g0 明细（强制）
 
-- 同 updates：True（51650.0）
-- acc_weight：[0.0, 4.9842]
-- 同 DB 指纹：True；同初始状态：True
+- 总判定：全部一致（updates=51650.0；acc=[0.0, 4.9842]）
+
+| 检查项 | 结果 | 详情 |
+|---|---|---|
+| same_total_updates | PASS | 51650 vs 51650 |
+| same_init_state_sha | PASS | 918b5e07046266f7… vs 918b5e07046266f7… |
+| same_init_ckpt_file_sha | PASS | 825be6785b3e7fc2… vs 825be6785b3e7fc2… |
+| same_dataset_sha | PASS | 6d308e18f05285e6… vs 6d308e18f05285e6… |
+| same_split_sha | PASS | c3987af0f1c91568… vs c3987af0f1c91568… |
+| same_vq_state_sha | PASS | 918b5e07046266f7… vs 918b5e07046266f7… |
+| same_norm_sha | PASS | bfbe62d548b525de… vs bfbe62d548b525de… |
+| same_pinned_protocol | PASS | pinned dicts equal |
+| acc_is_single_variable | PASS | B0=0.0 B1=4.9842 (each arm must match its own manifest expectation, and they differ) |
+| probe_b0_is_from_manifest_run | PASS | /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep/epoch_0010.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep |
+| probe_b1_is_from_manifest_run | PASS | /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep/epoch_0010.pt under /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep |
+| config_diff_only_allowed | PASS | differing keys: ['acc_weight', 'out_dir']; allowed: ['acc_weight', 'out_dir'] |
+
+- config.json 差异键：['acc_weight', 'out_dir']（允许：['acc_weight', 'out_dir']）
 
 ## 7. 中途鲁棒性对照（epoch_0005.pt，非选型依据）
 
@@ -86,6 +105,7 @@
 
 | 判据 | 结果 | 关键数字 |
 |---|---|---|
+| B0/B1 contract: manifests + configs identical except ACC_WEIGHT | PASS | 全部 12 项一致；updates=51650.0；acc=[0.0, 4.9842]；config 差异键=['acc_weight', 'out_dir'] |
 | d2r mean & p95 both drop (95% CI upper < 0) | PASS | mean 0.4080→0.3613cm (-11.45%); p95 1.2925→1.1317cm (-12.44%) |
 | ||d2 e_q|| mean change <= +0.5% | PASS | ‖Δ²e_q‖ 0.4160→0.3696cm (-11.15%) |
 | official quantized jitter drop >= 15% | FAIL | jitter 0.4298→0.3839cm (-10.67%; 要求 ≤ -15%) |
