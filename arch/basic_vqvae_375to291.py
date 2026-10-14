@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Literal
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# First channels of the 291-dim motion block: root planar velocity, yaw rate, vertical
-# velocity. Mirrors `Utils.motion375.decode_selected_state`.
+# First channels of motion291: root vx, yaw rate, vz (both translations are planar).
 ROOT_MOTION_DIMS = 3
 
 try:  # pragma: no cover - import guard
@@ -22,6 +22,53 @@ except ImportError:  # pragma: no cover
 # whole codebook every step and it never converges.
 LIBRARY_DEFAULT_DEAD_CODE_THRESHOLD = 2
 LIBRARY_EXTREME_RESET_FRACTION = 0.5
+
+
+def codebook_boundary_distance(z, embedding, *, mode="nearest_boundary", assigned_indices=None,
+                               chunk_rows=8192):
+    """Signed distance to the closest distinct-code Voronoi plane, plus a valid mask.
+
+    Search is detached; only two gathered vectors participate in autograd. The
+    second closest *code* need not define the closest *plane*. ``nearest_code``
+    retains that older approximation for explicitly replaying historical runs.
+    Assigned indices optionally preserve the actual quantizer's FP32 decisions.
+    Coincident codes do not define a geometric boundary; a one-point table has none.
+    """
+    if mode not in ("nearest_boundary", "nearest_code"):
+        raise ValueError(f"Unknown latent margin mode: {mode}")
+    if chunk_rows < 1 or z.ndim != 2 or embedding.ndim != 2 or z.shape[1] != embedding.shape[1] or len(embedding) < 1:
+        raise ValueError("Expected [rows,code_dim], [codes,code_dim] and positive chunk_rows")
+    if assigned_indices is not None and assigned_indices.shape != (len(z),):
+        raise ValueError("Assigned indices must have one entry per latent row")
+    table=embedding.detach().float();zf=z.float()
+    with torch.no_grad(), torch.autocast(device_type=z.device.type,enabled=False):
+        # No persistent cache: EMA can update the table every training forward.
+        if mode=='nearest_boundary':
+            # Direct cdist launches a very inefficient CUDA kernel for this D=4
+            # table (~15ms at K=2048). Broadcasted norms preserve zero aliases and
+            # accuracy without MM cancellation; block the temporary to <=64MiB.
+            block=max(1,16_777_216//(len(table)*table.shape[1]))
+            separations=torch.cat([(table[i:i+block,None]-table[None]).norm(dim=-1)
+                                   for i in range(0,len(table),block)])
+            distinct=separations>1e-9
+            inverse_length=.5/separations.clamp_min(1e-9)
+        first=torch.empty(len(z),device=z.device,dtype=torch.long);second=torch.empty_like(first)
+        weight=-2*table.t();bias=table.square().sum(-1)
+        for begin in range(0,len(z),chunk_rows):
+            end=min(begin+chunk_rows,len(z))
+            score=torch.addmm(bias[None],zf[begin:end].detach(),weight)
+            own=score.argmin(-1) if assigned_indices is None else assigned_indices[begin:end].to(z.device).long()
+            if mode=="nearest_boundary":
+                score.sub_(score.gather(1,own[:,None]))
+                score.mul_(inverse_length[own])
+                score.masked_fill_(~distinct[own],float('inf'))
+            else:
+                score.scatter_(1,own[:,None],float('inf'))
+            first[begin:end]=own;second[begin:end]=score.argmin(-1)
+    c1=table[first];c2=table[second]
+    valid=(c1-c2).norm(dim=-1)>1e-9
+    distance=((zf-c2).square().sum(-1)-(zf-c1).square().sum(-1))/(2*(c1-c2).norm(dim=-1).clamp_min(1e-9))
+    return torch.where(valid,distance,torch.zeros_like(distance)),valid
 
 
 @dataclass
@@ -139,10 +186,9 @@ class LibraryVectorQuantizer(nn.Module):
 
         The library forward materializes `F.one_hot(indices, K)` (int64 then cast to fp32)
         even in eval, which for B=512/32 heads/K=2048 is hundreds of MB of pure overhead.
-        This path computes the identical nearest code per head (same ordering as the
-        library's `argmax(-cdist(...))`, first-index tie break) and gathers the same fp32
-        codebook rows, so outputs are bit-identical while cost drops to one small matmul
-        per chunk.
+        This path uses the same Euclidean nearest-code rule and first-index tie break.
+        Different FP32 distance kernels can disagree at near-ties; mathematical
+        equivalence is not a bit-identity guarantee across chunks/devices.
         """
         if self.training:raise ValueError('quantize_only requires a frozen eval codebook')
         if z_bt.ndim!=2 or z_bt.shape[-1]!=self.latent_dim:raise ValueError('Expected [B,latent_dim]')
@@ -162,22 +208,24 @@ class LibraryVectorQuantizer(nn.Module):
             bias=embed.square().sum(-1)
             step=chunk_rows*heads
             for begin in range(0,x.size(0),step):
-                score=torch.addmm(bias[None],x[begin:begin+step],weight)
+                with torch.autocast(device_type=x.device.type,enabled=False):
+                    score=torch.addmm(bias[None],x[begin:begin+step],weight)
                 code[begin:begin+step]=score.argmin(dim=-1)
             return embed.index_select(0,code).reshape(batch,self.latent_dim)
         # separate codebook per head: same rule, per-head rows
         code=torch.empty(heads,x.size(0)//heads,dtype=torch.long,device=x.device)
-        per_head=x.reshape(heads,x.size(0)//heads,dim)
+        per_head=z.reshape(batch,heads,dim).permute(1,0,2)
         for head in range(heads):
             table=embed[head]
             table_norm=table.square().sum(-1)
             rows=per_head[head]
             for begin in range(0,rows.size(0),chunk_rows):
                 piece=rows[begin:begin+chunk_rows]
-                dist=piece.square().sum(-1,keepdim=True)+table_norm[None]-2.0*(piece@table.t())
+                with torch.autocast(device_type=x.device.type,enabled=False):
+                    dist=piece.square().sum(-1,keepdim=True)+table_norm[None]-2.0*(piece@table.t())
                 code[head,begin:begin+chunk_rows]=dist.argmin(dim=-1)
         gathered=embed.gather(1,code[...,None].expand(-1,-1,dim))
-        return gathered.reshape(batch,self.latent_dim)
+        return gathered.permute(1,0,2).reshape(batch,self.latent_dim)
 
     def forward(self, z_bt: torch.Tensor) -> QuantizeResult:
         if z_bt.dim() != 2:
@@ -762,13 +810,18 @@ class BasicVQVAE375to291(nn.Module):
         latent_margin_weight: float = 0.0,
         roundtrip_weight: float = 0.0,
         latent_margin_target: float = 0.05,
+        latent_margin_mode: Literal["nearest_boundary", "nearest_code"] = "nearest_boundary",
     ) -> dict[str, torch.Tensor]:
-        if code_align_weight < 0.0:
+        if not math.isfinite(code_align_weight) or code_align_weight < 0.0:
             raise ValueError(f"code_align_weight must be >= 0, got {code_align_weight}")
-        if latent_margin_weight < 0.0:
+        if not math.isfinite(latent_margin_weight) or latent_margin_weight < 0.0:
             raise ValueError(f"latent_margin_weight must be >= 0, got {latent_margin_weight}")
-        if roundtrip_weight < 0.0:
+        if not math.isfinite(roundtrip_weight) or roundtrip_weight < 0.0:
             raise ValueError(f"roundtrip_weight must be >= 0, got {roundtrip_weight}")
+        if not math.isfinite(latent_margin_target) or latent_margin_target < 0:
+            raise ValueError("latent_margin_target must be finite and nonnegative")
+        if latent_margin_mode not in ("nearest_boundary", "nearest_code"):
+            raise ValueError("Unknown latent margin mode")
         details = self.forward(x, return_details=True,
                                continuous_decode=code_align_weight > 0.0)
         pred = details["motion_hat"]
@@ -856,53 +909,26 @@ class BasicVQVAE375to291(nn.Module):
                 raise RuntimeError("code_align_weight requires the continuous decode")
             code_align_loss = torch.mean((continuous_hat - pred.detach()).square())
 
-        # Boundary margin: the measured failure mode of this codec is that the encoder output
-        # lives almost ON its Voronoi boundary (median exact boundary distance 0.011 vs cell
-        # spacing 0.154), so ANY equal-norm disturbance flips the code. Push each encoder
-        # output away from the boundary with a hinge; the codebook is an EMA buffer (no grad)
-        # so this trains the encoder only. Exact signed distance toward the second-nearest
-        # code: (||z-c2||^2 - ||z-c1||^2) / (2 ||c1-c2||).
+        # Margin supervises encoder geometry against the current post-EMA table.
+        # EMA buffers receive no gradient, but still update in training forward.
         latent_margin_loss = pred.new_zeros(())
         boundary_distance = pred.new_zeros(())
+        boundary_valid_fraction = pred.new_zeros(())
         if latent_margin_weight > 0.0:
             embed = self.quantizer.embedding_weight.detach()
             if embed.dim() == 3 and embed.size(0) == 1:
                 embed = embed[0]
             z_flat = latent_bt.reshape(-1, self.code_dim)
-            # Index search is non-differentiable (argmin) and only the two selected codes
-            # matter for the hinge, so the search runs under no_grad and the differentiable
-            # part is two gathers + two norms. The earlier full-cdist-with-grad version built
-            # a 32k x 2048 autograd graph per batch and cost ~30% of an epoch.
-            with torch.no_grad():
-                idx1 = torch.empty(z_flat.size(0), dtype=torch.long, device=z_flat.device)
-                idx2 = torch.empty_like(idx1)
-                embed_f = embed.float()
-                weight = -2.0 * embed_f.t()
-                bias = embed_f.square().sum(-1)
-                z_search = z_flat.detach().float()
-                for begin in range(0, z_flat.size(0), 8192):
-                    end = min(begin + 8192, z_flat.size(0))
-                    score = torch.addmm(bias[None], z_search[begin:end], weight)
-                    best = score.argmin(dim=-1)
-                    idx1[begin:end] = best
-                    # mask the winner and take the runner-up
-                    score.scatter_(1, best[:, None], float('inf'))
-                    idx2[begin:end] = score.argmin(dim=-1)
-            c1 = embed[idx1].float()
-            c2 = embed[idx2].float()
-            zf = z_flat.float()
-            gap12 = (c1 - c2).norm(dim=-1).clamp_min(1e-9)
-            # Exact signed distance to the Voronoi boundary between the two nearest codes:
-            # (||z-c2||^2 - ||z-c1||^2) / (2 ||c1-c2||), positive on c1's side, so gradient
-            # descent pushes along the unit vector away from c2.
-            signed = ((zf - c2).square().sum(-1) - (zf - c1).square().sum(-1)) / (2.0 * gap12)
-            boundary_distance = signed.mean()
-            latent_margin_loss = torch.relu(float(latent_margin_target) - signed).mean()
+            signed,valid = codebook_boundary_distance(z_flat,embed,mode=latent_margin_mode)
+            count=valid.sum().clamp_min(1)
+            boundary_distance=(signed*valid).sum()/count
+            boundary_valid_fraction=valid.float().mean()
+            latent_margin_loss=(torch.relu(float(latent_margin_target)-signed)*valid).sum()/count
 
         # Roundtrip consistency: feed the decoder's own output back through the encoder and
-        # ask it to return to the code it came from (the controller's closed loop does exactly
-        # this re-encode). Supervising towards the quantized code (not the continuous encoder
-        # output) directly minimizes out-of-cell drift, i.e. code flips under self-feedback.
+        # ask it to return to the code it came from. This is a same-frame codec cycle;
+        # controllers carrying feedback_latent explicitly do NOT re-encode it each step.
+        # Quantized targets were gathered before this forward's EMA update, and detached.
         roundtrip_loss = pred.new_zeros(())
         roundtrip_drift = pred.new_zeros(())
         if roundtrip_weight > 0.0:
@@ -941,6 +967,7 @@ class BasicVQVAE375to291(nn.Module):
             "code_align_loss": code_align_loss,
             "latent_margin_loss": latent_margin_loss,
             "boundary_distance": boundary_distance,
+            "boundary_valid_fraction": boundary_valid_fraction,
             "roundtrip_loss": roundtrip_loss,
             "roundtrip_drift": roundtrip_drift,
             "latent_code_gap": latent_code_gap,
@@ -950,6 +977,7 @@ class BasicVQVAE375to291(nn.Module):
 
 
 __all__ = [
+    "codebook_boundary_distance",
     "BasicVQVAE375to291",
     "LIBRARY_DEFAULT_DEAD_CODE_THRESHOLD",
     "LibraryVectorQuantizer",

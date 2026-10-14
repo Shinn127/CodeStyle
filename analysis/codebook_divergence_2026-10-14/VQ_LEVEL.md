@@ -1,5 +1,7 @@
 # VQ 层面：码保真的源头分析与重构方案
 
+> 复审限定（2026-10-14）：下文逐维σ与槽L2误差的比较、硬上限/唯一杠杆、合并实验的重训上界、AE误差地板等推断不成立或未经证明，不作执行保证。原始结果保留，当前代码修复及固定validation的运动质量对照见 [独立审计](../vq_code_stability_2026-10-14/AUDIT.md)。旧controller配套旧VQ仍可用，新VQ不能直接override替换。
+
 2026-10-14。回答"是否需要从 VQ 层面源头分析"——**是，且这是决定码保真上限的第一性杠杆**。
 本文给出定量依据（本轮新实验）与完整重构规格。前置：`REPORT.md` / `CAUSE_ANALYSIS.md` /
 `CODE_ANALYSIS.md`。工具：`vq_levers.py`（新）、`code_ceiling.py`（新）、`context_oracle.py`（新）。

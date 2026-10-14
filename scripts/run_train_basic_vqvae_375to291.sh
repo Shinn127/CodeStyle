@@ -59,6 +59,7 @@ CODE_ALIGN_WEIGHT="${CODE_ALIGN_WEIGHT:-2.0}"
 # measured failure mode is boundary survival, so these two are the direct levers.
 LATENT_MARGIN_WEIGHT="${LATENT_MARGIN_WEIGHT:-0.0}"
 LATENT_MARGIN_TARGET="${LATENT_MARGIN_TARGET:-0.05}"
+LATENT_MARGIN_MODE="${LATENT_MARGIN_MODE:-nearest_boundary}"
 ROUNDTRIP_WEIGHT="${ROUNDTRIP_WEIGHT:-0.0}"
 # Warm start (encoder/decoder only); codebook re-initialises when the size changes.
 INIT_CKPT="${INIT_CKPT:-}"
@@ -113,6 +114,7 @@ cmd=(
   --code-align-weight "${CODE_ALIGN_WEIGHT}"
   --latent-margin-weight "${LATENT_MARGIN_WEIGHT}"
   --latent-margin-target "${LATENT_MARGIN_TARGET}"
+  --latent-margin-mode "${LATENT_MARGIN_MODE}"
   --roundtrip-weight "${ROUNDTRIP_WEIGHT}"
   --num-embeddings "${NUM_EMBEDDINGS}"
   --eval-every "${EVAL_EVERY}"
@@ -134,4 +136,8 @@ ru_append_bool_flag cmd "${USE_ROTATION_TRICK}" --use-rotation-trick --no-use-ro
 ru_append_bool_flag cmd "${KMEANS_INIT}" --kmeans-init --no-kmeans-init
 
 cmd+=("$@")
+if [[ "${DRY_RUN:-0}" == "1" ]]; then
+  printf '[Dry run]'; printf ' %q' "${cmd[@]}"; printf '\n'
+  exit 0
+fi
 ru_run "${cmd[@]}"

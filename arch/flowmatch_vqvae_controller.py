@@ -1152,23 +1152,26 @@ class FlowMatchVQVAEController(nn.Module):
     def code_ce_temperature(self, override: float = 0.0) -> float:
         """Logit temperature for the code-decision CE; 0 or negative selects the auto value.
 
-        Auto = (median codebook nearest-neighbor spacing / 2)^2, i.e. a logit gap of -1 at the
-        typical cell radius and -4 at one full spacing, so a confident decision needs the
-        prediction to sit near the cell center rather than merely on the correct side.
+        Auto = (median codebook nearest-neighbor spacing / 2)^2: a pair at that
+        spacing has logit gap 4 at its code center and 0 at its midpoint. CE can
+        push beyond a center; it does not by itself constrain regression distance.
         """
+        if not math.isfinite(float(override)):
+            raise ValueError('Code CE temperature must be finite')
         if override and float(override) > 0.0:
             return float(override)
         embed = self._shared_codebook()
-        key = (id(embed), embed._version, str(embed.device))
+        key = (embed.data_ptr(), embed._version, tuple(embed.shape), str(embed.device))
         cached = getattr(self, '_code_ce_auto_temperature_cache', None)
         if cached is not None and cached[0] == key:
             return cached[1]
         with torch.no_grad():
             table = embed.float()
-            distances = torch.cdist(table, table)
-            distances.fill_diagonal_(float('inf'))
+            distances = torch.cdist(table, table, compute_mode='donot_use_mm_for_euclid_dist')
+            # Coincident aliases must not force T=1e-12 and explosive gradients.
+            distances.masked_fill_(distances<=1e-9,float('inf'))
             spacing = float(distances.min(dim=-1).values.median())
-        temperature = max((spacing / 2.0) ** 2, 1e-12)
+        temperature = max((spacing / 2.0) ** 2, 1e-12) if math.isfinite(spacing) else 1.0
         self._code_ce_auto_temperature_cache = (key, temperature)
         return temperature
 
@@ -1190,6 +1193,10 @@ class FlowMatchVQVAEController(nn.Module):
         ``(mean_ce, match_rate)``; the codebook stays frozen and no RNG is consumed.
         """
         self._require_latent_stats()
+        if predicted.shape!=target.shape or predicted.ndim<2 or predicted.shape[-1]!=self.latent_dim:
+            raise ValueError('Code CE expects matching [...,latent_dim] prediction and target')
+        if chunk_rows<1:
+            raise ValueError('Code CE chunk_rows must be positive')
         quantizer = self.vqvae.quantizer
         embed = self._shared_codebook().to(device=predicted.device, dtype=torch.float32)
         temperature = self.code_ce_temperature(temperature)
@@ -1198,7 +1205,7 @@ class FlowMatchVQVAEController(nn.Module):
         target_raw = self.denormalize_latent(target.float().detach()).reshape(-1, code_dim)
         weight = -2.0 * embed.t()
         bias = embed.square().sum(-1)
-        with torch.no_grad():
+        with torch.no_grad(), torch.autocast(device_type=predicted.device.type,enabled=False):
             gt = torch.empty(target_raw.size(0), dtype=torch.long, device=target_raw.device)
             for begin in range(0, target_raw.size(0), chunk_rows):
                 end = min(begin + chunk_rows, target_raw.size(0))
@@ -1209,9 +1216,10 @@ class FlowMatchVQVAEController(nn.Module):
         correct = predicted.new_zeros(())
         for begin in range(0, rows, chunk_rows):
             end = min(begin + chunk_rows, rows)
-            score = torch.addmm(bias[None], pred_raw[begin:end], weight)
-            logits = -score / temperature
-            total = total + F.cross_entropy(logits, gt[begin:end], reduction='sum')
+            with torch.autocast(device_type=predicted.device.type,enabled=False):
+                score = torch.addmm(bias[None], pred_raw[begin:end], weight)
+                logits = -score / temperature
+                total = total + F.cross_entropy(logits, gt[begin:end], reduction='sum')
             correct = correct + (logits.argmax(dim=-1) == gt[begin:end]).sum()
         denom = max(rows, 1)
         return total / denom, correct / denom

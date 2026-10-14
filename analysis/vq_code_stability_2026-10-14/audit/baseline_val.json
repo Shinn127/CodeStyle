@@ -1,0 +1,101 @@
+{
+ "schema": "vq_anatomy_exact_boundary_v2",
+ "split": "val",
+ "clips": 2,
+ "frames_total": 122,
+ "transition_intervals_total": 120,
+ "seed": 42,
+ "starts": [
+  1577711,
+  863033
+ ],
+ "source_entry_ids": [
+  323,
+  184
+ ],
+ "vq_sha256": "825be6785b3e7fc258c196f49b70b3874af792c6aaf4a2912a5bdd5765a9962c",
+ "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "norm_sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4",
+ "r1": {
+  "mean": 0.08805075287818909,
+  "p50": 0.0462,
+  "p90": 0.1968
+ },
+ "bdist": {
+  "mean": 0.03310558572411537,
+  "p10": 0.0014,
+  "p50": 0.0101,
+  "p90": 0.0697
+ },
+ "drift_quant": {
+  "mean": 0.12980511784553528,
+  "p50": 0.0694,
+  "p90": 0.2811
+ },
+ "drift_cont": {
+  "mean": 0.11776839196681976,
+  "p50": 0.0649
+ },
+ "drift_ctrl_noise": {
+  "mean": 0.16240547597408295,
+  "p50": 0.1035
+ },
+ "flip_rate": 0.6221823692321777,
+ "flip_rate_noise_control": 0.7917520403862,
+ "flip_given_drift_gt_bdist": 0.7071324586868286,
+ "flip_given_drift_le_bdist": 0.0,
+ "r1_over_bdist_mean": 14.537199020385742,
+ "recon_cm_mean": 0.8243502676486969,
+ "gt_switch_per_frame": 20.25,
+ "gt_switch_fraction_per_slot": 0.6328125,
+ "legacy_second_code_bdist_mean": 0.03464766964316368,
+ "legacy_overestimates_fraction": 0.13422131538391113,
+ "boundary_valid_fraction": 1.0,
+ "relative_boundary_p50": 0.3132,
+ "boundary_below_005_fraction": 0.8586065769195557,
+ "quantizer_search_disagreement_fraction": 0.0,
+ "reconstruction_metric": "local_position_mpjpe_24j_cm; legacy motion291 MAE was not cm",
+ "cycle_pose_displacement_cm": 0.4260791540145874,
+ "per_head_flip_rate": [
+  0.8278688490390778,
+  0.2540983557701111,
+  0.7049180269241333,
+  0.8934426307678223,
+  0.49180328845977783,
+  0.6557376980781555,
+  0.7540983557701111,
+  0.42622949182987213,
+  0.6147540807723999,
+  0.46721309423446655,
+  0.8524590134620667,
+  0.7459016442298889,
+  0.35245901346206665,
+  0.9508196711540222,
+  0.7213114798069,
+  0.6475409865379333,
+  0.10655737295746803,
+  0.8442622721195221,
+  0.9426229596138,
+  0.6065573692321777,
+  0.7049180269241333,
+  0.8770491778850555,
+  0.5245901644229889,
+  0.7049180269241333,
+  0.8278688490390778,
+  0.28688524663448334,
+  0.7950819432735443,
+  0.3196721374988556,
+  0.032786885276436806,
+  0.7950819432735443,
+  0.7540983557701111,
+  0.4262295141816139
+ ],
+ "motion_quality": {
+  "mpjpe_cm": 1.0279268775481345,
+  "root_ade_cm": 0.37043556229012914,
+  "jitter_cm": 0.4114468676895745,
+  "local_fs_cm": 0.43144531810984893,
+  "world_fs_cm": 0.5530763425325093,
+  "world_contact_count": 114
+ }
+}

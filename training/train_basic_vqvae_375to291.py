@@ -30,6 +30,7 @@ if str(_ROOT) not in sys.path:
 
 import argparse
 import contextlib
+import math
 import time
 from pathlib import Path
 from typing import Optional
@@ -48,6 +49,7 @@ from Utils.runtime import (
     set_seed,
     to_float,
     require_unmirrored_db,
+    sanitize_state_dict_keys,
 )
 from Utils.vqvae_eval import (
     VQVAEEvalConfig,
@@ -95,6 +97,7 @@ METRIC_KEYS = (
     "code_align_loss",
     "latent_margin_loss",
     "boundary_distance",
+    "boundary_valid_fraction",
     "roundtrip_loss",
     "roundtrip_drift",
     "latent_code_gap",
@@ -120,6 +123,7 @@ def epoch_pass(
     code_align_weight: float = 0.0,
     latent_margin_weight: float = 0.0,
     latent_margin_target: float = 0.05,
+    latent_margin_mode: str = "nearest_boundary",
     roundtrip_weight: float = 0.0,
     optimizer: Optional[torch.optim.Optimizer] = None,
     scaler: Optional[torch.cuda.amp.GradScaler] = None,
@@ -187,6 +191,7 @@ def epoch_pass(
                 code_align_weight=code_align_weight,
                 latent_margin_weight=latent_margin_weight,
                 latent_margin_target=latent_margin_target,
+                latent_margin_mode=latent_margin_mode,
                 roundtrip_weight=roundtrip_weight,
             )
             loss = loss_dict["loss"] / denom
@@ -406,10 +411,12 @@ def parse_args() -> argparse.Namespace:
               "encoder only; the EMA codebook has no gradient."))
     parser.add_argument("--latent-margin-target", type=float, default=0.05,
         help="Target boundary distance (raw latent units) for --latent-margin-weight.")
+    parser.add_argument("--latent-margin-mode", choices=("nearest_boundary", "nearest_code"), default="nearest_boundary",
+        help="Closest Voronoi plane (exact); nearest_code replays the old runner-up-code approximation.")
     parser.add_argument("--roundtrip-weight", type=float, default=0.0,
         help=("Weight of the re-encode consistency term: decode the prediction, re-encode it "
               "(with the GT trajectory block) and pull the result back to the code it came "
-              "from. Directly minimizes out-of-cell drift under self-feedback."))
+              "from. This is a same-frame codec cycle, not autoregressive controller feedback."))
     parser.add_argument("--vel-weight", type=float, default=15.0)
     parser.add_argument(
         "--acc-weight",
@@ -451,6 +458,12 @@ def parse_args() -> argparse.Namespace:
 
 
 def validate_args(args: argparse.Namespace) -> None:
+    if args.init_ckpt is not None and args.resume is not None:
+        raise ValueError("Use only one of --init-ckpt and --resume")
+    for name in ("code_align_weight", "latent_margin_weight", "roundtrip_weight", "latent_margin_target"):
+        value=getattr(args,name)
+        if not math.isfinite(value) or value<0:
+            raise ValueError(f"--{name.replace('_','-')} must be finite and nonnegative")
     validate_common_data_args(
         grad_accum_steps=args.grad_accum_steps,
         val_every=args.val_every,
@@ -547,6 +560,34 @@ def build_optimizer(model: BasicVQVAE375to291, args: argparse.Namespace, device:
     )
 
 
+def load_initial_vq_weights(model, checkpoint):
+    """Warm start all compatible weights; only an explicit K change drops EMA state."""
+    state=dict(sanitize_state_dict_keys(checkpoint['model']))
+    table=state.get('quantizer.vq._codebook.embed')
+    if table is None:
+        raise ValueError('init-ckpt lacks the quantizer codebook; refusing a silent replacement')
+    old_size=int(table.shape[-2])
+    drop_quantizer=old_size!=model.quantizer.num_embeddings
+    if drop_quantizer:
+        state={k:v for k,v in state.items() if not k.startswith('quantizer.')}
+    missing,unexpected=model.load_state_dict(state,strict=False)
+    real_missing=[k for k in missing if not (drop_quantizer and k.startswith('quantizer.'))]
+    if unexpected or real_missing:
+        raise ValueError(f'init-ckpt incompatible: missing={real_missing}, unexpected={unexpected}')
+    return drop_quantizer
+
+
+def validate_stability_resume(args, previous):
+    """Old pilots used the runner-up code, not the nearest Voronoi plane."""
+    old=previous.get('args') or {}
+    for name in ('code_align_weight','latent_margin_weight','roundtrip_weight'):
+        if float(old.get(name,0.))!=getattr(args,name):
+            raise ValueError(f'Resume changes {name}; use --init-ckpt for a new objective')
+    if args.latent_margin_weight>0:
+        if old.get('latent_margin_mode','nearest_code')!=args.latent_margin_mode or float(old.get('latent_margin_target',.05))!=args.latent_margin_target:
+            raise ValueError('Resume changes margin geometry/target; old pilots need --latent-margin-mode nearest_code, or use --init-ckpt')
+
+
 def main() -> None:
     args = parse_args()
     # Fail on a bad --best-metrics name before spending time on data preparation.
@@ -562,9 +603,14 @@ def main() -> None:
         args.out_dir = script_dir / "checkpoints" / f"vqvae_{args.input_mode}_{arch_tag}_375to291_32_4_2048"
     canonicalize_path_args(args)
     require_unmirrored_db(args.db)
+    if args.resume is None and any((args.out_dir/name).exists() for name in ('config.json','latest.pt')):
+        raise ValueError('Output already contains a run; use --resume or a new --out-dir')
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     validate_args(args)
+    args.vq_stability_version=2 if args.latent_margin_mode=='nearest_boundary' else 1
+    if args.resume is not None:
+        validate_stability_resume(args,load_checkpoint(args.resume,map_location='cpu'))
     set_seed(args.seed)
     device = resolve_device(args.device)
     configure_torch_runtime(
@@ -636,20 +682,7 @@ def main() -> None:
 
     model = build_model(args, device=device)
     if args.init_ckpt is not None:
-        # Warm start: load encoder/decoder weights only, keep a fresh optimizer/scheduler and
-        # start at epoch 1. When the codebook size changed the quantizer buffers are dropped
-        # so the library re-initialises the new table with k-means on the first batch.
-        initial = load_checkpoint(args.init_ckpt)
-        initial_args = initial.get("args") or {}
-        state = dict(initial["model"])
-        drop_quantizer = int(initial_args.get("num_embeddings", -1)) != int(args.num_embeddings)
-        if drop_quantizer:
-            state = {k: v for k, v in state.items() if not k.startswith("quantizer.")}
-        missing, unexpected = model.load_state_dict(state, strict=False)
-        real_missing = [k for k in missing if not k.startswith("quantizer.")]
-        if unexpected or real_missing:
-            raise ValueError(
-                f"init-ckpt incompatible: missing={real_missing}, unexpected={unexpected}")
+        drop_quantizer=load_initial_vq_weights(model,load_checkpoint(args.init_ckpt))
         print(
             f"[Info] init from       : {args.init_ckpt} "
             f"({'encoder/decoder only, codebook re-initialised' if drop_quantizer else 'full state'})")
@@ -777,6 +810,7 @@ def main() -> None:
             code_align_weight=args.code_align_weight,
             latent_margin_weight=args.latent_margin_weight,
             latent_margin_target=args.latent_margin_target,
+            latent_margin_mode=args.latent_margin_mode,
             roundtrip_weight=args.roundtrip_weight,
             root_weight=args.root_weight,
             optimizer=optimizer,
@@ -812,6 +846,7 @@ def main() -> None:
                         code_align_weight=args.code_align_weight,
                         latent_margin_weight=args.latent_margin_weight,
                         latent_margin_target=args.latent_margin_target,
+                        latent_margin_mode=args.latent_margin_mode,
                         roundtrip_weight=args.roundtrip_weight,
                         root_weight=args.root_weight,
                         optimizer=None,

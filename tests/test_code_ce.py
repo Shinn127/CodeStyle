@@ -109,7 +109,10 @@ def test_trainer_wiring_flag_resume_and_metric_keys():
 
 
 def test_rollout_training_step_carries_the_ce_through_unrolled_loss():
-    """The CE must be applied on the same prediction that feeds the next rollout step."""
+    """Every unrolled step supervises its stochastic FM endpoint with code CE.
+
+    This does not assert that endpoint equals the separately integrated Euler state.
+    """
     import training.train_flowmatch_vqvae_controller as trainer
     model = controller()
     model.train()

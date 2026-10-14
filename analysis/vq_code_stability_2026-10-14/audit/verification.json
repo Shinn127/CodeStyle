@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-14",
+  "cpu_passed": 395,
+  "cpu_skipped": 1,
+  "cuda_passed": 21,
+  "case_manifest_equal": true,
+  "norm_equal": true,
+  "fp32": true,
+  "tf32": false,
+  "new_real_training_started": false,
+  "comparison": {
+    "baseline": {
+      "path": "checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+      "epoch": 90,
+      "margin_mode": "disabled"
+    },
+    "pilot": {
+      "path": "checkpoints/vqvae_stable_margin_rt_k2048/best.pt",
+      "epoch": 25,
+      "margin_mode": "nearest_code"
+    }
+  },
+  "validation_clips": 12,
+  "validation_frames": 1452,
+  "vq_states_unchanged": true,
+  "corrected_margin_training_effect": "not evaluated; existing pilot used nearest_code",
+  "model_quality_improved_jointly": false,
+  "code_hashes": {
+    "arch/basic_vqvae_375to291.py": "27ca6577abf60a0d22958c8b32e2751ce670933a4eccd62d4cd1488714e8e57e",
+    "arch/flowmatch_vqvae_controller.py": "c602bd72b66c3d5c9017671d8db09f11ad74cbb0396d73666f7acdf11e6b29b1",
+    "training/train_basic_vqvae_375to291.py": "aaff645118449d4947f36678e2c8c9853c3a5776563bef2961f635837472b8f1",
+    "scripts/run_train_basic_vqvae_375to291.sh": "66e22d70d395af5e6a629f39ca74551bd456ef5528b816c33f768658c3867262",
+    "tests/test_vq_stability_audit.py": "bd24bdb77886e907441de25463935f8bf2c80ff3dc5388b08b24b6078752d3b2",
+    "analysis/codebook_divergence_2026-10-14/vq_anatomy.py": "ad039e4ae13d8913f310987022c3f5579bec6154013a62110b1d9464d24e13b5"
+  },
+  "limits": [
+    "Small fixed validation subset, no full-eval or multi-seed guarantee.",
+    "Old VQ resume lacks full RNG state; only objective compatibility was added.",
+    "Existing pilot completed; wrapper modification during execution caused a post-training shell error."
+  ]
+}

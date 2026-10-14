@@ -1,5 +1,7 @@
 # NewCode：当前运行说明
 
+2026-10-14 VQ码稳定性独立复审：已修复最近边界几何、初始化/数值接口问题；固定validation对照显示pilot重建更准，但量化jitter/world足滑尚未联合改善。实现、测试和原始证据见 [AUDIT](analysis/vq_code_stability_2026-10-14/AUDIT.md)。新VQ未自动替换现役VQ或下游cache，原配套controller仍按原VQ评估。
+
 2026-10-10。label controller 的目标为同一checkpoint、240帧/60fps autoregressive rollout上的matched≥85%、cross≥80%（已达成，见下）；unseen/OOD 不属于 label 模型评估范围（无对应条件通道），仅 recipe 类模型涉及。
 
 新版V2已实现：`clip→冻结VQ序列→temporal Es→TopK4 π→非线性code聚合→8 slot/global条件→逐层AdaLN/cross-attention→CFG flow→clip→quantize→decode`。Recipe从最终π进入同一条件路径；输出style/root约束作用于量化后的单次FM终点。已通过小数据回归和真实数据GPU smoke，正式Φ预训练和controller训练尚未执行。详见[V2运行说明](docs/CLIP_RECIPE_V2.md)和[主线方案](analysis/clip_recipe_failure_2026-10-09/NEXT_SOLUTION.md)。

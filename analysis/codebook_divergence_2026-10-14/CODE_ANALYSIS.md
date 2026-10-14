@@ -1,5 +1,7 @@
 # 代码级剖析与解决方案：为什么生成码与 GT 码不一致
 
+> 复审限定（2026-10-14）：下文"逐维 σ=.077 ≈ 半码格"的换算不成立——σ 是逐维高斯标准差，4 维槽的噪声 RMS L2 为 √4·σ≈0.154，不能与"实测槽 L2 中位数 .077"等同；n-gram/1NN 是有限基线而非信息论上限；固定重锚定曲线不能排除所有代码路径。原始记录保留，更正与独立 validation 结果见 [AUDIT](../vq_code_stability_2026-10-14/AUDIT.md)。
+
 2026-10-14。前置：[REPORT.md](REPORT.md)（四 regime 基线）→ [CAUSE_ANALYSIS.md](CAUSE_ANALYSIS.md)
 （三层分解）→ 本文（代码机制 + 新实验 + 方案矩阵）。新增实验脚本 `solver_sweep.py`，
 结果 `sweep_tf100_2L.json` / `sweep_tf10_l6_film.json`。
