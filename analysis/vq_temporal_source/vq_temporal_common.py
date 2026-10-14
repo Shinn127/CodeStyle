@@ -573,5 +573,9 @@ def per_source_metric(payload: dict, name: str) -> np.ndarray:
     if name == "pred_contact_coverage":
         return np.asarray([c["contact"]["pred_contact_coverage"] for c in per_source])
     if name == "style_correct":
+        if not payload.get("style_proxy"):
+            raise KeyError("style_correct requires a probe run with the style proxy enabled")
         return np.asarray([c["correct"] for c in payload["style_proxy"]["per_source"]], dtype=np.float64)
+    if name == "activity_gt":
+        raise KeyError("activity_gt is reference diagnostics only; use activity_q.* for gate input")
     raise KeyError(f"unknown per-source metric: {name}")

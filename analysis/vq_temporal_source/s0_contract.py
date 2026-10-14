@@ -117,7 +117,33 @@ def dry_run(acc_weight: float, out_dir: Path) -> dict:
         "epochs": "--epochs 10" in plain,
         "out_dir": str(out_dir) in plain,
     }
-    return dict(command=line, checks=checks, passed=all(checks.values()), out_dir=str(out_dir))
+    # The expanded command must parse with the trainer's own argparse. A flag-presence check
+    # alone once let an unrecognized --no-decoder-only through; this validates the whole argv.
+    parsed = parse_with_trainer(line[len("[Dry run]"):])
+    checks["trainer_argparse_valid"] = parsed["ok"]
+    return dict(command=line, checks=checks, passed=all(checks.values()),
+                argparse_error=parsed["error"], out_dir=str(out_dir))
+
+
+def parse_with_trainer(command: str) -> dict:
+    """Parse an expanded dry-run argv with training/train_basic_vqvae_375to291.py's parser."""
+    import contextlib
+    import io
+    import shlex
+
+    import training.train_basic_vqvae_375to291 as trainer_module
+
+    argv = shlex.split(command)[2:]  # drop the python executable and the train script path
+    old_argv = sys.argv
+    sys.argv = ["train_basic_vqvae_375to291.py", *argv]
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            trainer_module.parse_args()
+        return dict(ok=True, error=None)
+    except SystemExit as exc:
+        return dict(ok=False, error=f"SystemExit({exc.code})")
+    finally:
+        sys.argv = old_argv
 
 
 def main() -> None:

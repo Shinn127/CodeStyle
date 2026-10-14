@@ -151,7 +151,11 @@ ru_append_if_enabled cmd "${LOAD_INTO_MEMORY}" --load-into-memory
 if [[ -n "${NORM_STATS}" ]]; then cmd+=(--norm-stats "${NORM_STATS}"); fi
 if [[ -n "${INIT_CKPT}" ]]; then cmd+=(--init-ckpt "${INIT_CKPT}"); fi
 if [[ -n "${TEACHER_CKPT}" ]]; then cmd+=(--teacher-ckpt "${TEACHER_CKPT}"); fi
-ru_append_bool_flag cmd "${DECODER_ONLY}" --decoder-only --no-decoder-only
+# --decoder-only is a store_true flag in the trainer: append it only when enabled. The old
+# bool-pair form emitted --no-decoder-only (unrecognized) whenever DECODER_ONLY was 0/unset,
+# which broke every non-decoder-only run through this wrapper (found while launching the
+# vq_temporal pilot; exercised by tests/test_vq_temporal_pipeline.py).
+ru_append_if_enabled cmd "${DECODER_ONLY}" --decoder-only
 ru_append_bool_flag cmd "${COMPILE}" --compile --no-compile
 ru_append_bool_flag cmd "${USE_ROTATION_TRICK}" --use-rotation-trick --no-use-rotation-trick
 ru_append_bool_flag cmd "${KMEANS_INIT}" --kmeans-init --no-kmeans-init
