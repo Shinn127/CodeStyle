@@ -28,6 +28,22 @@ PINNED = dict(
 CONFIG_DIFF_ALLOWED = frozenset({"out_dir", "observation_noise_std"})
 
 
+def _epoch_record(row: dict) -> dict:
+    """history.jsonl mixes training rows and rollout-validation rows (same epoch key)."""
+    if "train" in row:
+        return dict(kind="train", epoch=int(row["epoch"]), time_sec=float(row.get("time_sec", 0.0)),
+                    num_batches=float(row.get("train_num_batches", 0.0)),
+                    train_loss=float(row["train"]["loss"]),
+                    val_loss=float(row["val"]["loss"]) if row.get("val") else None,
+                    noise_coeff=float(row["train"].get("observation_noise_coeff_mean", float("nan"))))
+    rollout = row.get("rollout_style_val") or {}
+    keep = ("matched_accuracy", "cross_accuracy", "matched_root_ade_cm", "cross_root_ade_cm",
+            "jitter_cm", "foot_sliding_local_cm", "foot_sliding_world_cm")
+    return dict(kind="rollout_val", epoch=int(row["epoch"]),
+                selection_key=row.get("selection_key"),
+                **{k: (float(rollout[k]) if rollout.get(k) is not None else None) for k in keep})
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", type=Path, required=True)
@@ -66,16 +82,12 @@ def main() -> None:
         final_checkpoint=dict(path=str(endpoint), sha256=file_sha256(endpoint),
                               epoch=load_checkpoint(endpoint).get("epoch"),
                               state_sha256=state_fingerprint(final_state)),
-        epochs=[dict(epoch=int(r["epoch"]), time_sec=float(r.get("time_sec", 0.0)),
-                     num_updates=float(r["train"].get("num_updates", 0.0)),
-                     train_loss=float(r["train"]["loss"]),
-                     noise_coeff=float(r["train"].get("observation_noise_coeff_mean", float("nan"))),
-                     tf_val=None if not r.get("tf_val") else {
-                         k: r["tf_val"][k] for k in ("matched_accuracy", "cross_accuracy",
-                                                     "matched_root_ade_cm", "cross_root_ade_cm")})
-                for r in history],
-        integrity=dict(epochs_recorded=len(history),
-                       total_updates=sum(float(r["train"].get("num_updates", 0.0)) for r in history),
+        epochs=[_epoch_record(r) for r in history],
+        integrity=dict(epochs_recorded=sum(1 for r in history if "train" in r),
+                       # the controller trainer reports batches; updates == batches at bs512
+                       total_updates=sum(float(r.get("train_num_batches", 0.0))
+                                         for r in history if "train" in r),
+                       rollout_validations=sum(1 for r in history if "rollout_style_val" in r),
                        final_epoch=int(history[-1]["epoch"]) if history else None),
     )
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False))
