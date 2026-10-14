@@ -16,9 +16,10 @@ ARM="${ARM:-}"
 case "${ARM}" in
   V1-B0) POSACC_PINNED="0";;
   V1-B1)
-    # Calibrated in analysis/vq_controller_recovery/V1/gradient_calibration.json
-    # (decoder ratio 0.105, cos 0.057, window [1.058,2.505] -> geometric centre).
-    POSACC_PINNED="${POSACC_WEIGHT:-1.6278}";;
+    # Operative calibration: gradient_calibration_decoder_only.json (matches the trainer's
+    # decoder-only base: vq/code_align/latent_l1/latent_vel zeroed). Decoder ratio 0.1046,
+    # cos 0.056, window [1.059, 2.508] -> geometric centre 1.6295.
+    POSACC_PINNED="${POSACC_WEIGHT:-1.6295}";;
   *) echo "[Error] set ARM=V1-B0 or ARM=V1-B1" >&2; exit 2;;
 esac
 SRC_RUN="${ROOT_DIR}/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror"

@@ -18,7 +18,7 @@ S3/S4 的失败是 **mixed normalized-motion291** 空间二阶项与位置重建
 | 冻结 | **E 与 Q/EMA 全冻结**（`--decoder-only`，quantizer 保持 eval、EMA/死码路径关闭） |
 | 只更新 | Decoder 参数 |
 | norm | 原 `norm_stats.npz` 显式传入（不重算） |
-| 损失 | recon=3 / vq=1 / vel=15 / root=3 / code_align=2 / latent_l1=0.01 / latent_vel=0.1；margin/roundtrip/teacher=0 |
+| 损失 | **训练器 decoder-only 实际 base**：recon=3 / vel=15 / root=3（`--decoder-only` 会自动将 vq/code_align/latent_l1/latent_vel 归零，见 trainer 的 `[Info] decoder-only zeroed`）；margin/roundtrip/teacher=0 |
 | `posacc_beta_cm` | 0.5 cm（SmoothL1 拐点） |
 | 序列 | `seq_len=8`、`stride=1`、batch 512、seed 42、`LOADER_SEED=4242` |
 | lr | 1e-4 → 1e-5 cosine |
@@ -36,6 +36,10 @@ S3/S4 的失败是 **mixed normalized-motion291** 空间二阶项与位置重建
 - 选 λ 使 `λ‖g_posacc‖/‖g_base‖ ≈ 0.1–0.3`。若 cos<0（冲突）或统计极不稳，标风险并停止；
   若窗口与 S2 的 gap-midpoint 情形类似，用同一回退规则（缺口几何中点）并记录。
 - 与 S2 的 4.9842 **无继承关系**：那里是 mixed 空间 + 全 VQ，这里是 cm 位置空间 + frozen E/Q。
+- **协议更正（训练前，未见过任何 V1 数据）**：初版标定误用未归零 base（`gradient_calibration.json`，
+  λ=1.6278）。训练器在 decoder-only 下会把 vq/code_align/latent_l1/latent_vel 归零，因此按实际 base
+  重算（`gradient_calibration_decoder_only.json`）：decoder ratio 0.1046、cos 0.056、
+  窗口 [1.059, 2.508] → **λ=1.6295**（两者差 0.1%，归零项对 decoder 梯度几乎无贡献，但以实际 base 为准）。
 
 ## 4. 验收门槛（预注册，训练前冻结，事后不得改）
 

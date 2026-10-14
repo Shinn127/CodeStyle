@@ -22,11 +22,14 @@ import loop_lib as lib  # noqa: E402
 from Utils.reproducibility import file_sha256, state_fingerprint  # noqa: E402
 from Utils.runtime import load_checkpoint, sanitize_state_dict_keys  # noqa: E402
 
+# The trainer's decoder-only path zeroes vq/code_align/latent_l1/latent_vel before writing
+# config.json (it prints "[Info] decoder-only zeroed ..."), so the pinned values are the
+# POST-zeroing ones — verified against a real smoke run's config.json.
 PINNED = dict(
     seq_len=8, stride=1, batch_size=512, epochs=5, eval_every=1, save_every=5,
     lr=1e-4, min_lr=1e-5, seed=42, loader_generator_seed=4242,
-    recon_weight=3.0, vq_weight=1.0, vel_weight=15.0, root_weight=3.0,
-    code_align_weight=2.0, latent_l1_weight=0.01, latent_vel_weight=0.1,
+    recon_weight=3.0, vq_weight=0.0, vel_weight=15.0, root_weight=3.0,
+    code_align_weight=0.0, latent_l1_weight=0.0, latent_vel_weight=0.0,
     latent_margin_weight=0.0, roundtrip_weight=0.0, teacher_align_weight=0.0, acc_weight=0.0,
     decoder_only=True, amp_dtype="fp32", tf32=False, matmul_precision="highest",
 )

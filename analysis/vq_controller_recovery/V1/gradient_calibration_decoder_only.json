@@ -1,0 +1,100 @@
+{
+ "protocol": "V1/PROTOCOL.md section 3: 4 train batches B16xT8, decoder group only, no optimizer.step, EMA frozen, E/Q frozen, trainer decoder-only base (vq/code_align/latent_l1/latent_vel zeroed)",
+ "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+ "checkpoint_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "state_unchanged": true,
+ "encoder_frozen": true,
+ "base_weights": {
+  "recon_type": "l1",
+  "temporal_loss_type": "l1",
+  "recon_weight": 3.0,
+  "vq_weight": 0.0,
+  "vel_weight": 15.0,
+  "root_weight": 3.0,
+  "code_align_weight": 0.0,
+  "latent_l1_weight": 0.0,
+  "latent_vel_weight": 0.0,
+  "latent_margin_weight": 0.0,
+  "roundtrip_weight": 0.0
+ },
+ "beta_cm": 0.5,
+ "seed": 4242,
+ "batch_size": 16,
+ "seq_len": 8,
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "git": {
+  "commit": "2b655c4eeb2b82ded46e8a907cee6b2b5460b044",
+  "branch": "recovery/vq-controller-2026-10-15",
+  "dirty": true,
+  "untracked_files": 0
+ },
+ "per_batch": [
+  {
+   "batch": 0,
+   "loss_base": 0.5413369536399841,
+   "loss_posacc": 0.07500109076499939,
+   "posacc_abs_cm": 0.16817085444927216,
+   "decoder": {
+    "norm_base": 3.873770236968994,
+    "norm_posacc": 0.41929444670677185,
+    "ratio": 0.10823936760425568,
+    "cosine": 0.05321196839213371
+   }
+  },
+  {
+   "batch": 1,
+   "loss_base": 0.5336583256721497,
+   "loss_posacc": 0.07026071846485138,
+   "posacc_abs_cm": 0.15859006345272064,
+   "decoder": {
+    "norm_base": 4.3344831466674805,
+    "norm_posacc": 0.4166088402271271,
+    "ratio": 0.09611500054597855,
+    "cosine": 0.06971409916877747
+   }
+  },
+  {
+   "batch": 2,
+   "loss_base": 0.5404245853424072,
+   "loss_posacc": 0.060234978795051575,
+   "posacc_abs_cm": 0.15274758636951447,
+   "decoder": {
+    "norm_base": 4.070102691650391,
+    "norm_posacc": 0.3844730854034424,
+    "ratio": 0.09446274489164352,
+    "cosine": 0.0582350417971611
+   }
+  },
+  {
+   "batch": 3,
+   "loss_base": 0.4811449348926544,
+   "loss_posacc": 0.06925143301486969,
+   "posacc_abs_cm": 0.16038280725479126,
+   "decoder": {
+    "norm_base": 3.9029338359832764,
+    "norm_posacc": 0.46683040261268616,
+    "ratio": 0.11961012333631516,
+    "cosine": 0.044079527258872986
+   }
+  }
+ ],
+ "ratio_mean": 0.10460680909454823,
+ "ratio_std": 0.010164986110933307,
+ "cosine_mean": 0.05631015915423632,
+ "cosine_min": 0.044079527258872986,
+ "weight_window": [
+  1.0586184015159432,
+  2.508148906062671
+ ],
+ "selection_rule": "10-30% window geometric centre",
+ "recommended_posacc_weight": 1.6295,
+ "risk_flags": []
+}

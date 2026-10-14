@@ -68,7 +68,15 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=4242)
     ap.add_argument("--beta-cm", type=float, default=0.5)
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--decoder-only-base", action="store_true",
+                    help="reproduce the trainer's decoder-only zeroing (vq/code_align/latent_l1/"
+                         "latent_vel -> 0) so the calibration matches the arms' actual base loss")
     args = ap.parse_args()
+    global BASE_WEIGHTS
+    if args.decoder_only_base:
+        BASE_WEIGHTS = {**BASE_WEIGHTS, "vq_weight": 0.0, "code_align_weight": 0.0,
+                        "latent_l1_weight": 0.0, "latent_vel_weight": 0.0}
 
     device = torch.device(args.device)
     torch.set_float32_matmul_precision("highest")
@@ -138,7 +146,9 @@ def main() -> None:
 
     payload = dict(
         protocol="V1/PROTOCOL.md section 3: 4 train batches B16xT8, decoder group only, "
-                 "no optimizer.step, EMA frozen, E/Q frozen",
+                 "no optimizer.step, EMA frozen, E/Q frozen"
+                 + (", trainer decoder-only base (vq/code_align/latent_l1/latent_vel zeroed)"
+                    if args.decoder_only_base else ", full base weights"),
         checkpoint=str(Path(args.ckpt).resolve()), checkpoint_state_sha256=before,
         state_unchanged=True, encoder_frozen=encoder_frozen,
         base_weights=BASE_WEIGHTS, beta_cm=args.beta_cm, seed=args.seed,
@@ -150,7 +160,8 @@ def main() -> None:
         weight_window=[lo, hi], selection_rule=rule,
         recommended_posacc_weight=round(lam, 4), risk_flags=risk,
     )
-    OUT.write_text(json.dumps(payload, indent=1, ensure_ascii=False))
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(payload, indent=1, ensure_ascii=False))
     print(f"[V1] ratio={ratios.mean():.4g}+-{ratios.std():.2g} cosine={cosines.mean():.3f} "
           f"window=[{lo:.4g},{hi:.4g}] -> POSACC_WEIGHT={round(lam,4)} ({rule})")
     if risk:
