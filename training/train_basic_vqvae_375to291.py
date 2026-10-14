@@ -228,7 +228,7 @@ def epoch_pass(
                 f"acc={to_float(loss_dict['acc_loss']):.6f} "
                 f"root={to_float(loss_dict['root_loss']):.6f} "
                 f"z_l1={to_float(loss_dict['latent_l1_loss']):.6f} "
-            f"align={to_float(loss_dict['code_align_loss']):.6f} "
+                f"align={to_float(loss_dict['code_align_loss']):.6f} "
                 f"z_gap={to_float(loss_dict['latent_code_gap']):.6f} "
                 f"bd={to_float(loss_dict['boundary_distance']):.6f} "
                 f"margin={to_float(loss_dict['latent_margin_loss']):.6f} "
