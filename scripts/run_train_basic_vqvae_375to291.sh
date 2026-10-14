@@ -61,6 +61,10 @@ LATENT_MARGIN_WEIGHT="${LATENT_MARGIN_WEIGHT:-0.0}"
 LATENT_MARGIN_TARGET="${LATENT_MARGIN_TARGET:-0.05}"
 LATENT_MARGIN_MODE="${LATENT_MARGIN_MODE:-nearest_boundary}"
 ROUNDTRIP_WEIGHT="${ROUNDTRIP_WEIGHT:-0.0}"
+# V1 physical-position second-order loss: SmoothL1 over the 24-joint position second
+# difference in cm (differentiable, needs --norm-stats; seq_len >= 3).
+POSACC_WEIGHT="${POSACC_WEIGHT:-0.0}"
+POSACC_BETA_CM="${POSACC_BETA_CM:-0.5}"
 # Warm start (encoder/decoder only); codebook re-initialises when the size changes.
 INIT_CKPT="${INIT_CKPT:-}"
 NUM_EMBEDDINGS="${NUM_EMBEDDINGS:-2048}"
@@ -131,6 +135,8 @@ cmd=(
   --latent-margin-target "${LATENT_MARGIN_TARGET}"
   --latent-margin-mode "${LATENT_MARGIN_MODE}"
   --roundtrip-weight "${ROUNDTRIP_WEIGHT}"
+  --posacc-weight "${POSACC_WEIGHT}"
+  --posacc-beta-cm "${POSACC_BETA_CM}"
   --num-embeddings "${NUM_EMBEDDINGS}"
   --teacher-align-weight "${TEACHER_ALIGN_WEIGHT}"
   --eval-every "${EVAL_EVERY}"

@@ -11,6 +11,74 @@ import torch.nn.functional as F
 # First channels of motion291: root vx, yaw rate, vz (both translations are planar).
 ROOT_MOTION_DIMS = 3
 
+# Physical position block inside motion291: 24 joints x 3 coordinates starting at channel 3.
+POSITION_MOTION_START = ROOT_MOTION_DIMS                # 3
+POSITION_MOTION_END = POSITION_MOTION_START + 24 * 3    # 75
+
+
+def motion_positions_cm(motion_norm: torch.Tensor, motion_mean=None, motion_std=None) -> torch.Tensor:
+    """Convert normalized motion291 positions to cm, [...,291] -> [...,24,3] (differentiable).
+
+    `motion_mean`/`motion_std` may be the 375-dim norm stats (the trajectory block is then
+    skipped with the 84+3:84+75 offset), the 291-dim motion block, or the 72 position channels
+    directly. Positions in this dataset are meters, so the final scale is 100.
+    """
+    if motion_norm.size(-1) != 291:
+        raise ValueError(f"Expected motion291 input, got last dim {motion_norm.size(-1)}")
+    if (motion_mean is None) != (motion_std is None):
+        raise ValueError("motion_mean and motion_std must be provided together")
+    block = motion_norm[..., POSITION_MOTION_START:POSITION_MOTION_END]
+    if motion_mean is not None:
+        mean = torch.as_tensor(motion_mean, device=motion_norm.device, dtype=torch.float32)
+        std = torch.as_tensor(motion_std, device=motion_norm.device, dtype=torch.float32)
+        width = mean.numel()
+        if width == 375:
+            mean, std = mean[84 + POSITION_MOTION_START:84 + POSITION_MOTION_END], std[84 + POSITION_MOTION_START:84 + POSITION_MOTION_END]
+        elif width == 291:
+            mean, std = mean[POSITION_MOTION_START:POSITION_MOTION_END], std[POSITION_MOTION_START:POSITION_MOTION_END]
+        elif width != POSITION_MOTION_END - POSITION_MOTION_START:
+            raise ValueError(f"norm stats must have 375/291/72 entries, got {width}")
+        block = block * std + mean
+    return (block.reshape(*motion_norm.shape[:-1], 24, 3) * 100.0)
+
+
+def second_difference(values: torch.Tensor) -> torch.Tensor:
+    """Second difference along the time axis: [B,T,...] -> [B,T-2,...]; T<3 is invalid."""
+    if values.dim() < 2 or values.size(1) < 3:
+        raise ValueError(f"second_difference needs at least 3 steps, got shape {tuple(values.shape)}")
+    return values[:, 2:] - 2.0 * values[:, 1:-1] + values[:, :-2]
+
+
+def physical_position_acceleration_loss(
+    pred_motion: torch.Tensor,
+    target_motion: torch.Tensor,
+    *,
+    motion_mean=None,
+    motion_std=None,
+    beta_cm: float = 0.5,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """SmoothL1 between the physical 24-joint position second differences, in cm.
+
+    Both inputs are normalized motion291 [B,T,291] (T>=3); the 84-d trajectory offset is
+    handled inside `motion_positions_cm`. Returns (smooth_l1, mean absolute cm error).
+    Fully differentiable; beta is in cm by construction so it does not inherit the scale
+    of normalized-space losses.
+    """
+    if pred_motion.shape != target_motion.shape:
+        raise ValueError(
+            f"prediction/target shape mismatch: {tuple(pred_motion.shape)} vs {tuple(target_motion.shape)}")
+    if pred_motion.size(-1) != 291:
+        raise ValueError(f"expected motion291 inputs, got last dim {pred_motion.size(-1)}")
+    if pred_motion.size(1) < 3:
+        raise ValueError(f"posacc needs at least 3 frames, got {pred_motion.size(1)}")
+    pred_cm = motion_positions_cm(pred_motion, motion_mean, motion_std)
+    target_cm = motion_positions_cm(target_motion, motion_mean, motion_std)
+    delta2_pred = second_difference(pred_cm)
+    delta2_target = second_difference(target_cm)
+    smooth = F.smooth_l1_loss(delta2_pred, delta2_target, beta=float(beta_cm))
+    absolute = (delta2_pred - delta2_target).abs().mean()
+    return smooth, absolute
+
 try:  # pragma: no cover - import guard
     from vector_quantize_pytorch import VectorQuantize as _LibraryVectorQuantize
 except ImportError:  # pragma: no cover
@@ -836,6 +904,10 @@ class BasicVQVAE375to291(nn.Module):
         latent_margin_mode: Literal["nearest_boundary", "nearest_code"] = "nearest_boundary",
         teacher_align_weight: float = 0.0,
         teacher_motion: torch.Tensor | None = None,
+        posacc_weight: float = 0.0,
+        posacc_beta_cm: float = 0.5,
+        motion_mean: torch.Tensor | None = None,
+        motion_std: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
         if not math.isfinite(code_align_weight) or code_align_weight < 0.0:
             raise ValueError(f"code_align_weight must be >= 0, got {code_align_weight}")
@@ -849,6 +921,12 @@ class BasicVQVAE375to291(nn.Module):
             raise ValueError("latent_margin_target must be finite and nonnegative")
         if latent_margin_mode not in ("nearest_boundary", "nearest_code"):
             raise ValueError("Unknown latent margin mode")
+        if not math.isfinite(posacc_weight) or posacc_weight < 0.0:
+            raise ValueError(f"posacc_weight must be >= 0, got {posacc_weight}")
+        if not math.isfinite(posacc_beta_cm) or posacc_beta_cm <= 0.0:
+            raise ValueError(f"posacc_beta_cm must be > 0, got {posacc_beta_cm}")
+        if posacc_weight > 0.0 and (motion_mean is None or motion_std is None):
+            raise ValueError("posacc_weight > 0 requires motion_mean and motion_std (for cm conversion)")
         details = self.forward(x, return_details=True,
                                continuous_decode=code_align_weight > 0.0)
         pred = details["motion_hat"]
@@ -984,12 +1062,28 @@ class BasicVQVAE375to291(nn.Module):
             roundtrip_drift = (z_rt - target_code).norm(dim=-1).mean()
             roundtrip_loss = (z_rt - target_code).square().mean()
 
+        # Physical-position second-order loss (V1). Unlike `acc_loss` (normalized motion291,
+        # which mixes rotations/velocities and was measured to trade away joint-position
+        # accuracy), this term supervises the real 24 joint positions in cm and only their
+        # second difference: it needs the current model's norm stats, is differentiable
+        # end-to-end, and is inert at weight 0.
+        posacc_loss = pred.new_zeros(())
+        posacc_smooth = pred.new_zeros(())
+        if posacc_weight > 0.0:
+            if pred_bt.size(1) < 3:
+                raise ValueError(f"posacc_weight > 0 needs seq_len >= 3, got {pred_bt.size(1)}")
+            posacc_loss, posacc_smooth = physical_position_acceleration_loss(
+                pred_bt, target_bt, motion_mean=motion_mean, motion_std=motion_std,
+                beta_cm=float(posacc_beta_cm),
+            )
+
         total = (
             recon_weight * recon_loss
             + code_align_weight * code_align_loss
             + teacher_align_weight * teacher_align_loss
             + latent_margin_weight * latent_margin_loss
             + roundtrip_weight * roundtrip_loss
+            + posacc_weight * posacc_loss
             + vq_weight * details["vq_loss"]
             + vel_weight * vel_loss
             + acc_weight * acc_loss
@@ -1015,6 +1109,8 @@ class BasicVQVAE375to291(nn.Module):
             "boundary_valid_fraction": boundary_valid_fraction,
             "roundtrip_loss": roundtrip_loss,
             "roundtrip_drift": roundtrip_drift,
+            "posacc_loss": posacc_loss,
+            "posacc_abs_cm": posacc_smooth,
             "latent_code_gap": latent_code_gap,
             "perplexity": details["perplexity"],
             "dead_codes_reset": details["dead_codes_reset"],
@@ -1029,7 +1125,12 @@ __all__ = [
     "ControlMLP",
     "ControlSkipCatMLP",
     "ControlSkipMLP",
+    "POSITION_MOTION_END",
+    "POSITION_MOTION_START",
     "QuantizeResult",
     "build_control_network",
+    "motion_positions_cm",
     "normalize_control_network_arch",
+    "physical_position_acceleration_loss",
+    "second_difference",
 ]

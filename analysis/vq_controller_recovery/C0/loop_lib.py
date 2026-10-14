@@ -138,13 +138,17 @@ def run_teacher_anchored(model, *, x_norm, latents_gt, style_feature, z0_plan, m
 
 @torch.no_grad()
 def run_sequence(model, *, x_norm, label, style_feature, z0_plan,
-                 mode="official", steps=4, planner=None, perturb=None):
+                 mode="official", steps=4, planner=None, perturb=None,
+                 noise_scale: float = 1.0, zero_history: bool = False):
     """Sequential rollout. mode in {official, continuous, planner}.
 
     Returns (generated_raw 375 [T,375], latents [T,128], diagnostics dict).
     Enforces the C0 state invariants on every step (motion == decode(carried latent)).
     `perturb=(direction, amplitude, t0)` injects the registered bounded perturbation at
     transition t0 only; the paired clean branch is produced by the same call with perturb=None.
+    `noise_scale` multiplies the registered z0 plan (0 -> z0=0, 0.5 -> half amplitude);
+    `zero_history` replaces the history latent with zeros (C1 ablation, distribution-out-of-
+    domain diagnostic). Both default to the C0 behaviour, so C0 numbers are unaffected.
     """
     device = x_norm.device
     transitions = x_norm.shape[0] - 1
@@ -189,9 +193,13 @@ def run_sequence(model, *, x_norm, label, style_feature, z0_plan,
             diagnostics["perturbation_l2_after_clip"] = float(
                 (model.clip_latent_to_data_bounds(q_perturbed_raw) - q_before_injection).norm())
         x_curr = torch.cat((traj_t, current_motion), dim=-1)
+        history_input = torch.zeros_like(history_latent) if zero_history else history_latent
+        # z0(scale) = offset + scale*(plan - offset): scale=0 -> z0 == latent_offset, whose
+        # normalized form is exactly 0 (the "no transport noise" start the session CLI uses).
+        z0_step = model.latent_offset + noise_scale * (z0_plan[t - 1] - model.latent_offset)
         motion_new, q_new = sample_step(
-            model, x_curr=x_curr, prev_latent=q, history_latent=history_latent,
-            style_feature=style_feature, z0=z0_plan[t - 1][None],
+            model, x_curr=x_curr, prev_latent=q, history_latent=history_input,
+            style_feature=style_feature, z0=z0_step[None],
             steps=steps, requantize=requantize)
         # invariant 1: carried motion token equals decode(carried latent)
         if not torch.equal(model.vqvae.decode(q_new), motion_new):

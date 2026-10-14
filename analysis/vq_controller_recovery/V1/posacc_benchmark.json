@@ -1,0 +1,35 @@
+{
+ "protocol": "frozen-EMA bounded fwd/bwd timing, no optimizer step, decoder-only freeze",
+ "batch_size": 512,
+ "seq_len": 8,
+ "iterations": 10,
+ "posacc_weight": 1.6278,
+ "results": {
+  "posacc_0": {
+   "mean_ms": 32.83068300024752,
+   "p95_ms": 32.96221190039432,
+   "peak_allocated_gib": 4.089889049530029,
+   "posacc_value": 0.0,
+   "posacc_abs_cm": 0.0
+  },
+  "posacc_lambda": {
+   "mean_ms": 32.89698740009044,
+   "p95_ms": 32.948571999259,
+   "peak_allocated_gib": 4.091536521911621,
+   "posacc_value": 0.06582538783550262,
+   "posacc_abs_cm": 0.15549108386039734
+  }
+ },
+ "overhead_ms": 0.06630439984292025,
+ "overhead_ratio": 0.002019586368106334,
+ "state_unchanged": true,
+ "device": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ }
+}

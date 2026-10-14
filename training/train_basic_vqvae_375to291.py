@@ -106,6 +106,8 @@ METRIC_KEYS = (
     "boundary_valid_fraction",
     "roundtrip_loss",
     "roundtrip_drift",
+    "posacc_loss",
+    "posacc_abs_cm",
     "latent_code_gap",
     "perplexity",
     "dead_codes_reset",
@@ -131,6 +133,10 @@ def epoch_pass(
     latent_margin_target: float = 0.05,
     latent_margin_mode: str = "nearest_boundary",
     roundtrip_weight: float = 0.0,
+    posacc_weight: float = 0.0,
+    posacc_beta_cm: float = 0.5,
+    motion_mean=None,
+    motion_std=None,
     teacher=None,
     teacher_align_weight: float = 0.0,
     optimizer: Optional[torch.optim.Optimizer] = None,
@@ -201,6 +207,10 @@ def epoch_pass(
                 latent_margin_target=latent_margin_target,
                 latent_margin_mode=latent_margin_mode,
                 roundtrip_weight=roundtrip_weight,
+                posacc_weight=posacc_weight,
+                posacc_beta_cm=posacc_beta_cm,
+                motion_mean=motion_mean,
+                motion_std=motion_std,
                 teacher_align_weight=teacher_align_weight,
                 teacher_motion=None if teacher is None else _teacher_target(teacher, x),
             )
@@ -428,6 +438,14 @@ def parse_args() -> argparse.Namespace:
         help=("Weight of the re-encode consistency term: decode the prediction, re-encode it "
               "(with the GT trajectory block) and pull the result back to the code it came "
               "from. This is a same-frame codec cycle, not autoregressive controller feedback."))
+    parser.add_argument("--posacc-weight", type=float, default=0.0,
+        help=("Weight of the physical-position second-order loss (V1): SmoothL1 over the "
+              "second difference of the real 24 joint positions in cm (differentiable, uses "
+              "the run's norm stats). Targets the extra quantization jitter without the "
+              "position-accuracy trade-off the normalized motion291 acc term showed. "
+              "0 keeps the recipe; needs seq_len >= 3."))
+    parser.add_argument("--posacc-beta-cm", type=float, default=0.5,
+        help="SmoothL1 beta of --posacc-weight, in cm (default 0.5).")
     parser.add_argument("--decoder-only", action="store_true",
         help=("Decoder-only calibration: freeze the encoder parameters and keep the quantizer's "
               "EMA/dead-code path in eval (model.set_representation_frozen). The optimizer then "
@@ -575,6 +593,21 @@ def validate_args(args: argparse.Namespace) -> None:
         raise ValueError(
             f"--acc-weight > 0 needs --seq-len >= 3 to form a second difference, got seq_len={args.seq_len}"
         )
+    if not math.isfinite(args.posacc_weight) or args.posacc_weight < 0.0:
+        raise ValueError(f"--posacc-weight must be finite and >= 0, got {args.posacc_weight}")
+    if not math.isfinite(args.posacc_beta_cm) or args.posacc_beta_cm <= 0.0:
+        raise ValueError(f"--posacc-beta-cm must be > 0, got {args.posacc_beta_cm}")
+    if args.posacc_weight > 0.0 and args.seq_len < 3:
+        raise ValueError(
+            f"--posacc-weight > 0 needs --seq-len >= 3 to form a second difference, got seq_len={args.seq_len}"
+        )
+    if args.posacc_weight > 0.0 and args.norm_stats is None:
+        # Without a fixed norm file the trainer computes stats from its own windows; the
+        # train-time stats would still be valid for a from-scratch run, but V1 must stay on
+        # the source run's manifold, so require the explicit file.
+        print("[Warn] posacc_weight > 0 without --norm-stats: the loss uses this run's own "
+              "computed statistics; pass the source run's norm_stats.npz to stay on the "
+              "frozen VQ manifold")
     if args.latent_l1_weight < 0.0:
         raise ValueError(f"--latent-l1-weight must be >= 0, got {args.latent_l1_weight}")
     if args.latent_vel_weight < 0.0:
@@ -693,8 +726,10 @@ def _teacher_target(teacher, x: torch.Tensor) -> torch.Tensor:
 def validate_stability_resume(args, previous):
     """Old pilots used the runner-up code, not the nearest Voronoi plane."""
     old=previous.get('args') or {}
-    for name in ('code_align_weight','latent_margin_weight','roundtrip_weight'):
-        if float(old.get(name,0.))!=getattr(args,name):
+    for name in ('code_align_weight','latent_margin_weight','roundtrip_weight',
+                 'posacc_weight','posacc_beta_cm'):
+        default = 0.5 if name == 'posacc_beta_cm' else 0.0
+        if float(old.get(name, default)) != float(getattr(args, name, default)):
             raise ValueError(f'Resume changes {name}; use --init-ckpt for a new objective')
     if args.latent_margin_weight>0:
         if old.get('latent_margin_mode','nearest_code')!=args.latent_margin_mode or float(old.get('latent_margin_target',.05))!=args.latent_margin_target:
@@ -770,6 +805,7 @@ def main() -> None:
     print(
         f"[Info] loss weights    : recon={args.recon_weight} vq={args.vq_weight} "
         f"vel={args.vel_weight} acc={args.acc_weight} root={args.root_weight} "
+        f"posacc={args.posacc_weight}(beta={args.posacc_beta_cm}cm) "
         f"z_l1={args.latent_l1_weight} z_vel={args.latent_vel_weight}"
     )
     print(
@@ -966,6 +1002,10 @@ def main() -> None:
             latent_margin_target=args.latent_margin_target,
             latent_margin_mode=args.latent_margin_mode,
             roundtrip_weight=args.roundtrip_weight,
+            posacc_weight=args.posacc_weight,
+            posacc_beta_cm=args.posacc_beta_cm,
+            motion_mean=prepared.bundle.norm_mean,
+            motion_std=prepared.bundle.norm_std,
             teacher=teacher,
             teacher_align_weight=args.teacher_align_weight,
             root_weight=args.root_weight,
@@ -1004,6 +1044,10 @@ def main() -> None:
                         latent_margin_target=args.latent_margin_target,
                         latent_margin_mode=args.latent_margin_mode,
                         roundtrip_weight=args.roundtrip_weight,
+                        posacc_weight=args.posacc_weight,
+                        posacc_beta_cm=args.posacc_beta_cm,
+                        motion_mean=prepared.bundle.norm_mean,
+                        motion_std=prepared.bundle.norm_std,
                         teacher=teacher,
                         teacher_align_weight=args.teacher_align_weight,
                         root_weight=args.root_weight,
@@ -1091,6 +1135,7 @@ def main() -> None:
             f"train_vel={train_metrics['vel_loss']:.6f} "
             f"train_acc={train_metrics['acc_loss']:.6f} "
             f"train_root={train_metrics['root_loss']:.6f} "
+            f"train_posacc={train_metrics['posacc_loss']:.6f} "
             f"train_z_l1={train_metrics['latent_l1_loss']:.6f} "
             f"train_z_vel={train_metrics['latent_vel_loss']:.6f} "
             f"train_ppl={train_metrics['perplexity']:.3f}"
