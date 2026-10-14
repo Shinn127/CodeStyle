@@ -1,0 +1,174 @@
+{
+ "protocol": "docs/VQ_CONTROLLER_RECOVERY_AGENT_PLAN.md section 3 (G0)",
+ "git": {
+  "commit": "12861afc4f15527eed3f8c89da501fbfeb2fa8dd",
+  "branch": "recovery/vq-controller-2026-10-15",
+  "tracked_dirty": false,
+  "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "untracked_files": 2
+ },
+ "environment": {
+  "python": "3.13.15",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "cudnn": "unavailable (RuntimeError: cuDNN version incompatibility: PyTorch was compiled  against...)",
+  "vector_quantize_pytorch": "1.31.4",
+  "numpy": "2.5.2",
+  "fp32_forced": true,
+  "tf32_off": true,
+  "matmul_precision": "highest",
+  "device": "cuda"
+ },
+ "vq": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+  "sha256": "825be6785b3e7fc258c196f49b70b3874af792c6aaf4a2912a5bdd5765a9962c",
+  "epoch": 90,
+  "state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "norm_sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4",
+  "db_fingerprints": {
+   "db_sha256": "6d308e18f05285e604aad4e7011019b8ff966a30f2d46da8649fa8068272697d",
+   "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+   "split_sha256": "c3987af0f1c91568b24756e6c8f24f69833995236d33bc0a89b67b772e540dd0"
+  }
+ },
+ "controller": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf100/best.pt",
+  "sha256": "adc4deb2d7da200ce6c7494b65e2e377613f32ee140216f40492779a4c2a56a9",
+  "epoch": 100,
+  "best_metric": 6.885684445314181,
+  "training_objective_version": 12,
+  "recorded_fingerprints": {
+   "db_sha256": "6d308e18f05285e604aad4e7011019b8ff966a30f2d46da8649fa8068272697d",
+   "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+   "norm_fingerprint": "a7e1628d637acc71",
+   "split_sha256": "c3987af0f1c91568b24756e6c8f24f69833995236d33bc0a89b67b772e540dd0"
+  },
+  "cross_checks": {
+   "vq_state_matches": true,
+   "db_matches": true,
+   "split_matches": true,
+   "norm_matches": true
+  },
+  "architecture": {
+   "flow_layers": 2,
+   "flow_hidden_dim": 256,
+   "flow_heads": 4,
+   "seq_len": 6,
+   "unroll_steps": 4,
+   "style_film": null,
+   "history_conditioning": true,
+   "prediction_mode": "target",
+   "solver_steps": 4,
+   "noise_std": 1.0,
+   "observation_noise_std": 0.5,
+   "inference_requantize": true,
+   "inference_latent_clip": true,
+   "feedback_probability": 0.0,
+   "conditioning_mode": "label"
+  }
+ },
+ "aux_assets": {
+  "latent_stats": {
+   "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/latent_stats.npz",
+   "sha256": "417b174605508826e4de34977ea2993c94feff362f474d6ad102414eaba93eb9"
+  },
+  "vq_target_cache": {
+   "path": "/home/shinn/桌面/multimedia/revision/NewCode/cache/vq_targets_vq150ep_nomirror_repair_v2",
+   "meta": {
+    "format": "vq_target_cache_v2",
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror",
+    "vqvae_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+    "norm_stats": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "num_frames": 3534258,
+    "feature_dim": 375,
+    "num_codebooks": 32,
+    "code_dim": 4,
+    "latent_dim": 128,
+    "num_embeddings": 2048,
+    "indices_dtype": "uint16",
+    "indices_file": "indices.u16",
+    "fingerprints": {
+     "db_sha256": "6d308e18f05285e604aad4e7011019b8ff966a30f2d46da8649fa8068272697d",
+     "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+     "norm_fingerprint": "a7e1628d637acc71",
+     "split_sha256": "c3987af0f1c91568b24756e6c8f24f69833995236d33bc0a89b67b772e540dd0"
+    },
+    "runtime": {
+     "device": "cuda",
+     "device_name": "NVIDIA GeForce RTX 5070 Ti",
+     "python": "3.13.15",
+     "torch": "2.13.0+cu132",
+     "numpy": "2.5.2",
+     "cuda": "13.2",
+     "vector_quantize_pytorch": "1.31.4",
+     "matmul_precision": "highest",
+     "tf32": false,
+     "chunk_rows": 8192,
+     "dtype": "float32",
+     "verified_chunk_indices": [
+      0,
+      215,
+      431
+     ]
+    },
+    "indices_sha256": "c93cbd6c07c69787947b60d586a409e683241781ac9817e6a9710d40ec11c3f0",
+    "complete": true
+   },
+   "indices_sha256": "c93cbd6c07c69787947b60d586a409e683241781ac9817e6a9710d40ec11c3f0"
+  },
+  "style_prior": {
+   "path": "/home/shinn/桌面/multimedia/revision/NewCode/cache/style_code_prior_vq150ep_nomirror_repair_v2.npz",
+   "sha256": "5c93fc0e3aace13b331cc31d74ea960254ab5faa28aada9caad23ddd4fe7f421"
+  }
+ },
+ "test_suites": {
+  "cpu": {
+   "returncode": 0,
+   "summary": "425 passed, 22 deselected, 10 warnings, 5 subtests passed in 34.80s",
+   "log": "G0/tests_cpu.log"
+  },
+  "gpu": {
+   "returncode": 0,
+   "summary": "22 passed, 425 deselected, 1 warning in 3.97s",
+   "log": "G0/tests_gpu.log"
+  }
+ },
+ "wrappers": {
+  "vq_entry": {
+   "script": "run_train_basic_vqvae_375to291.sh",
+   "returncode": 0,
+   "line": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_nomirror --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 50 --batch-size 512 --seq-len 2 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 10 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 0 --no-tf32 --no-compile --use-rotation-trick --kmeans-init",
+   "parse": {
+    "ok": true,
+    "error": null
+   }
+  },
+  "controller_obsnoise_tf100": {
+   "script": "run_train_flowmatch_history_obsnoise_tf100.sh",
+   "returncode": 0,
+   "line": "[Run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_flowmatch_vqvae_controller.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --vqvae-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --vq-target-cache /home/shinn/桌面/multimedia/revision/NewCode/cache/vq_targets_vq150ep_nomirror_repair_v2 --style-code-prior /home/shinn/桌面/multimedia/revision/NewCode/cache/style_code_prior_vq150ep_nomirror_repair_v2.npz --latent-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_nomirror_150ep/latent_stats.npz --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf100_l6 --field-arch transformer --use-motion-token --epochs 100 --lr-schedule-epochs 100 --seed 42 --seq-len 5 --stride 1 --unroll-steps 4 --feedback-start-epoch 1 --feedback-ramp-epochs 0 --feedback-probability 0 --feedback-solver-steps 2 --batch-size 1024 --microbatch-size 0 --prediction-mode target --flow-loss-space normalized --lr 1e-3 --min-lr 1e-5 --weight-decay 1e-4 --grad-clip 1 --flow-hidden-dim 256 --flow-layers 2 --flow-heads 4 --flow-ffn-dim 1024 --dropout 0 --style-num-slots 8 --style-selector-topk 4 --style-selector-temperature 1 --style-selector-init prior --style-proto-normalization none --style-prior-loss dense --style-hist-weight .02 --style-entropy-weight .003 --recipe-prob 0 --recon-weight 0 --root-recon-weight 0 --style-consistency-weight 0 --noise-std 1 --solver-steps 8 --inference-requantize --inference-latent-clip --matmul-precision highest --no-tf32 --rollout-val-every 0 --tf-val-every 5 --style-val-mode rollout --style-val-batch-size 64 --tf-val-clips 90 --tf-val-windows 3 --tf-val-selection absolute --tf-val-min-matched-accuracy .85 --tf-val-max-matched-ade 5 --tf-val-max-cross-ade 10 --val-every 1 --save-every 5 --num-workers 8 --prefetch-factor 4 --epochs 100 --lr-schedule-epochs 100 --seq-len 6 --history-conditioning --train-feedback-context --observation-noise-std 0.5 --flow-layers 6 --dropout 0 --batch-size 2048 --gpu-data-cache-gb 8 --cache-teacher-motion --motion-quality-selection --tf-val-every 5 --solver-steps 4 --feedback-solver-steps 4",
+   "parse": {
+    "ok": true,
+    "error": null
+   }
+  }
+ },
+ "already_fixed": [
+  "S4 g0 acceptance gate is now mandatory/fail-closed (12861af) — do not re-file as a bug",
+  "S4 best.pt epochs now read from history.jsonl (12861af) — B0 ep1 / B1 ep3 is correct",
+  "S4 continuous-AE causal wording corrected (12861af) — c.jitter +2.0%, not 'smoothed'",
+  "VQ entry wrapper --no-decoder-only argparse bug fixed (28ac8a0) + regression test",
+  "S2/S3/S4 contract fixes: norm pinned, loader generators, teacher fingerprint, resume guards",
+  "codebook_boundary_distance exact Voronoi plane + margin/no_grad search (0a11707 era)"
+ ],
+ "open_observations": [
+  "controller wrapper expands duplicated flags (--epochs/--flow-layers twice); argparse last-wins makes it benign, recorded here as cosmetic only",
+  "flowmatch_label_history_obsnoise_tf100 contains an extra best_loss.pt from an older artifact convention; not used by any runner",
+  "historical 'shell tail' anomaly in an old pilot log (AUDIT section 6.1) was never reproduced; wrapper syntax + DRY_RUN verified in G0",
+  "controller trainer resume guard covers objective version; C2 must bump it if semantics change"
+ ],
+ "verdict": "PASS",
+ "blockers": []
+}
