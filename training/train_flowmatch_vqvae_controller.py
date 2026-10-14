@@ -184,6 +184,8 @@ def unrolled_flow_loss(
     recon_anchor_weight: float = 0.0,
     style_hist_weight: float = 0.0,
     style_entropy_weight: float = 0.0,
+    code_ce_weight: float = 0.0,
+    code_ce_temperature: float = 0.0,
     noise_std: float = 1.0,
     solver_steps: int = 8,
     detach_feedback: bool = True,
@@ -338,6 +340,8 @@ def unrolled_flow_loss(
             style_entropy_weight=style_entropy_weight if step == 0 else 0.0,
             noise_std=noise_std,
             solver_steps=step_solver_steps,
+            code_ce_weight=code_ce_weight,
+            code_ce_temperature=code_ce_temperature,
             return_prediction=style_consistency_weight > 0,
             return_rollout_latent=need_prediction,
             history_latent=history_latent if getattr(model, "history_conditioning", False) else None,
@@ -490,6 +494,8 @@ def _weighted_loss_breakdown(metrics: dict[str, float], args: argparse.Namespace
     total = float(metrics.get("loss", 0.0))
     terms = {
         "flow": (float(metrics.get("flow_loss", 0.0)), 1.0),
+        "code_ce": (float(metrics.get("code_ce_loss", 0.0)),
+                    float(getattr(args, "code_ce_weight_effective", getattr(args, "code_ce_weight", 0.0)))),
         "recon": (float(metrics.get("recon_loss", 0.0)), float(getattr(args, "recon_weight", 0.0))),
         "root_recon": (float(metrics.get("root_recon_loss", 0.0)), float(getattr(args, "root_recon_weight", 0.0))),
         "style_prior": (
@@ -520,6 +526,8 @@ def _metric_keys(prediction_mode: str) -> list[str]:
     base = [
         "loss",
         "flow_loss",
+        "code_ce_loss",
+        "code_ce_match",
         "recon_loss",
         "recon_anchor_loss",
         "recon_quant_error",
@@ -736,6 +744,14 @@ def _seed_loader(loader, *, seed, epoch):
 
 
 
+def _code_ce_ramp(epoch: int, warmup_epochs: int) -> float:
+    """Linear 0->1 ramp for the code-decision CE weight; 0 keeps the weight constant."""
+    warmup = int(warmup_epochs)
+    if warmup <= 0:
+        return 1.0
+    return min(1.0, max(0.0, int(epoch)) / float(warmup))
+
+
 def feedback_probability_for_epoch(epoch, *, start_epoch, ramp_epochs, probability=1.0):
     """One-based TF -> rollout curriculum ramp for the unroll feedback share.
 
@@ -794,6 +810,8 @@ def _run_epoch(
     reuse_style_table=True,
     feedback_batch_schedule="window",
     observation_noise_std=0.0,
+    code_ce_weight=0.0,
+    code_ce_temperature=0.0,
 ):
     is_train = optimizer is not None
     pure_recipe = getattr(model, 'conditioning_mode', 'label') in ('recipe', 'clip_recipe')
@@ -942,6 +960,8 @@ def _run_epoch(
                         feedback_solver_steps=feedback_solver_steps if is_train else solver_steps,
                         reuse_style_table=reuse_style_table,
                         observation_noise_std=observation_noise_std if is_train else 0.0,
+                        code_ce_weight=code_ce_weight if is_train else 0.0,
+                        code_ce_temperature=code_ce_temperature,
                         style_consistency_weight=style_consistency_weight if is_train else 0.,
                         style_classifier=style_classifier, motion_mean=motion_mean, motion_std=motion_std,
                         joint_indices=joint_indices, classifier_label_map=classifier_label_map,
@@ -1239,6 +1259,19 @@ def parse_args() -> argparse.Namespace:
               "observation by clip->quantize->decode(z_gt + U[0,std]*transport_std*eps). "
               "Simulates the model's own noisy feedback during pure TF without Euler rollout. "
               "0 disables (legacy RNG stream); inert at unroll_steps==1 or feedback_probability==1."))
+    parser.add_argument("--code-ce-weight", type=float, default=0.0,
+        help=("Code-decision CE weight: supervises which codebook cell the predicted latent "
+              "lands in (logits = -||p-e_k||^2/T, target = GT code), on top of the continuous "
+              "flow MSE. Directly targets quantized-code fidelity while the VQ stays frozen. "
+              "0 disables and preserves the legacy loss exactly."))
+    parser.add_argument("--code-ce-temperature", type=float, default=0.0,
+        help=("Logit temperature for --code-ce-weight; 0 selects the auto value "
+              "(median codebook nearest-neighbor spacing / 2)^2."))
+    parser.add_argument("--code-ce-warmup-epochs", type=int, default=0,
+        help=("Linearly ramp --code-ce-weight from 0 to its target over this many epochs. "
+              "From-scratch runs start far from the codebook, where the CE gradient is much "
+              "larger than the flow gradient; a short ramp keeps the continuous objective in "
+              "control until predictions are in the right neighborhood."))
     parser.add_argument(
         "--style-consistency-weight",
         type=float,
@@ -1394,6 +1427,12 @@ def main() -> None:
         args.field_dropout = float(args.dropout)
     if not np.isfinite(args.field_dropout) or not 0.0 <= args.field_dropout < 1.0:
         raise ValueError(f"--field-dropout must be finite and in [0,1), got {args.field_dropout}")
+    if not np.isfinite(args.code_ce_weight) or args.code_ce_weight < 0.0:
+        raise ValueError(f"--code-ce-weight must be finite and >= 0, got {args.code_ce_weight}")
+    if not np.isfinite(args.code_ce_temperature) or args.code_ce_temperature < 0.0:
+        raise ValueError(f"--code-ce-temperature must be finite and >= 0, got {args.code_ce_temperature}")
+    if args.code_ce_warmup_epochs < 0:
+        raise ValueError(f"--code-ce-warmup-epochs must be >= 0, got {args.code_ce_warmup_epochs}")
     if args.unroll_steps == 1:
         if (args.feedback_start_epoch != 1 or args.feedback_ramp_epochs != 0
                 or args.feedback_probability != 1.0):
@@ -1744,6 +1783,10 @@ def main() -> None:
         legacy_defaults.update(history_conditioning=False, feedback_batch_schedule="window",
                                motion_quality_selection=False,quality_max_jitter=.5,quality_max_local_fs=.8,quality_max_world_fs=1.,gpu_data_cache_gb=0.,cache_teacher_motion=False)
         legacy_defaults['use_style_film'] = False
+        legacy_defaults['code_ce_weight'] = 0.0
+        legacy_defaults['code_ce_temperature'] = 0.0
+        legacy_defaults['code_ce_warmup_epochs'] = 0
+        resume_fields += ("code_ce_weight", "code_ce_temperature", "code_ce_warmup_epochs")
         legacy_defaults.update(feedback_start_epoch=1, feedback_ramp_epochs=0, feedback_probability=1.0)
         if 'field_dropout' not in prior_args:
             # Legacy runs had a single dropout knob and the field inherited it.
@@ -1834,6 +1877,7 @@ def main() -> None:
         epoch_feedback_probability = feedback_probability_for_epoch(
             epoch, start_epoch=args.feedback_start_epoch,
             ramp_epochs=args.feedback_ramp_epochs, probability=args.feedback_probability)
+        args.code_ce_weight_effective = args.code_ce_weight * _code_ce_ramp(epoch, args.code_ce_warmup_epochs)
         train_metrics = _run_epoch(
             model=model,
             loader=bundle.train_loader,
@@ -1869,6 +1913,8 @@ def main() -> None:
             recipe_pool=recipe_pool, recipe_probability=args.recipe_prob,
             train_feedback_context=args.train_feedback_context,
             observation_noise_std=args.observation_noise_std,
+            code_ce_weight=args.code_ce_weight_effective,
+            code_ce_temperature=args.code_ce_temperature,
             flow_low_t_probability=args.flow_low_t_probability,
             flow_low_t_max=args.flow_low_t_max,
         )
@@ -1947,6 +1993,12 @@ def main() -> None:
             f"recipe_fraction={train_metrics['recipe_fraction']:.3f} "
             f"recipe_n={train_metrics['recipe_exemplars_mean']:.2f} "
             f"recipe_bank_hit={train_metrics['recipe_bank_hit_fraction']:.3f}"
+            + (
+                f" | code_ce={train_metrics['code_ce_loss']:.4f}"
+                f" code_match={train_metrics['code_ce_match']:.4f}"
+                f" w_code_ce={breakdown['code_ce']['weighted']:.4f}"
+                if args.code_ce_weight > 0 else ""
+            )
             + (
                 ""
                 if val_metrics is None

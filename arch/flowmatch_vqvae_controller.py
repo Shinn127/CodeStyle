@@ -1139,6 +1139,83 @@ class FlowMatchVQVAEController(nn.Module):
             z = self.requantize_latent(z)
         return self.vqvae.decode(z), z
 
+    def _shared_codebook(self) -> torch.Tensor:
+        """Frozen [K, code_dim] codebook table (this repo's VQ shares one table across slots)."""
+        embed = self.vqvae.quantizer.embedding_weight
+        if embed.dim() == 3 and embed.size(0) == 1:
+            embed = embed[0]
+        if embed.dim() != 2:
+            raise ValueError(
+                f"code-decision CE expects a shared codebook table, got shape {tuple(embed.shape)}")
+        return embed.detach()
+
+    def code_ce_temperature(self, override: float = 0.0) -> float:
+        """Logit temperature for the code-decision CE; 0 or negative selects the auto value.
+
+        Auto = (median codebook nearest-neighbor spacing / 2)^2, i.e. a logit gap of -1 at the
+        typical cell radius and -4 at one full spacing, so a confident decision needs the
+        prediction to sit near the cell center rather than merely on the correct side.
+        """
+        if override and float(override) > 0.0:
+            return float(override)
+        embed = self._shared_codebook()
+        key = (id(embed), embed._version, str(embed.device))
+        cached = getattr(self, '_code_ce_auto_temperature_cache', None)
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        with torch.no_grad():
+            table = embed.float()
+            distances = torch.cdist(table, table)
+            distances.fill_diagonal_(float('inf'))
+            spacing = float(distances.min(dim=-1).values.median())
+        temperature = max((spacing / 2.0) ** 2, 1e-12)
+        self._code_ce_auto_temperature_cache = (key, temperature)
+        return temperature
+
+    def code_decision_loss(
+        self,
+        predicted: torch.Tensor,
+        target: torch.Tensor,
+        *,
+        temperature: float = 0.0,
+        chunk_rows: int = 2048,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """CE over per-slot nearest-code decisions, in raw latent space.
+
+        ``predicted``/``target`` are normalized-space latents (as produced/consumed by the flow
+        loss). For every slot the codebook distances become logits ``-||p - e_k||^2 / T`` and the
+        GT slot code supplies the CE target, so the decision "which code will this quantize to"
+        receives a direct, margin-aware gradient instead of only the continuous MSE (whose
+        optimum can sit on a cell boundary when the conditional is multimodal). Returns
+        ``(mean_ce, match_rate)``; the codebook stays frozen and no RNG is consumed.
+        """
+        self._require_latent_stats()
+        quantizer = self.vqvae.quantizer
+        embed = self._shared_codebook().to(device=predicted.device, dtype=torch.float32)
+        temperature = self.code_ce_temperature(temperature)
+        code_dim = int(quantizer.code_dim)
+        pred_raw = self.denormalize_latent(predicted.float()).reshape(-1, code_dim)
+        target_raw = self.denormalize_latent(target.float().detach()).reshape(-1, code_dim)
+        weight = -2.0 * embed.t()
+        bias = embed.square().sum(-1)
+        with torch.no_grad():
+            gt = torch.empty(target_raw.size(0), dtype=torch.long, device=target_raw.device)
+            for begin in range(0, target_raw.size(0), chunk_rows):
+                end = min(begin + chunk_rows, target_raw.size(0))
+                score = torch.addmm(bias[None], target_raw[begin:end], weight)
+                gt[begin:end] = score.argmin(dim=-1)
+        rows = pred_raw.size(0)
+        total = predicted.new_zeros(())
+        correct = predicted.new_zeros(())
+        for begin in range(0, rows, chunk_rows):
+            end = min(begin + chunk_rows, rows)
+            score = torch.addmm(bias[None], pred_raw[begin:end], weight)
+            logits = -score / temperature
+            total = total + F.cross_entropy(logits, gt[begin:end], reduction='sum')
+            correct = correct + (logits.argmax(dim=-1) == gt[begin:end]).sum()
+        denom = max(rows, 1)
+        return total / denom, correct / denom
+
     def history_delta(self, z_prev, history_latent):
         if not self.history_conditioning:
             if history_latent is not None:
@@ -1273,6 +1350,8 @@ class FlowMatchVQVAEController(nn.Module):
         style_table: dict[str, torch.Tensor] | None = None,
         flow_low_t_probability: float = 0.,
         flow_low_t_max: float = .2,
+        code_ce_weight: float = 0.0,
+        code_ce_temperature: float = 0.0,
     ) -> dict[str, torch.Tensor]:
         x_curr = self._flatten_frames(x_curr, self.input_dim)
         x_next = self._flatten_frames(x_next, self.input_dim)
@@ -1354,6 +1433,14 @@ class FlowMatchVQVAEController(nn.Module):
         else:
             flow_loss = (F.mse_loss(target_pred, z1) if self.flow_loss_space == "normalized"
                          else F.mse_loss(field_out, self.transport_normalize_latent(z1)))
+        # Code-decision CE rides on the same prediction the flow loss supervises (continuous
+        # MSE alone has no notion of which codebook cell the prediction lands in). The target
+        # is the GT next latent's code; the codebook itself stays frozen.
+        code_ce_loss = flow_loss.new_zeros(())
+        code_ce_match = flow_loss.new_zeros(())
+        if code_ce_weight > 0.0:
+            code_ce_loss, code_ce_match = self.code_decision_loss(
+                target_pred, z1, temperature=code_ce_temperature)
         style_hist_loss = flow_loss.new_zeros(())
         style_entropy_loss = flow_loss.new_zeros(())
         selector_entropy = flow_loss.new_zeros(())
@@ -1462,11 +1549,14 @@ class FlowMatchVQVAEController(nn.Module):
             + float(recon_anchor_weight) * anchor_loss
             + float(style_hist_weight) * style_hist_loss
             + float(style_entropy_weight) * style_entropy_loss
+            + float(code_ce_weight) * code_ce_loss
         )
         result = {
             "flow_time_mean": t.mean(),
             "loss": total,
             "flow_loss": flow_loss,
+            "code_ce_loss": code_ce_loss,
+            "code_ce_match": code_ce_match,
             "recon_loss": recon_loss,
             "recon_anchor_loss": anchor_loss,
             "recon_quant_error": quant_error,

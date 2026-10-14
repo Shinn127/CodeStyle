@@ -35,6 +35,9 @@ export STYLE_FILM="${STYLE_FILM:-0}"
 # transformer with dropout while the selector stays deterministic (keeps its fast path).
 export DROPOUT="${DROPOUT:-0}"
 export FIELD_DROPOUT="${FIELD_DROPOUT:-}"
+# Code-decision CE (code fidelity): weight + ramp-in epochs; 0 keeps the legacy loss.
+export CODE_CE_W="${CODE_CE_W:-0}"
+export CODE_CE_WARMUP="${CODE_CE_WARMUP:-0}"
 # Pure teacher forcing: p=0 means no feedback window ever (no epoch enters the ramp).
 export FEEDBACK_START_EPOCH=1
 export FEEDBACK_RAMP_EPOCHS=0
@@ -50,6 +53,9 @@ if [[ "${STYLE_FILM}" == "1" ]]; then
 fi
 if [[ -n "${FIELD_DROPOUT}" ]]; then
   extra+=(--field-dropout "${FIELD_DROPOUT}")
+fi
+if [[ "${CODE_CE_W}" != "0" ]]; then
+  extra+=(--code-ce-weight "${CODE_CE_W}" --code-ce-warmup-epochs "${CODE_CE_WARMUP}")
 fi
 bash "${ROOT_DIR}/scripts/run_train_flowmatch_6tok_curriculum100.sh" \
   --epochs "${EPOCHS}" --lr-schedule-epochs "${EPOCHS}" --seq-len 6 --history-conditioning \
