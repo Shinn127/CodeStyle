@@ -51,6 +51,10 @@ def parse_args(argv=None):
     p.add_argument('--demo',action='store_true',help='Scripted control/style changes for bounded checks')
     p.add_argument('--reel',action='store_true',help='Scripted walk/turn/strafe sequence with style swaps, for recordings')
     p.add_argument('--hidden',action='store_true',help='Render into a hidden window (offscreen); still needs a display server')
+    p.add_argument('--full-pipeline',action=argparse.BooleanOptionalAction,default=True,
+        help=('Render the scene through the full GenoView deferred pipeline (shadow map, G-buffer, '
+              'SSAO, blur, lighting, FXAA, mesh ground, real shadows). --no-full-pipeline keeps the '
+              'classic lightweight inline-shader renderer.'))
     p.add_argument('--record',type=Path,default=None,help='Record every rendered frame to this mp4 (H.264 via the ffmpeg binary)')
     p.add_argument('--max-frames',type=int,default=0,help='0 keeps the interactive window open')
     p.add_argument('--screenshot',type=Path,default=None)
@@ -222,11 +226,22 @@ def run_viewer(session,args):
     flags=gv.FLAG_MSAA_4X_HINT|gv.FLAG_VSYNC_HINT|(gv.FLAG_WINDOW_HIDDEN if args.hidden else 0)
     gv.SetConfigFlags(flags)
     gv.InitWindow(1280,800,b'Live label flow controller | WASD + QE')
-    model=None;shader=None;latencies=[]
+    model=None;shader=None;pipeline=None;latencies=[]
     try:
         if not gv.IsWindowReady():raise RuntimeError('Could not open a raylib window')
         gv.SetTargetFPS(60)
-        fragment=b'''#version 300 es
+        model=gv.LoadGenoModel(str(GENOVIEW_RESOURCES_DIR/'Geno.bin').encode())
+        if model.boneCount!=len(parents):raise ValueError('Geno mesh/template joint orders differ')
+        bind_pos,bind_rot=gv.GetModelBindPoseAsNumpyArrays(model)
+        camera=gv.Camera();camera.distance=5.2;camera.altitude=.28;camera.azimuth=np.pi
+        if args.full_pipeline:
+            from Visualization.backends.genoview_pipeline import GenoViewPipeline
+            pipeline=GenoViewPipeline(gv,width=1280,height=800,shadow_size=1024,
+                shadow_area=(5.0,5.0),shadow_extent=5.0,ground_size=20.0)
+            camera_location=camera_value=None
+        else:
+            # Classic lightweight renderer: one inline fragment shader on the skinned vertex pass.
+            fragment=b'''#version 300 es
 precision highp float;
 in vec3 fragNormal; in vec3 fragPosition; in vec4 fragColor; uniform vec4 colDiffuse; uniform vec3 cameraPosition;
 out vec4 finalColor;
@@ -234,15 +249,11 @@ void main(){vec3 n=normalize(fragNormal);float light=0.58+0.42*max(0.0,dot(n,nor
 float rim=pow(1.0-max(0.0,dot(n,normalize(cameraPosition-fragPosition))),3.0);
 finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0);}
 '''
-        shader=gv.LoadShaderFromMemory((GENOVIEW_RESOURCES_DIR/'skinnedBasic.vs').read_bytes(),fragment)
-        if shader.id==gv.rlGetShaderIdDefault():raise RuntimeError('Could not compile the skinning shader')
-        model=gv.LoadGenoModel(str(GENOVIEW_RESOURCES_DIR/'Geno.bin').encode())
-        if model.boneCount!=len(parents):raise ValueError('Geno mesh/template joint orders differ')
-        model.materials[0].shader=shader
-        camera_location=gv.GetShaderLocation(shader,b'cameraPosition')
-        camera_value=gv.ffi.new('float[3]')
-        bind_pos,bind_rot=gv.GetModelBindPoseAsNumpyArrays(model)
-        camera=gv.Camera();camera.distance=5.2;camera.altitude=.28;camera.azimuth=np.pi
+            shader=gv.LoadShaderFromMemory((GENOVIEW_RESOURCES_DIR/'skinnedBasic.vs').read_bytes(),fragment)
+            if shader.id==gv.rlGetShaderIdDefault():raise RuntimeError('Could not compile the skinning shader')
+            model.materials[0].shader=shader
+            camera_location=gv.GetShaderLocation(shader,b'cameraPosition')
+            camera_value=gv.ffi.new('float[3]')
         search=gv.ffi.new('char[128]');scroll=gv.ffi.new('int *',max(0,session.style-4));active=gv.ffi.new('int *')
         speed=gv.ffi.new('float *',args.speed)
         editing=False;paused=False;skeleton=False;trajectory=True;last_query='';pending_toggle=None
@@ -302,28 +313,45 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
             else:camera_target+=(1-np.exp(-2*np.pi*6*max(wall_dt,1./120)))*(follow-camera_target)
             camera.update(gv.Vector3(*camera_target),delta.x if orbit else 0.,delta.y if orbit else 0.,0.,0.,
                 gv.GetMouseWheelMove() if not panel else 0.,max(wall_dt,1./120))
-            eye=camera.cam3d.position;camera_value[0]=eye.x;camera_value[1]=eye.y;camera_value[2]=eye.z
-            gv.SetShaderValue(shader,camera_location,camera_value,gv.SHADER_UNIFORM_VEC3)
-            gv.BeginDrawing();gv.ClearBackground(gv.Color(232,238,242,255));gv.BeginMode3D(camera.cam3d)
-            gv.DrawPlane(gv.Vector3(*root),gv.Vector2(100,100),gv.Color(216,224,230,255))
-            gv.rlPushMatrix();gv.rlTranslatef(float(np.floor(root[0])),.002,float(np.floor(root[2])))
-            gv.DrawGrid(32,1.);gv.rlPopMatrix()
-            for _,_,foot,toe in processor.legs:
-                point=full_pos[0,foot];alpha=int(35*max(0.,1-max(0.,float(point[1])-.08)/.4))
-                gv.DrawCylinder(gv.Vector3(point[0],.006,point[2]),.12,.12,.002,20,gv.Color(48,61,72,alpha))
-            gv.DrawModel(model,gv.Vector3(0,0,0),1.,gv.Color(64,124,196,255))
-            if skeleton:gv.DrawSkeleton(full_pos[0],full_rot[0],parents,gv.Color(240,138,45,255))
-            if trajectory:
-                p=session.debug['positions'].copy();d=session.debug['directions'].copy();p[:,0]*=factor;d[:,0]*=factor
-                for i in range(len(p)):
-                    color=gv.Color(38,164,119,255) if session.planner.offsets[i]>=0 else gv.Color(130,145,160,255)
-                    point=np.array([p[i,0],.04,p[i,1]])
-                    if i:gv.DrawLine3D(gv.Vector3(p[i-1,0],.04,p[i-1,1]),gv.Vector3(*point),color)
-                    gv.DrawSphere(gv.Vector3(*point),.035,color)
-                    gv.DrawLine3D(gv.Vector3(*point),gv.Vector3(*(point+np.array([d[i,0],0,d[i,1]])*.22)),color)
+            if pipeline is None:
+                eye=camera.cam3d.position;camera_value[0]=eye.x;camera_value[1]=eye.y;camera_value[2]=eye.z
+                gv.SetShaderValue(shader,camera_location,camera_value,gv.SHADER_UNIFORM_VEC3)
             facing=planar_facing(session.planner.yaw,factor)
-            gv.DrawLine3D(gv.Vector3(*(root+np.array([0,.03,0]))),gv.Vector3(*(root+facing*.8+np.array([0,.03,0]))),gv.Color(239,153,48,255))
-            gv.EndMode3D()
+            if pipeline is not None:
+                def overlay(gv_mod,cam,*,root=root,facing=facing,skeleton=skeleton,trajectory=trajectory,
+                            full_pos=full_pos,full_rot=full_rot,parents=parents,session=session,factor=factor):
+                    if skeleton:gv_mod.DrawSkeleton(full_pos[0],full_rot[0],parents,gv_mod.Color(240,138,45,255))
+                    if trajectory:
+                        p=session.debug['positions'].copy();d=session.debug['directions'].copy();p[:,0]*=factor;d[:,0]*=factor
+                        for i in range(len(p)):
+                            color=gv_mod.Color(38,164,119,255) if session.planner.offsets[i]>=0 else gv_mod.Color(130,145,160,255)
+                            point=np.array([p[i,0],.04,p[i,1]])
+                            if i:gv_mod.DrawLine3D(gv_mod.Vector3(p[i-1,0],.04,p[i-1,1]),gv_mod.Vector3(*point),color)
+                            gv_mod.DrawSphere(gv_mod.Vector3(*point),.035,color)
+                            gv_mod.DrawLine3D(gv_mod.Vector3(*point),gv_mod.Vector3(*(point+np.array([d[i,0],0,d[i,1]])*.22)),color)
+                    gv_mod.DrawLine3D(gv_mod.Vector3(*(root+np.array([0,.03,0]))),gv_mod.Vector3(*(root+facing*.8+np.array([0,.03,0]))),gv_mod.Color(239,153,48,255))
+                pipeline.render(camera,models=[(model,gv.Color(64,124,196,255))],
+                    shadow_focus=(float(root[0]),float(root[2])),overlay=overlay)
+            else:
+                gv.BeginDrawing();gv.ClearBackground(gv.Color(232,238,242,255));gv.BeginMode3D(camera.cam3d)
+                gv.DrawPlane(gv.Vector3(*root),gv.Vector2(100,100),gv.Color(216,224,230,255))
+                gv.rlPushMatrix();gv.rlTranslatef(float(np.floor(root[0])),.002,float(np.floor(root[2])))
+                gv.DrawGrid(32,1.);gv.rlPopMatrix()
+                for _,_,foot,toe in processor.legs:
+                    point=full_pos[0,foot];alpha=int(35*max(0.,1-max(0.,float(point[1])-.08)/.4))
+                    gv.DrawCylinder(gv.Vector3(point[0],.006,point[2]),.12,.12,.002,20,gv.Color(48,61,72,alpha))
+                gv.DrawModel(model,gv.Vector3(0,0,0),1.,gv.Color(64,124,196,255))
+                if skeleton:gv.DrawSkeleton(full_pos[0],full_rot[0],parents,gv.Color(240,138,45,255))
+                if trajectory:
+                    p=session.debug['positions'].copy();d=session.debug['directions'].copy();p[:,0]*=factor;d[:,0]*=factor
+                    for i in range(len(p)):
+                        color=gv.Color(38,164,119,255) if session.planner.offsets[i]>=0 else gv.Color(130,145,160,255)
+                        point=np.array([p[i,0],.04,p[i,1]])
+                        if i:gv.DrawLine3D(gv.Vector3(p[i-1,0],.04,p[i-1,1]),gv.Vector3(*point),color)
+                        gv.DrawSphere(gv.Vector3(*point),.035,color)
+                        gv.DrawLine3D(gv.Vector3(*point),gv.Vector3(*(point+np.array([d[i,0],0,d[i,1]])*.22)),color)
+                gv.DrawLine3D(gv.Vector3(*(root+np.array([0,.03,0]))),gv.Vector3(*(root+facing*.8+np.array([0,.03,0]))),gv.Color(239,153,48,255))
+                gv.EndMode3D()
             gv.DrawRectangle(968,0,312,800,gv.Color(247,249,251,250))
             text=lambda message,y,size=17,color=None:gv.DrawText(message.encode(),994,y,size,color or gv.Color(40,57,74,255))
             text('LABEL CONTROL',26,24)
@@ -379,13 +407,17 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
         if recorder is not None:
             try:session.recorded_frames=recorder.close()
             except Exception as exc:print(f'[Warn] recording close failed: {exc}',file=sys.stderr)
+        if pipeline is not None:
+            try:pipeline.close()
+            except Exception:pass
         if model is not None:gv.UnloadModel(model)
         if shader is not None:gv.UnloadShader(shader)
         gv.CloseWindow()
     effective=processing_status(postprocess,processor.foot_ik,processor.cutoff,processor.diagnostics['contacts'])
     session.render_diagnostics=dict(postprocess=postprocess,foot_ik=processor.foot_ik,foot_ik_active=effective['foot_ik'],
         smoothing_active=effective['smoothing'],smooth_cutoff=args.smooth_cutoff,
-        postprocess_ms_mean=float(np.mean(pose_cost)) if pose_cost else 0.,**processor.diagnostics)
+        postprocess_ms_mean=float(np.mean(pose_cost)) if pose_cost else 0.,
+        full_pipeline=bool(pipeline is not None),**processor.diagnostics)
     if args.record is not None:
         session.render_diagnostics['recording']=dict(path=str(args.record),fps=60,
             frames=int(getattr(session,'recorded_frames',0)),hidden=bool(args.hidden))

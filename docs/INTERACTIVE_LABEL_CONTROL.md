@@ -91,6 +91,20 @@ bash scripts/run_interactive_label_control.sh --no-postprocess      # 原始显�
 
 `--smooth-cutoff 0`只关闭时间滤波，骨长约束和IK仍按开关生效。Headless模型入口不渲染，显示诊断使用下面的专用短测。
 
+### 渲染管线（2026-10-14 更新）
+
+交互视口默认使用 **完整 GenoView 延迟管线**：shadow map → G-Buffer → SSAO → 可分离 blur →
+lighting → FXAA，mesh 地面 + 真实投影阴影，与 `genoview_preview`/双人对比同一实现
+（共享模块 `Visualization/backends/genoview_pipeline.py`）。骨架/轨迹/朝向线作为 3D overlay
+在 lighting 段绘制（深度遮挡 + FXAA）。旧轻量内联 shader 渲染可用 `--no-full-pipeline` 回退。
+
+```bash
+bash scripts/run_interactive_label_control.sh --no-full-pipeline    # 回退轻量渲染
+```
+
+全管线隐藏窗口实测（1280×800，录制 720 帧）：CPU 编码 0.10 ms/帧，端到端持续 ≥59 render FPS；
+详见[实施与验证报告](../analysis/genoview_pipeline_2026-10-14/REPORT.md)。
+
 同一seed42、120帧demo中，world joint二阶差分代理5.45→3.08cm，下降43.5%；相同85个完全锁定support pairs（占35.7%）的XZ滑动代理2.30→0.030cm/帧。仅平滑/FK时可增加穿地，所以默认联合IK。脚底高度代理的最大穿地0.75cm降至数值误差范围；不代表整个mesh精确零穿地。这些都是显示诊断，不是论文F.S./Jitter或style accuracy。
 
 后处理平均约2.2—2.3ms/帧，120帧虚拟窗口检查显示60 render FPS；原始model motion、noise状态逐帧不变，world root与修订前demo逐值一致，VQ不变。17项针对性测试通过（交互7项+后处理10项）。记录见[后处理验证](../analysis/interactive_label_postprocess/verification.json)和[预览](../analysis/interactive_label_postprocess/preview.png)。

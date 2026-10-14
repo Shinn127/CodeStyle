@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import importlib
 import os
 import sys
 from pathlib import Path
@@ -14,12 +13,19 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 VISUALIZATION_DIR = SCRIPT_DIR.parent
 NEWCODE_DIR = VISUALIZATION_DIR.parent
 REPO_ROOT = NEWCODE_DIR.parent
-GENOVIEW_DIR = REPO_ROOT / "GenoViewPython-main"
-GENOVIEW_RESOURCES_DIR = GENOVIEW_DIR / "resources"
 
 if str(NEWCODE_DIR) not in sys.path:
     sys.path.insert(0, str(NEWCODE_DIR))
 
+# The full render chain and the GenoView module/resources live in genoview_pipeline; the
+# names below stay importable from this module for existing callers.
+from Visualization.backends.genoview_pipeline import (  # noqa: E402
+    GENOVIEW_DIR,
+    GENOVIEW_RESOURCES_DIR,
+    GenoViewPipeline,
+    _as_bytes,
+    _load_genoview_module,
+)
 from Utils import quat  # noqa: E402
 from Utils.motion375 import (  # noqa: E402
     TRAJECTORY_SAMPLE_STRIDE,
@@ -37,23 +43,6 @@ from Visualization.io.genoview_bvh import (  # noqa: E402
     _resolve_frame_range,
     _template_local_transforms,
 )
-
-
-def _as_bytes(path: Path) -> bytes:
-    return str(path.expanduser().resolve()).encode("utf-8")
-
-
-def _load_genoview_module() -> Any:
-    if not GENOVIEW_DIR.exists():
-        raise FileNotFoundError(f"GenoView project directory not found: {GENOVIEW_DIR}")
-    if str(GENOVIEW_DIR) not in sys.path:
-        sys.path.insert(0, str(GENOVIEW_DIR))
-    try:
-        return importlib.import_module("genoview")
-    except ModuleNotFoundError as exc:
-        raise RuntimeError(
-            "Failed to import GenoView runtime. Install the Python raylib bindings in the selected environment."
-        ) from exc
 
 
 def _trajectory_sample_offsets(window: int, sample_count: int) -> np.ndarray:
@@ -324,106 +313,13 @@ def visualize_dual_motion375_genoview_from_375(
     old_cwd = Path.cwd()
     os.chdir(GENOVIEW_DIR)
 
-    shadow_shader = None
-    skinned_shadow_shader = None
-    skinned_basic_shader = None
-    basic_shader = None
-    lighting_shader = None
-    ssao_shader = None
-    blur_shader = None
-    fxaa_shader = None
-    ground_model = None
-    shadow_map = None
-    gbuffer = None
-    lighted = None
-    ssao_front = None
-    ssao_back = None
+    pipeline = None
     ref_model = None
     pred_model = None
     try:
         gv.SetConfigFlags(gv.FLAG_VSYNC_HINT)
         gv.InitWindow(int(screen_width), int(screen_height), (title or "motion375 GenoView compare").encode("utf-8"))
         gv.SetTargetFPS(int(fps))
-        gv.rlSetClipPlanes(0.01, 50.0)
-
-        shadow_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.fs"))
-        shadow_shader_light_clip_near = gv.GetShaderLocation(shadow_shader, b"lightClipNear")
-        shadow_shader_light_clip_far = gv.GetShaderLocation(shadow_shader, b"lightClipFar")
-
-        skinned_shadow_shader = gv.LoadShader(
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "skinnedShadow.vs"),
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.fs"),
-        )
-        skinned_shadow_shader_light_clip_near = gv.GetShaderLocation(skinned_shadow_shader, b"lightClipNear")
-        skinned_shadow_shader_light_clip_far = gv.GetShaderLocation(skinned_shadow_shader, b"lightClipFar")
-
-        skinned_basic_shader = gv.LoadShader(
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "skinnedBasic.vs"),
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "basic.fs"),
-        )
-        shader_specularity = gv.GetShaderLocation(skinned_basic_shader, b"specularity")
-        shader_glossiness = gv.GetShaderLocation(skinned_basic_shader, b"glossiness")
-        shader_cam_clip_near = gv.GetShaderLocation(skinned_basic_shader, b"camClipNear")
-        shader_cam_clip_far = gv.GetShaderLocation(skinned_basic_shader, b"camClipFar")
-
-        basic_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "basic.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "basic.fs"))
-        basic_shader_specularity = gv.GetShaderLocation(basic_shader, b"specularity")
-        basic_shader_glossiness = gv.GetShaderLocation(basic_shader, b"glossiness")
-        basic_shader_cam_clip_near = gv.GetShaderLocation(basic_shader, b"camClipNear")
-        basic_shader_cam_clip_far = gv.GetShaderLocation(basic_shader, b"camClipFar")
-
-        lighting_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "lighting.fs"))
-        lighting_shader_gbuffer_color = gv.GetShaderLocation(lighting_shader, b"gbufferColor")
-        lighting_shader_gbuffer_normal = gv.GetShaderLocation(lighting_shader, b"gbufferNormal")
-        lighting_shader_gbuffer_depth = gv.GetShaderLocation(lighting_shader, b"gbufferDepth")
-        lighting_shader_ssao = gv.GetShaderLocation(lighting_shader, b"ssao")
-        lighting_shader_cam_pos = gv.GetShaderLocation(lighting_shader, b"camPos")
-        lighting_shader_cam_inv_view_proj = gv.GetShaderLocation(lighting_shader, b"camInvViewProj")
-        lighting_shader_light_dir = gv.GetShaderLocation(lighting_shader, b"lightDir")
-        lighting_shader_sun_color = gv.GetShaderLocation(lighting_shader, b"sunColor")
-        lighting_shader_sun_strength = gv.GetShaderLocation(lighting_shader, b"sunStrength")
-        lighting_shader_sky_color = gv.GetShaderLocation(lighting_shader, b"skyColor")
-        lighting_shader_sky_strength = gv.GetShaderLocation(lighting_shader, b"skyStrength")
-        lighting_shader_ground_strength = gv.GetShaderLocation(lighting_shader, b"groundStrength")
-        lighting_shader_ambient_strength = gv.GetShaderLocation(lighting_shader, b"ambientStrength")
-        lighting_shader_exposure = gv.GetShaderLocation(lighting_shader, b"exposure")
-        lighting_shader_cam_clip_near = gv.GetShaderLocation(lighting_shader, b"camClipNear")
-        lighting_shader_cam_clip_far = gv.GetShaderLocation(lighting_shader, b"camClipFar")
-
-        ssao_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "ssao.fs"))
-        ssao_shader_gbuffer_normal = gv.GetShaderLocation(ssao_shader, b"gbufferNormal")
-        ssao_shader_gbuffer_depth = gv.GetShaderLocation(ssao_shader, b"gbufferDepth")
-        ssao_shader_cam_view = gv.GetShaderLocation(ssao_shader, b"camView")
-        ssao_shader_cam_proj = gv.GetShaderLocation(ssao_shader, b"camProj")
-        ssao_shader_cam_inv_proj = gv.GetShaderLocation(ssao_shader, b"camInvProj")
-        ssao_shader_cam_inv_view_proj = gv.GetShaderLocation(ssao_shader, b"camInvViewProj")
-        ssao_shader_light_view_proj = gv.GetShaderLocation(ssao_shader, b"lightViewProj")
-        ssao_shader_shadow_map = gv.GetShaderLocation(ssao_shader, b"shadowMap")
-        ssao_shader_shadow_inv_resolution = gv.GetShaderLocation(ssao_shader, b"shadowInvResolution")
-        ssao_shader_cam_clip_near = gv.GetShaderLocation(ssao_shader, b"camClipNear")
-        ssao_shader_cam_clip_far = gv.GetShaderLocation(ssao_shader, b"camClipFar")
-        ssao_shader_light_clip_near = gv.GetShaderLocation(ssao_shader, b"lightClipNear")
-        ssao_shader_light_clip_far = gv.GetShaderLocation(ssao_shader, b"lightClipFar")
-        ssao_shader_light_dir = gv.GetShaderLocation(ssao_shader, b"lightDir")
-
-        blur_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "blur.fs"))
-        blur_shader_gbuffer_normal = gv.GetShaderLocation(blur_shader, b"gbufferNormal")
-        blur_shader_gbuffer_depth = gv.GetShaderLocation(blur_shader, b"gbufferDepth")
-        blur_shader_input_texture = gv.GetShaderLocation(blur_shader, b"inputTexture")
-        blur_shader_cam_inv_proj = gv.GetShaderLocation(blur_shader, b"camInvProj")
-        blur_shader_cam_clip_near = gv.GetShaderLocation(blur_shader, b"camClipNear")
-        blur_shader_cam_clip_far = gv.GetShaderLocation(blur_shader, b"camClipFar")
-        blur_shader_inv_texture_resolution = gv.GetShaderLocation(blur_shader, b"invTextureResolution")
-        blur_shader_blur_direction = gv.GetShaderLocation(blur_shader, b"blurDirection")
-
-        fxaa_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "fxaa.fs"))
-        fxaa_shader_input_texture = gv.GetShaderLocation(fxaa_shader, b"inputTexture")
-        fxaa_shader_inv_texture_resolution = gv.GetShaderLocation(fxaa_shader, b"invTextureResolution")
-
-        ground_mesh = gv.GenMeshPlane(20.0, 20.0, 10, 10)
-        ground_model = gv.LoadModelFromMesh(ground_mesh)
-        ground_position = gv.Vector3(0.0, -0.01, 0.0)
-        zero_position = gv.Vector3(0.0, 0.0, 0.0)
 
         ref_model = gv.LoadGenoModel(_as_bytes(GENOVIEW_RESOURCES_DIR / "Geno.bin"))
         pred_model = gv.LoadGenoModel(_as_bytes(GENOVIEW_RESOURCES_DIR / "Geno.bin"))
@@ -433,39 +329,44 @@ def visualize_dual_motion375_genoview_from_375(
         camera.distance = 7.5
         camera.altitude = 0.35
 
-        specularity_ptr = gv.ffi.new("float*")
-        glossiness_ptr = gv.ffi.new("float*")
-        cam_clip_near_ptr = gv.ffi.new("float*")
-        cam_clip_far_ptr = gv.ffi.new("float*")
-        specularity_ptr[0] = 0.5
-        glossiness_ptr[0] = 10.0
-        cam_clip_near_ptr[0] = 0.01
-        cam_clip_far_ptr[0] = 50.0
-
-        light_dir = gv.Vector3Normalize(gv.Vector3(0.35, -1.0, -0.35))
-        shadow_light = gv.ShadowLight()
-        shadow_light.target = gv.Vector3Zero()
-        shadow_light.position = gv.Vector3Scale(light_dir, -6.0)
-        shadow_light.up = gv.Vector3(0.0, 1.0, 0.0)
-        shadow_light.width = 10.0
-        shadow_light.height = 8.0
-        shadow_light.near = 0.01
-        shadow_light.far = 16.0
-
-        shadow_width = 1024
-        shadow_height = 1024
-        shadow_inv_resolution = gv.Vector2(1.0 / shadow_width, 1.0 / shadow_height)
-        shadow_map = gv.LoadShadowMap(shadow_width, shadow_height)
-
-        gbuffer = gv.LoadGBuffer(int(screen_width), int(screen_height))
-        lighted = gv.LoadRenderTexture(int(screen_width), int(screen_height))
-        ssao_front = gv.LoadRenderTexture(int(screen_width), int(screen_height))
-        ssao_back = gv.LoadRenderTexture(int(screen_width), int(screen_height))
+        pipeline = GenoViewPipeline(
+            gv,
+            width=int(screen_width),
+            height=int(screen_height),
+            shadow_size=1024,
+            shadow_area=(10.0, 8.0),
+            shadow_extent=6.0,
+            ground_size=20.0,
+        )
 
         ref_color = gv.Color(110, 159, 255, 255)
         pred_color = gv.Color(255, 171, 82, 255)
         ref_skeleton_color = gv.Color(70, 105, 180, 255)
         pred_skeleton_color = gv.Color(191, 108, 10, 255)
+
+        def overlay(gv_mod: Any, cam: Any) -> None:
+            if draw_bone_transforms_ptr[0]:
+                gv_mod.DrawSkeleton(ref_full_pos[animation_frame], ref_full_rot[animation_frame], ref_full_parents, ref_skeleton_color)
+                gv_mod.DrawSkeleton(pred_full_pos[animation_frame], pred_full_rot[animation_frame], ref_full_parents, pred_skeleton_color)
+            if draw_trajectory_ptr[0]:
+                if ref_traj_pos.size:
+                    _draw_trajectory_overlay(
+                        gv_mod,
+                        positions=ref_traj_pos,
+                        directions=ref_traj_dir,
+                        offsets=traj_offsets,
+                        frame_index=animation_frame,
+                        future_only=bool(trajectory_future_only),
+                    )
+                if pred_traj_pos.size:
+                    _draw_trajectory_overlay(
+                        gv_mod,
+                        positions=pred_traj_pos,
+                        directions=pred_traj_dir,
+                        offsets=traj_offsets,
+                        frame_index=animation_frame,
+                        future_only=bool(trajectory_future_only),
+                    )
 
         animation_frame = 0
         paused = bool(start_paused)
@@ -501,18 +402,11 @@ def visualize_dual_motion375_genoview_from_375(
 
             hip_ref = gv.Vector3(*ref_full_pos[animation_frame, 0])
             hip_pred = gv.Vector3(*pred_full_pos[animation_frame, 0])
-            if screenshots and animation_frame in screenshots:
-                shot = screenshots[animation_frame]
-                shot.parent.mkdir(parents=True, exist_ok=True)
-                gv.TakeScreenshot(str(shot).encode())
-                print(f"[Screenshot] frame {animation_frame} -> {shot}", flush=True)
             focus_target = gv.Vector3(
                 0.5 * (hip_ref.x + hip_pred.x),
                 0.75 + 0.5 * (hip_ref.y + hip_pred.y),
                 0.5 * (hip_ref.z + hip_pred.z),
             )
-            shadow_light.target = gv.Vector3(focus_target.x, 0.0, focus_target.z)
-            shadow_light.position = gv.Vector3Add(shadow_light.target, gv.Vector3Scale(light_dir, -6.0))
             camera.update(
                 focus_target,
                 gv.GetMouseDelta().x if gv.IsKeyDown(gv.KEY_LEFT_CONTROL) and gv.IsMouseButtonDown(0) else 0.0,
@@ -523,197 +417,12 @@ def visualize_dual_motion375_genoview_from_375(
                 gv.GetFrameTime(),
             )
 
-            gv.rlDisableColorBlend()
-            gv.SetShaderValue(skinned_basic_shader, shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.BeginDrawing()
-
-            gv.BeginShadowMap(shadow_map, shadow_light)
-            light_view_proj = gv.MatrixMultiply(gv.rlGetMatrixModelview(), gv.rlGetMatrixProjection())
-            light_clip_near = gv.rlGetCullDistanceNear()
-            light_clip_far = gv.rlGetCullDistanceFar()
-            light_clip_near_ptr = gv.ffi.new("float*")
-            light_clip_far_ptr = gv.ffi.new("float*")
-            light_clip_near_ptr[0] = light_clip_near
-            light_clip_far_ptr[0] = light_clip_far
-            gv.SetShaderValue(shadow_shader, shadow_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(shadow_shader, shadow_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_shadow_shader, skinned_shadow_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_shadow_shader, skinned_shadow_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            ground_model.materials[0].shader = shadow_shader
-            gv.DrawModel(ground_model, ground_position, 1.0, gv.WHITE)
-            ref_model.materials[0].shader = skinned_shadow_shader
-            pred_model.materials[0].shader = skinned_shadow_shader
-            gv.DrawModel(ref_model, zero_position, 1.0, gv.WHITE)
-            gv.DrawModel(pred_model, zero_position, 1.0, gv.WHITE)
-            gv.EndShadowMap()
-
-            gv.BeginGBuffer(gbuffer, camera.cam3d)
-            cam_view = gv.rlGetMatrixModelview()
-            cam_proj = gv.rlGetMatrixProjection()
-            cam_inv_proj = gv.MatrixInvert(cam_proj)
-            cam_inv_view_proj = gv.MatrixInvert(gv.MatrixMultiply(cam_view, cam_proj))
-            cam_clip_near = gv.rlGetCullDistanceNear()
-            cam_clip_far = gv.rlGetCullDistanceFar()
-            cam_clip_near_ptr[0] = cam_clip_near
-            cam_clip_far_ptr[0] = cam_clip_far
-            gv.SetShaderValue(basic_shader, basic_shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            ground_model.materials[0].shader = basic_shader
-            gv.DrawModel(ground_model, ground_position, 1.0, gv.Color(190, 190, 190, 255))
-            ref_model.materials[0].shader = skinned_basic_shader
-            pred_model.materials[0].shader = skinned_basic_shader
-            gv.DrawModel(ref_model, zero_position, 1.0, ref_color)
-            gv.DrawModel(pred_model, zero_position, 1.0, pred_color)
-            gv.EndGBuffer(int(screen_width), int(screen_height))
-
-            gv.BeginTextureMode(ssao_front)
-            gv.BeginShaderMode(ssao_shader)
-            gv.SetShaderValueTexture(ssao_shader, ssao_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(ssao_shader, ssao_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_view, cam_view)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_proj, cam_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_inv_proj, cam_inv_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_inv_view_proj, cam_inv_view_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_light_view_proj, light_view_proj)
-            gv.SetShaderValueShadowMap(ssao_shader, ssao_shader_shadow_map, shadow_map)
-            gv.SetShaderValue(ssao_shader, ssao_shader_shadow_inv_resolution, gv.ffi.addressof(shadow_inv_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.SetShaderValue(ssao_shader, ssao_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_dir, gv.ffi.addressof(light_dir), gv.SHADER_UNIFORM_VEC3)
-            gv.ClearBackground(gv.WHITE)
-            gv.DrawTextureRec(
-                ssao_front.texture,
-                gv.Rectangle(0, 0, ssao_front.texture.width, -ssao_front.texture.height),
-                gv.Vector2(0.0, 0.0),
-                gv.WHITE,
+            pipeline.render(
+                camera,
+                models=[(ref_model, ref_color), (pred_model, pred_color)],
+                shadow_focus=(focus_target.x, focus_target.z),
+                overlay=overlay,
             )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(ssao_back)
-            gv.BeginShaderMode(blur_shader)
-            blur_direction = gv.Vector2(1.0, 0.0)
-            blur_inv_texture_resolution = gv.Vector2(1.0 / ssao_front.texture.width, 1.0 / ssao_front.texture.height)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_input_texture, ssao_front.texture)
-            gv.SetShaderValueMatrix(blur_shader, blur_shader_cam_inv_proj, cam_inv_proj)
-            gv.SetShaderValue(blur_shader, blur_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(blur_shader, blur_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(blur_shader, blur_shader_inv_texture_resolution, gv.ffi.addressof(blur_inv_texture_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.SetShaderValue(blur_shader, blur_shader_blur_direction, gv.ffi.addressof(blur_direction), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                ssao_back.texture,
-                gv.Rectangle(0, 0, ssao_back.texture.width, -ssao_back.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(ssao_front)
-            gv.BeginShaderMode(blur_shader)
-            blur_direction = gv.Vector2(0.0, 1.0)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_input_texture, ssao_back.texture)
-            gv.SetShaderValue(blur_shader, blur_shader_blur_direction, gv.ffi.addressof(blur_direction), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                ssao_front.texture,
-                gv.Rectangle(0, 0, ssao_front.texture.width, -ssao_front.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(lighted)
-            gv.BeginShaderMode(lighting_shader)
-            sun_color = gv.Vector3(253.0 / 255.0, 255.0 / 255.0, 232.0 / 255.0)
-            sun_strength_ptr = gv.ffi.new("float*")
-            sky_color = gv.Vector3(174.0 / 255.0, 183.0 / 255.0, 190.0 / 255.0)
-            sky_strength_ptr = gv.ffi.new("float*")
-            ground_strength_ptr = gv.ffi.new("float*")
-            ambient_strength_ptr = gv.ffi.new("float*")
-            exposure_ptr = gv.ffi.new("float*")
-            sun_strength_ptr[0] = 0.25
-            sky_strength_ptr[0] = 0.15
-            ground_strength_ptr[0] = 0.1
-            ambient_strength_ptr[0] = 1.0
-            exposure_ptr[0] = 0.9
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_color, gbuffer.color)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_ssao, ssao_front.texture)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_pos, gv.ffi.addressof(camera.cam3d.position), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValueMatrix(lighting_shader, lighting_shader_cam_inv_view_proj, cam_inv_view_proj)
-            gv.SetShaderValue(lighting_shader, lighting_shader_light_dir, gv.ffi.addressof(light_dir), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sun_color, gv.ffi.addressof(sun_color), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sun_strength, sun_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sky_color, gv.ffi.addressof(sky_color), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sky_strength, sky_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_ground_strength, ground_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_ambient_strength, ambient_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_exposure, exposure_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.ClearBackground(gv.RAYWHITE)
-            gv.DrawTextureRec(
-                gbuffer.color,
-                gv.Rectangle(0, 0, gbuffer.color.width, -gbuffer.color.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-
-            gv.BeginMode3D(camera.cam3d)
-            if draw_bone_transforms_ptr[0]:
-                gv.DrawSkeleton(ref_full_pos[animation_frame], ref_full_rot[animation_frame], ref_full_parents, ref_skeleton_color)
-                gv.DrawSkeleton(pred_full_pos[animation_frame], pred_full_rot[animation_frame], ref_full_parents, pred_skeleton_color)
-            if draw_trajectory_ptr[0]:
-                if ref_traj_pos.size:
-                    _draw_trajectory_overlay(
-                        gv,
-                        positions=ref_traj_pos,
-                        directions=ref_traj_dir,
-                        offsets=traj_offsets,
-                        frame_index=animation_frame,
-                        future_only=bool(trajectory_future_only),
-                    )
-                if pred_traj_pos.size:
-                    _draw_trajectory_overlay(
-                        gv,
-                        positions=pred_traj_pos,
-                        directions=pred_traj_dir,
-                        offsets=traj_offsets,
-                        frame_index=animation_frame,
-                        future_only=bool(trajectory_future_only),
-                    )
-            gv.EndMode3D()
-            gv.EndTextureMode()
-
-            gv.BeginShaderMode(fxaa_shader)
-            fxaa_inv_texture_resolution = gv.Vector2(1.0 / lighted.texture.width, 1.0 / lighted.texture.height)
-            gv.SetShaderValueTexture(fxaa_shader, fxaa_shader_input_texture, lighted.texture)
-            gv.SetShaderValue(fxaa_shader, fxaa_shader_inv_texture_resolution, gv.ffi.addressof(fxaa_inv_texture_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                lighted.texture,
-                gv.Rectangle(0, 0, lighted.texture.width, -lighted.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-
-            gv.rlEnableColorBlend()
             gv.GuiGroupBox(gv.Rectangle(20, 10, 190, 180), b"Camera")
             gv.GuiLabel(gv.Rectangle(30, 20, 150, 20), b"Ctrl + Left Click - Rotate")
             gv.GuiLabel(gv.Rectangle(30, 40, 150, 20), b"Ctrl + Right Click - Pan")
@@ -734,48 +443,31 @@ def visualize_dual_motion375_genoview_from_375(
             gv.GuiLabel(gv.Rectangle(int(screen_width) - 290, 40, 240, 20), b"Right: Prediction")
             gv.GuiCheckBox(gv.Rectangle(int(screen_width) - 290, 65, 20, 20), b"Draw Transforms", draw_bone_transforms_ptr)
             gv.GuiCheckBox(gv.Rectangle(int(screen_width) - 290, 85, 20, 20), b"Draw Trajectory", draw_trajectory_ptr)
+            if screenshots and animation_frame in screenshots:
+                # raylib's TakeScreenshot writes relative to the process CWD (chdir'd to
+                # GENOVIEW_DIR, so absolute paths collapse to their basename); grab the frame
+                # and export it explicitly so the caller's path is honored.
+                shot = screenshots[animation_frame]
+                shot.parent.mkdir(parents=True, exist_ok=True)
+                gv.rlDrawRenderBatchActive()
+                image = gv.LoadImageFromScreen()
+                try:
+                    if not gv.ExportImage(image, str(shot).encode()):
+                        raise RuntimeError(f"Screenshot export failed: {shot}")
+                finally:
+                    gv.UnloadImage(image)
+                print(f"[Screenshot] frame {animation_frame} -> {shot}", flush=True)
             gv.EndDrawing()
     finally:
-        for target in (lighted, ssao_back, ssao_front):
-            if target is not None:
-                try:
-                    gv.UnloadRenderTexture(target)
-                except Exception:
-                    pass
-        if gbuffer is not None:
+        if pipeline is not None:
             try:
-                gv.UnloadGBuffer(gbuffer)
-            except Exception:
-                pass
-        if shadow_map is not None:
-            try:
-                gv.UnloadShadowMap(shadow_map)
+                pipeline.close()
             except Exception:
                 pass
         for model in (pred_model, ref_model):
             if model is not None:
                 try:
                     gv.UnloadModel(model)
-                except Exception:
-                    pass
-        if ground_model is not None:
-            try:
-                gv.UnloadModel(ground_model)
-            except Exception:
-                pass
-        for shader in (
-            fxaa_shader,
-            blur_shader,
-            ssao_shader,
-            lighting_shader,
-            basic_shader,
-            skinned_basic_shader,
-            skinned_shadow_shader,
-            shadow_shader,
-        ):
-            if shader is not None:
-                try:
-                    gv.UnloadShader(shader)
                 except Exception:
                     pass
         try:
@@ -836,139 +528,28 @@ def main() -> None:
     old_cwd = Path.cwd()
     os.chdir(GENOVIEW_DIR)
 
-    shadow_shader = None
-    skinned_shadow_shader = None
-    skinned_basic_shader = None
-    basic_shader = None
-    lighting_shader = None
-    ssao_shader = None
-    blur_shader = None
-    fxaa_shader = None
-    ground_model = None
-    shadow_map = None
-    gbuffer = None
-    lighted = None
-    ssao_front = None
-    ssao_back = None
+    pipeline = None
     geno_model = None
     try:
         gv.SetConfigFlags(gv.FLAG_VSYNC_HINT)
         gv.InitWindow(int(args.screen_width), int(args.screen_height), args.title.encode("utf-8"))
         gv.SetTargetFPS(int(args.fps))
-        gv.rlSetClipPlanes(0.01, 50.0)
-
-        shadow_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.fs"))
-        shadow_shader_light_clip_near = gv.GetShaderLocation(shadow_shader, b"lightClipNear")
-        shadow_shader_light_clip_far = gv.GetShaderLocation(shadow_shader, b"lightClipFar")
-
-        skinned_shadow_shader = gv.LoadShader(
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "skinnedShadow.vs"),
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "shadow.fs"),
-        )
-        skinned_shadow_shader_light_clip_near = gv.GetShaderLocation(skinned_shadow_shader, b"lightClipNear")
-        skinned_shadow_shader_light_clip_far = gv.GetShaderLocation(skinned_shadow_shader, b"lightClipFar")
-
-        skinned_basic_shader = gv.LoadShader(
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "skinnedBasic.vs"),
-            _as_bytes(GENOVIEW_RESOURCES_DIR / "basic.fs"),
-        )
-        shader_specularity = gv.GetShaderLocation(skinned_basic_shader, b"specularity")
-        shader_glossiness = gv.GetShaderLocation(skinned_basic_shader, b"glossiness")
-        shader_cam_clip_near = gv.GetShaderLocation(skinned_basic_shader, b"camClipNear")
-        shader_cam_clip_far = gv.GetShaderLocation(skinned_basic_shader, b"camClipFar")
-
-        basic_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "basic.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "basic.fs"))
-        basic_shader_specularity = gv.GetShaderLocation(basic_shader, b"specularity")
-        basic_shader_glossiness = gv.GetShaderLocation(basic_shader, b"glossiness")
-        basic_shader_cam_clip_near = gv.GetShaderLocation(basic_shader, b"camClipNear")
-        basic_shader_cam_clip_far = gv.GetShaderLocation(basic_shader, b"camClipFar")
-
-        lighting_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "lighting.fs"))
-        lighting_shader_gbuffer_color = gv.GetShaderLocation(lighting_shader, b"gbufferColor")
-        lighting_shader_gbuffer_normal = gv.GetShaderLocation(lighting_shader, b"gbufferNormal")
-        lighting_shader_gbuffer_depth = gv.GetShaderLocation(lighting_shader, b"gbufferDepth")
-        lighting_shader_ssao = gv.GetShaderLocation(lighting_shader, b"ssao")
-        lighting_shader_cam_pos = gv.GetShaderLocation(lighting_shader, b"camPos")
-        lighting_shader_cam_inv_view_proj = gv.GetShaderLocation(lighting_shader, b"camInvViewProj")
-        lighting_shader_light_dir = gv.GetShaderLocation(lighting_shader, b"lightDir")
-        lighting_shader_sun_color = gv.GetShaderLocation(lighting_shader, b"sunColor")
-        lighting_shader_sun_strength = gv.GetShaderLocation(lighting_shader, b"sunStrength")
-        lighting_shader_sky_color = gv.GetShaderLocation(lighting_shader, b"skyColor")
-        lighting_shader_sky_strength = gv.GetShaderLocation(lighting_shader, b"skyStrength")
-        lighting_shader_ground_strength = gv.GetShaderLocation(lighting_shader, b"groundStrength")
-        lighting_shader_ambient_strength = gv.GetShaderLocation(lighting_shader, b"ambientStrength")
-        lighting_shader_exposure = gv.GetShaderLocation(lighting_shader, b"exposure")
-        lighting_shader_cam_clip_near = gv.GetShaderLocation(lighting_shader, b"camClipNear")
-        lighting_shader_cam_clip_far = gv.GetShaderLocation(lighting_shader, b"camClipFar")
-
-        ssao_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "ssao.fs"))
-        ssao_shader_gbuffer_normal = gv.GetShaderLocation(ssao_shader, b"gbufferNormal")
-        ssao_shader_gbuffer_depth = gv.GetShaderLocation(ssao_shader, b"gbufferDepth")
-        ssao_shader_cam_view = gv.GetShaderLocation(ssao_shader, b"camView")
-        ssao_shader_cam_proj = gv.GetShaderLocation(ssao_shader, b"camProj")
-        ssao_shader_cam_inv_proj = gv.GetShaderLocation(ssao_shader, b"camInvProj")
-        ssao_shader_cam_inv_view_proj = gv.GetShaderLocation(ssao_shader, b"camInvViewProj")
-        ssao_shader_light_view_proj = gv.GetShaderLocation(ssao_shader, b"lightViewProj")
-        ssao_shader_shadow_map = gv.GetShaderLocation(ssao_shader, b"shadowMap")
-        ssao_shader_shadow_inv_resolution = gv.GetShaderLocation(ssao_shader, b"shadowInvResolution")
-        ssao_shader_cam_clip_near = gv.GetShaderLocation(ssao_shader, b"camClipNear")
-        ssao_shader_cam_clip_far = gv.GetShaderLocation(ssao_shader, b"camClipFar")
-        ssao_shader_light_clip_near = gv.GetShaderLocation(ssao_shader, b"lightClipNear")
-        ssao_shader_light_clip_far = gv.GetShaderLocation(ssao_shader, b"lightClipFar")
-        ssao_shader_light_dir = gv.GetShaderLocation(ssao_shader, b"lightDir")
-
-        blur_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "blur.fs"))
-        blur_shader_gbuffer_normal = gv.GetShaderLocation(blur_shader, b"gbufferNormal")
-        blur_shader_gbuffer_depth = gv.GetShaderLocation(blur_shader, b"gbufferDepth")
-        blur_shader_input_texture = gv.GetShaderLocation(blur_shader, b"inputTexture")
-        blur_shader_cam_inv_proj = gv.GetShaderLocation(blur_shader, b"camInvProj")
-        blur_shader_cam_clip_near = gv.GetShaderLocation(blur_shader, b"camClipNear")
-        blur_shader_cam_clip_far = gv.GetShaderLocation(blur_shader, b"camClipFar")
-        blur_shader_inv_texture_resolution = gv.GetShaderLocation(blur_shader, b"invTextureResolution")
-        blur_shader_blur_direction = gv.GetShaderLocation(blur_shader, b"blurDirection")
-
-        fxaa_shader = gv.LoadShader(_as_bytes(GENOVIEW_RESOURCES_DIR / "post.vs"), _as_bytes(GENOVIEW_RESOURCES_DIR / "fxaa.fs"))
-        fxaa_shader_input_texture = gv.GetShaderLocation(fxaa_shader, b"inputTexture")
-        fxaa_shader_inv_texture_resolution = gv.GetShaderLocation(fxaa_shader, b"invTextureResolution")
-
-        ground_mesh = gv.GenMeshPlane(20.0, 20.0, 10, 10)
-        ground_model = gv.LoadModelFromMesh(ground_mesh)
-        ground_position = gv.Vector3(0.0, -0.01, 0.0)
 
         geno_model = gv.LoadGenoModel(_as_bytes(GENOVIEW_RESOURCES_DIR / "Geno.bin"))
         bind_pos, bind_rot = gv.GetModelBindPoseAsNumpyArrays(geno_model)
 
-        geno_position = gv.Vector3(0.0, 0.0, 0.0)
         camera = gv.Camera()
 
-        specularity_ptr = gv.ffi.new("float*")
-        glossiness_ptr = gv.ffi.new("float*")
-        cam_clip_near_ptr = gv.ffi.new("float*")
-        cam_clip_far_ptr = gv.ffi.new("float*")
-        specularity_ptr[0] = 0.5
-        glossiness_ptr[0] = 10.0
-        cam_clip_near_ptr[0] = 0.01
-        cam_clip_far_ptr[0] = 50.0
-
-        light_dir = gv.Vector3Normalize(gv.Vector3(0.35, -1.0, -0.35))
-        shadow_light = gv.ShadowLight()
-        shadow_light.target = gv.Vector3Zero()
-        shadow_light.position = gv.Vector3Scale(light_dir, -5.0)
-        shadow_light.up = gv.Vector3(0.0, 1.0, 0.0)
-        shadow_light.width = 5.0
-        shadow_light.height = 5.0
-        shadow_light.near = 0.01
-        shadow_light.far = 10.0
-
-        shadow_width = 1024
-        shadow_height = 1024
-        shadow_inv_resolution = gv.Vector2(1.0 / shadow_width, 1.0 / shadow_height)
-        shadow_map = gv.LoadShadowMap(shadow_width, shadow_height)
-
-        gbuffer = gv.LoadGBuffer(int(args.screen_width), int(args.screen_height))
-        lighted = gv.LoadRenderTexture(int(args.screen_width), int(args.screen_height))
-        ssao_front = gv.LoadRenderTexture(int(args.screen_width), int(args.screen_height))
-        ssao_back = gv.LoadRenderTexture(int(args.screen_width), int(args.screen_height))
+        pipeline = GenoViewPipeline(
+            gv,
+            width=int(args.screen_width),
+            height=int(args.screen_height),
+            shadow_size=1024,
+            shadow_area=(5.0, 5.0),
+            shadow_extent=5.0,
+            ground_size=20.0,
+            clip_far=50.0,
+        )
 
         animation_frame = 0
         paused = bool(args.start_paused)
@@ -976,6 +557,19 @@ def main() -> None:
         draw_bone_transforms_ptr[0] = bool(args.draw_skeleton)
         draw_trajectory_ptr = gv.ffi.new("bool*")
         draw_trajectory_ptr[0] = bool(args.draw_trajectory)
+
+        def overlay(gv_mod: Any, cam: Any) -> None:
+            if draw_bone_transforms_ptr[0]:
+                gv_mod.DrawSkeleton(full_pos[animation_frame], full_rot[animation_frame], full_parents, gv.GRAY)
+            if draw_trajectory_ptr[0]:
+                _draw_trajectory_overlay(
+                    gv_mod,
+                    positions=info["trajectory_positions"],
+                    directions=info["trajectory_directions"],
+                    offsets=info["trajectory_offsets"],
+                    frame_index=animation_frame,
+                    future_only=bool(args.trajectory_future_only),
+                )
 
         while not gv.WindowShouldClose():
             if gv.IsKeyPressed(gv.KEY_SPACE):
@@ -996,8 +590,6 @@ def main() -> None:
             )
 
             hip = gv.Vector3(*full_pos[animation_frame, 0])
-            shadow_light.target = gv.Vector3(hip.x, 0.0, hip.z)
-            shadow_light.position = gv.Vector3Add(shadow_light.target, gv.Vector3Scale(light_dir, -5.0))
             camera.update(
                 gv.Vector3(hip.x, 0.75, hip.z),
                 gv.GetMouseDelta().x if gv.IsKeyDown(gv.KEY_LEFT_CONTROL) and gv.IsMouseButtonDown(0) else 0.0,
@@ -1008,182 +600,12 @@ def main() -> None:
                 gv.GetFrameTime(),
             )
 
-            gv.rlDisableColorBlend()
-            gv.SetShaderValue(skinned_basic_shader, shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.BeginDrawing()
-
-            gv.BeginShadowMap(shadow_map, shadow_light)
-            light_view_proj = gv.MatrixMultiply(gv.rlGetMatrixModelview(), gv.rlGetMatrixProjection())
-            light_clip_near = gv.rlGetCullDistanceNear()
-            light_clip_far = gv.rlGetCullDistanceFar()
-            light_clip_near_ptr = gv.ffi.new("float*")
-            light_clip_far_ptr = gv.ffi.new("float*")
-            light_clip_near_ptr[0] = light_clip_near
-            light_clip_far_ptr[0] = light_clip_far
-            gv.SetShaderValue(shadow_shader, shadow_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(shadow_shader, shadow_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_shadow_shader, skinned_shadow_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_shadow_shader, skinned_shadow_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            ground_model.materials[0].shader = shadow_shader
-            gv.DrawModel(ground_model, ground_position, 1.0, gv.WHITE)
-            geno_model.materials[0].shader = skinned_shadow_shader
-            gv.DrawModel(geno_model, geno_position, 1.0, gv.WHITE)
-            gv.EndShadowMap()
-
-            gv.BeginGBuffer(gbuffer, camera.cam3d)
-            cam_view = gv.rlGetMatrixModelview()
-            cam_proj = gv.rlGetMatrixProjection()
-            cam_inv_proj = gv.MatrixInvert(cam_proj)
-            cam_inv_view_proj = gv.MatrixInvert(gv.MatrixMultiply(cam_view, cam_proj))
-            cam_clip_near = gv.rlGetCullDistanceNear()
-            cam_clip_far = gv.rlGetCullDistanceFar()
-            cam_clip_near_ptr[0] = cam_clip_near
-            cam_clip_far_ptr[0] = cam_clip_far
-            gv.SetShaderValue(basic_shader, basic_shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(basic_shader, basic_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_specularity, specularity_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_glossiness, glossiness_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(skinned_basic_shader, shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            ground_model.materials[0].shader = basic_shader
-            gv.DrawModel(ground_model, ground_position, 1.0, gv.Color(190, 190, 190, 255))
-            geno_model.materials[0].shader = skinned_basic_shader
-            gv.DrawModel(geno_model, geno_position, 1.0, gv.ORANGE)
-            gv.EndGBuffer(int(args.screen_width), int(args.screen_height))
-
-            gv.BeginTextureMode(ssao_front)
-            gv.BeginShaderMode(ssao_shader)
-            gv.SetShaderValueTexture(ssao_shader, ssao_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(ssao_shader, ssao_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_view, cam_view)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_proj, cam_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_inv_proj, cam_inv_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_cam_inv_view_proj, cam_inv_view_proj)
-            gv.SetShaderValueMatrix(ssao_shader, ssao_shader_light_view_proj, light_view_proj)
-            gv.SetShaderValueShadowMap(ssao_shader, ssao_shader_shadow_map, shadow_map)
-            gv.SetShaderValue(ssao_shader, ssao_shader_shadow_inv_resolution, gv.ffi.addressof(shadow_inv_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.SetShaderValue(ssao_shader, ssao_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_clip_near, light_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_clip_far, light_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(ssao_shader, ssao_shader_light_dir, gv.ffi.addressof(light_dir), gv.SHADER_UNIFORM_VEC3)
-            gv.ClearBackground(gv.WHITE)
-            gv.DrawTextureRec(
-                ssao_front.texture,
-                gv.Rectangle(0, 0, ssao_front.texture.width, -ssao_front.texture.height),
-                gv.Vector2(0.0, 0.0),
-                gv.WHITE,
+            pipeline.render(
+                camera,
+                models=[(geno_model, gv.ORANGE)],
+                shadow_focus=(hip.x, hip.z),
+                overlay=overlay,
             )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(ssao_back)
-            gv.BeginShaderMode(blur_shader)
-            blur_direction = gv.Vector2(1.0, 0.0)
-            blur_inv_texture_resolution = gv.Vector2(1.0 / ssao_front.texture.width, 1.0 / ssao_front.texture.height)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_input_texture, ssao_front.texture)
-            gv.SetShaderValueMatrix(blur_shader, blur_shader_cam_inv_proj, cam_inv_proj)
-            gv.SetShaderValue(blur_shader, blur_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(blur_shader, blur_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(blur_shader, blur_shader_inv_texture_resolution, gv.ffi.addressof(blur_inv_texture_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.SetShaderValue(blur_shader, blur_shader_blur_direction, gv.ffi.addressof(blur_direction), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                ssao_back.texture,
-                gv.Rectangle(0, 0, ssao_back.texture.width, -ssao_back.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(ssao_front)
-            gv.BeginShaderMode(blur_shader)
-            blur_direction = gv.Vector2(0.0, 1.0)
-            gv.SetShaderValueTexture(blur_shader, blur_shader_input_texture, ssao_back.texture)
-            gv.SetShaderValue(blur_shader, blur_shader_blur_direction, gv.ffi.addressof(blur_direction), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                ssao_front.texture,
-                gv.Rectangle(0, 0, ssao_front.texture.width, -ssao_front.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-            gv.EndTextureMode()
-
-            gv.BeginTextureMode(lighted)
-            gv.BeginShaderMode(lighting_shader)
-            sun_color = gv.Vector3(253.0 / 255.0, 255.0 / 255.0, 232.0 / 255.0)
-            sun_strength_ptr = gv.ffi.new("float*")
-            sky_color = gv.Vector3(174.0 / 255.0, 183.0 / 255.0, 190.0 / 255.0)
-            sky_strength_ptr = gv.ffi.new("float*")
-            ground_strength_ptr = gv.ffi.new("float*")
-            ambient_strength_ptr = gv.ffi.new("float*")
-            exposure_ptr = gv.ffi.new("float*")
-            sun_strength_ptr[0] = 0.25
-            sky_strength_ptr[0] = 0.15
-            ground_strength_ptr[0] = 0.1
-            ambient_strength_ptr[0] = 1.0
-            exposure_ptr[0] = 0.9
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_color, gbuffer.color)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_normal, gbuffer.normal)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_gbuffer_depth, gbuffer.depth)
-            gv.SetShaderValueTexture(lighting_shader, lighting_shader_ssao, ssao_front.texture)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_pos, gv.ffi.addressof(camera.cam3d.position), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValueMatrix(lighting_shader, lighting_shader_cam_inv_view_proj, cam_inv_view_proj)
-            gv.SetShaderValue(lighting_shader, lighting_shader_light_dir, gv.ffi.addressof(light_dir), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sun_color, gv.ffi.addressof(sun_color), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sun_strength, sun_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sky_color, gv.ffi.addressof(sky_color), gv.SHADER_UNIFORM_VEC3)
-            gv.SetShaderValue(lighting_shader, lighting_shader_sky_strength, sky_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_ground_strength, ground_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_ambient_strength, ambient_strength_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_exposure, exposure_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_clip_near, cam_clip_near_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.SetShaderValue(lighting_shader, lighting_shader_cam_clip_far, cam_clip_far_ptr, gv.SHADER_UNIFORM_FLOAT)
-            gv.ClearBackground(gv.RAYWHITE)
-            gv.DrawTextureRec(
-                gbuffer.color,
-                gv.Rectangle(0, 0, gbuffer.color.width, -gbuffer.color.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-
-            gv.BeginMode3D(camera.cam3d)
-            if draw_bone_transforms_ptr[0]:
-                gv.DrawSkeleton(full_pos[animation_frame], full_rot[animation_frame], full_parents, gv.GRAY)
-            if draw_trajectory_ptr[0]:
-                _draw_trajectory_overlay(
-                    gv,
-                    positions=info["trajectory_positions"],
-                    directions=info["trajectory_directions"],
-                    offsets=info["trajectory_offsets"],
-                    frame_index=animation_frame,
-                    future_only=bool(args.trajectory_future_only),
-                )
-            gv.EndMode3D()
-            gv.EndTextureMode()
-
-            gv.BeginShaderMode(fxaa_shader)
-            fxaa_inv_texture_resolution = gv.Vector2(1.0 / lighted.texture.width, 1.0 / lighted.texture.height)
-            gv.SetShaderValueTexture(fxaa_shader, fxaa_shader_input_texture, lighted.texture)
-            gv.SetShaderValue(fxaa_shader, fxaa_shader_inv_texture_resolution, gv.ffi.addressof(fxaa_inv_texture_resolution), gv.SHADER_UNIFORM_VEC2)
-            gv.DrawTextureRec(
-                lighted.texture,
-                gv.Rectangle(0, 0, lighted.texture.width, -lighted.texture.height),
-                gv.Vector2(0, 0),
-                gv.WHITE,
-            )
-            gv.EndShaderMode()
-
-            gv.rlEnableColorBlend()
             gv.GuiGroupBox(gv.Rectangle(20, 10, 190, 180), b"Camera")
             gv.GuiLabel(gv.Rectangle(30, 20, 150, 20), b"Ctrl + Left Click - Rotate")
             gv.GuiLabel(gv.Rectangle(30, 40, 150, 20), b"Ctrl + Right Click - Pan")
@@ -1204,20 +626,9 @@ def main() -> None:
             gv.GuiCheckBox(gv.Rectangle(int(args.screen_width) - 250, 45, 20, 20), b"Draw Trajectory", draw_trajectory_ptr)
             gv.EndDrawing()
     finally:
-        for target in (lighted, ssao_back, ssao_front):
-            if target is not None:
-                try:
-                    gv.UnloadRenderTexture(target)
-                except Exception:
-                    pass
-        if gbuffer is not None:
+        if pipeline is not None:
             try:
-                gv.UnloadGBuffer(gbuffer)
-            except Exception:
-                pass
-        if shadow_map is not None:
-            try:
-                gv.UnloadShadowMap(shadow_map)
+                pipeline.close()
             except Exception:
                 pass
         if geno_model is not None:
@@ -1225,26 +636,6 @@ def main() -> None:
                 gv.UnloadModel(geno_model)
             except Exception:
                 pass
-        if ground_model is not None:
-            try:
-                gv.UnloadModel(ground_model)
-            except Exception:
-                pass
-        for shader in (
-            fxaa_shader,
-            blur_shader,
-            ssao_shader,
-            lighting_shader,
-            basic_shader,
-            skinned_basic_shader,
-            skinned_shadow_shader,
-            shadow_shader,
-        ):
-            if shader is not None:
-                try:
-                    gv.UnloadShader(shader)
-                except Exception:
-                    pass
         try:
             gv.CloseWindow()
         except Exception:

@@ -187,3 +187,18 @@ def test_hidden_and_reel_flags_reach_the_args():
     from Visualization.cli.interactive_label_control import parse_args
     args=parse_args(['--hidden','--reel','--max-frames','30'])
     assert args.hidden and args.reel and not args.headless
+
+
+def test_full_pipeline_flag_defaults_on_and_can_be_disabled():
+    from Visualization.cli.interactive_label_control import parse_args
+    assert parse_args(['--max-frames','5']).full_pipeline is True
+    assert parse_args(['--no-full-pipeline','--max-frames','5']).full_pipeline is False
+
+
+def test_pipeline_module_exposes_shared_renderer_contract():
+    # The render chain lives in one module; the backend must re-export it for legacy callers.
+    from Visualization.backends.genoview_pipeline import GenoViewPipeline
+    from Visualization.backends.genoview_backend import GenoViewPipeline as BackendPipeline
+    assert BackendPipeline is GenoViewPipeline
+    for method in ('render', 'close'):
+        assert callable(getattr(GenoViewPipeline, method))
