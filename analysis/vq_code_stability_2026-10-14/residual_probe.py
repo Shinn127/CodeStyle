@@ -66,18 +66,18 @@ def main():
     rng = np.random.RandomState(42)
     picks = [pool[i] for i in rng.choice(len(pool), min(args.clips, len(pool)), replace=False)]
 
-    def frames_of(motion_norm: torch.Tensor, traj_block: torch.Tensor):
-        """normalized motion291 [T,291] + normalized traj block [T,84] -> (local_cm, world_cm).
+    def frames_of(motion_norm: torch.Tensor):
+        """normalized motion291 [T,291] -> (local_cm, world_cm) for the 24 selected joints.
 
-        The trajectory block is NOT integrated here: the 24-joint globals are rebuilt from the
-        motion block's own root-motion channels (channels 0:3 of motion291), exactly like
-        `reconstruct_selected_globals_from_375` does for a full 375 feature row. The traj block
-        is only carried along to satisfy the feature layout; it does not affect positions.
+        The 24-joint globals are rebuilt from the motion block's own root-motion channels
+        (motion291 channels 0:3), so the 84-dim trajectory slot is filled with zeros purely to
+        satisfy the 375 layout - the reconstruction reads only the motion block, and mixing a
+        normalized trajectory block with raw motion units would be misleading.
         """
         motion_raw = motion_norm * std_t[84:] + mean_t[84:]
         local = motion_raw[:, 3:3 + N_JOINTS * 3].reshape(-1, N_JOINTS, 3) * 100.0
-        features = torch.cat((traj_block, motion_raw), -1).cpu().numpy()
-        world, _ = reconstruct_selected_globals_from_375(features)
+        layout = torch.cat((torch.zeros_like(motion_raw[:, :84]), motion_raw), -1).cpu().numpy()
+        world, _ = reconstruct_selected_globals_from_375(layout)
         return local, torch.as_tensor(world, device=motion_norm.device) * 100.0
 
     # Optional frozen-teacher target: the alignment term B actually optimized is
@@ -102,10 +102,9 @@ def main():
             motion_q = vq.decode(z_q)
             motion_c = vq.decode(z_e)
             motion_t = teacher.decode(teacher.encode_pre_vq(x)) if teacher is not None else None
-        traj = x[:, :84]
-        lq, wq = frames_of(motion_q, traj)
-        lc, wc = frames_of(motion_c, traj)
-        lg, wg = frames_of(x[:, 84:], traj)
+        lq, wq = frames_of(motion_q)
+        lc, wc = frames_of(motion_c)
+        lg, wg = frames_of(x[:, 84:])
         for rq, rc, name, store in ((lq, lc, 'local', (loc_r, loc_dr, loc_d2r)),
                                     (wq, wc, 'world', (wor_r, wor_dr, wor_d2r))):
             r = rq - rc
@@ -115,7 +114,7 @@ def main():
             store[1].append(dr.norm(dim=-1).reshape(-1).cpu())
             store[2].append(d2r.norm(dim=-1).reshape(-1).cpu())
         if motion_t is not None:
-            lt, _ = frames_of(motion_t, traj)
+            lt, _ = frames_of(motion_t)
             r = lq - lt
             dr = r[1:] - r[:-1]
             d2r = dr[1:] - dr[:-1]

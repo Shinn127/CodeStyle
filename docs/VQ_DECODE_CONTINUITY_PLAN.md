@@ -1,10 +1,13 @@
 # VQ跳变问题：从解码连续性推导下一步方案
 
 > **执行结果（2026-10-14，已按本文 §5 完成 A/B）**：decoder-only 校准**未降低**量化残差
-> r/Δr/Δ²r（+1~5%，jitter/足滑持平），B 相对 A 无增益（≤1%，噪声内）→ 按 §5 预设**停止
-> teacher 路线**，不推广；结论与归因见 [CALIB_AB_RESULT.md](../analysis/vq_code_stability_2026-10-14/CALIB_AB_RESULT.md)。
-> 实现与正确性检查见 [DECODER_CALIB_IMPL.md](../analysis/vq_code_stability_2026-10-14/DECODER_CALIB_IMPL.md)；
-> 下一步按本文 §7 的优先级（短历史 decoder / 码本容量）另立预注册方案。
+> r/Δr/Δ²r（+1~5%，jitter/足滑持平）；B 相对 A 无足以验收的增益（个别指标 ~2–5%，不改变
+> 判定）→ 按 §5 预设**停止 teacher 路线**，不推广。**权威复核见
+> [CALIB_AB_AUDIT.md](../analysis/vq_code_stability_2026-10-14/CALIB_AB_AUDIT.md)；
+> 运行记录见 [CALIB_AB_RESULT.md](../analysis/vq_code_stability_2026-10-14/CALIB_AB_RESULT.md)
+> （纠正版）；实现与契约修复见 [DECODER_CALIB_IMPL.md](../analysis/vq_code_stability_2026-10-14/DECODER_CALIB_IMPL.md) §4。**
+> 下一步：先完成契约修复（已完成），随后按 [docs/NEXT_TASKS.md](NEXT_TASKS.md) 执行——
+> 优先 `acc`（GT 二阶差分）单变量实验；短历史 decoder 作为条件性结构假设，需独立预注册。
 
 2026-10-14。状态：推导和实验计划，未修改训练目标、未启动新训练。依据为 [独立审计](../analysis/vq_code_stability_2026-10-14/AUDIT.md) 的固定validation比较。
 

@@ -1,5 +1,9 @@
 # 码本跳变（quantized-code divergence）探针：GT-clip 四 regime 对比
 
+> **复审限定（2026-10-14 追加）**：本文件为原始探针归档（数字有效），其中涉及机制归因的
+> 段落（尤其"运动层面良性""视觉代价很小"与"gt 换码 63% 是常态"的引申）不能单独作为
+> 结论；到次近码平面不一定等于真实最近边界，探针测集也非 untouched 封存集。权威更正与
+> 独立 validation 见 [vq_code_stability_2026-10-14/AUDIT.md](../vq_code_stability_2026-10-14/AUDIT.md)。
 > **后续**：根因分析见 [CAUSE_ANALYSIS.md](CAUSE_ANALYSIS.md)（几何/稳定槽分解/闭环刷新扫描
 > 三层定量分解；本文件中"关键读法"第 8、9 条已按该结果修正）。
 

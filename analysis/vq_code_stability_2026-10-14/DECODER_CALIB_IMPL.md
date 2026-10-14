@@ -1,7 +1,9 @@
 # 解码连续性（decoder-only 校准）修订：实现与正确性检查
 
 2026-10-14。依据 [VQ_DECODE_CONTINUITY_PLAN.md](../../docs/VQ_DECODE_CONTINUITY_PLAN.md)
-（GPT-6 推导）+ 本轮实现。**本轮未启动训练**（按用户要求），只做代码修订与正确性检查。
+（GPT-6 推导）。初版为代码修订与实现检查（当时未运行训练）；**其后 A/B 已执行**，并在
+独立复核后完成契约修复（§4）。A/B 结果见 [CALIB_AB_RESULT.md](CALIB_AB_RESULT.md)
+（纠正版），复核见 [CALIB_AB_AUDIT.md](CALIB_AB_AUDIT.md)。
 
 ## 1. 目标（方案的数学核心）
 
@@ -63,9 +65,9 @@ quantized/continuous/GT 三个量，**不把 `J_q - J_c` 当作 `J(r)`**（方�
 意外的好处：两 pilot 因此是**同起点、同预算**对照，与 150ep 基线的 ep30
 （recon 0.0554 / mpjpe 1.264）相比，K=2048 新配方（0.0417 / 1.011）同预算显著更优。
 
-## 3. 正确性检查（全部通过，未运行训练）
+## 3. 正确性检查（初版时点，A/B 运行之前）
 
-`tests/test_decoder_only_calibration.py`（9 项）：
+`tests/test_decoder_only_calibration.py`（初版 9 项；后续修复新增至 14 项）：
 
 | 检查 | 结果 |
 |---|---|
@@ -78,9 +80,10 @@ quantized/continuous/GT 三个量，**不把 `J_q - J_c` 当作 `J(r)`**（方�
 | teacher 形状/缺参校验 | ✅ |
 | 表示不匹配的 teacher 被拒绝；码本漂移被指纹捕获 | ✅ |
 | decoder-only 与 margin/roundtrip 组合报错；vq/align 自动归零 | ✅ |
-| teacher 双参数互斥要求；resume 三字段保护 | ✅ |
+| teacher 双参数互斥要求 | ✅ |
+| resume 三字段 helper 单元级校验 | ✅ 单元级（⚠️ 入口级组合/顺序缺陷在独立复核中发现并已修复，见 §4） |
 
-回归：**CPU 405 passed / 21 deselected；GPU 21 passed**。
+回归（初版时点）：**CPU 405 passed / 21 deselected；GPU 21 passed**（最终计数见 §4）。
 
 效率（设计层面，未跑训练）：decoder-only 只反传 decoder（最短反向路径）；teacher 目标走
 `decode(encode_pre_vq(x))`（跳过 teacher 的量化前向）；方案允许后续对 q 与 teacher 目标

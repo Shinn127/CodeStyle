@@ -1,6 +1,13 @@
 # NewCode：当前运行说明
 
-2026-10-14 VQ码稳定性独立复审：已修复最近边界几何、初始化/数值接口问题；固定validation对照显示pilot重建更准，但量化jitter/world足滑尚未联合改善。实现、测试和原始证据见 [AUDIT](analysis/vq_code_stability_2026-10-14/AUDIT.md)。新VQ未自动替换现役VQ或下游cache，原配套controller仍按原VQ评估。
+2026-10-14 表示层（VQ/decoder）状态：基线 VQ（150ep ep90）+ 原 controller 仍是**唯一有效配套**。
+码稳定性 margin/roundtrip 30ep pilot 重建更准但量化 jitter/world 足滑未联合改善
+（[AUDIT](analysis/vq_code_stability_2026-10-14/AUDIT.md)）；decoder-only 校准与 teacher 对齐
+A/B 为负结果、teacher 路线停止（[CALIB_AB_RESULT](analysis/vq_code_stability_2026-10-14/CALIB_AB_RESULT.md)、
+[CALIB_AB_AUDIT](analysis/vq_code_stability_2026-10-14/CALIB_AB_AUDIT.md)）；实验契约修复已落地
+（norm 固定/独立 RNG/teacher 身份/resume/探针口径）。后续任务见
+[docs/NEXT_TASKS.md](docs/NEXT_TASKS.md)（优先 GT 二阶差分 `acc` 单变量实验）。新资产未替换
+现役 VQ 或下游 cache。
 
 2026-10-10。label controller 的目标为同一checkpoint、240帧/60fps autoregressive rollout上的matched≥85%、cross≥80%（已达成，见下）；unseen/OOD 不属于 label 模型评估范围（无对应条件通道），仅 recipe 类模型涉及。
 
