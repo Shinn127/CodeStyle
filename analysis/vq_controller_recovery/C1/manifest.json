@@ -1,0 +1,75 @@
+{
+ "stage": "C1",
+ "protocol": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_controller_recovery/C1/PROTOCOL.md",
+ "configs": [
+  {
+   "id": "REF",
+   "note": "C0-C baseline: requantize on, Euler 4, noise 1.0, history on"
+  },
+  {
+   "id": "R0",
+   "requantize": false,
+   "note": "requantize off (diagnostic only)"
+  },
+  {
+   "id": "S2",
+   "steps": 2,
+   "note": "Euler 2 steps"
+  },
+  {
+   "id": "S8",
+   "steps": 8,
+   "note": "Euler 8 steps"
+  },
+  {
+   "id": "N0",
+   "noise_scale": 0.0,
+   "note": "inference noise std=0 (z0=latent_offset)"
+  },
+  {
+   "id": "N05",
+   "noise_scale": 0.5,
+   "note": "inference noise std=0.5"
+  },
+  {
+   "id": "H0",
+   "zero_history": true,
+   "note": "history ablation (zero history latent; OOD diagnostic)"
+  }
+ ],
+ "sources": [
+  323,
+  184,
+  451,
+  571,
+  0,
+  212,
+  322,
+  525,
+  82,
+  360,
+  658,
+  286
+ ],
+ "n_sources": 12,
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "git": {
+  "commit": "58b8870cddec77b917222773fdde2a4696803748",
+  "branch": "recovery/vq-controller-2026-10-15",
+  "dirty": true,
+  "untracked_files": 2
+ },
+ "controller_state_sha256": "26dc40eb30bb93708aa81f7e619b7e9f27d230bbac6d6ad2d6945c6a869b9b98",
+ "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "state_unchanged": true,
+ "invariant_violations_total": 0,
+ "wall_sec": 47.0
+}

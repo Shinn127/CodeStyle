@@ -1,0 +1,3664 @@
+{
+ "configs": [
+  {
+   "config": {
+    "id": "REF",
+    "note": "C0-C baseline: requantize on, Euler 4, noise 1.0, history on"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.3537216125002183,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.520775019992055,
+     "jitter": 0.5568707009903563,
+     "official": {
+      "mpjpe": 14.587041558159722,
+      "mpjpe_count": 5760,
+      "root_ade": 12.953037516276042,
+      "jitter": 0.5568707463454131,
+      "fs_local": 1.0184892416000366,
+      "fs_local_count": 1,
+      "fs_world": 1.3078004873482285,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 6.172126414087743,
+     "activity": {
+      "moving_frame_fraction": 0.8075313807531381,
+      "strong_moving_frame_fraction": 0.1589958158995816,
+      "pose_step_mean_cm": 0.7430213378715474,
+      "leg_travel_cm": 361.01892485654463,
+      "toe_height_range_cm": 5.915207386016846,
+      "foot_lift_fraction": 0.25416666666666665,
+      "toe_speed_mean_cm_per_frame": 1.6215270086761724
+     },
+     "contact_coverage_pred": 0.027196652719665274,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 0.9999998807907104
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1159586708336064,
+     "invariant_violations": 0,
+     "local_mpjpe": 2.9841283412578163,
+     "jitter": 0.41460171086578823,
+     "official": {
+      "mpjpe": 3.652806939019097,
+      "mpjpe_count": 5760,
+      "root_ade": 1.7793111165364583,
+      "jitter": 0.41460181484703257,
+      "fs_local": 0.6316762765248617,
+      "fs_local_count": 48,
+      "fs_world": 0.6127254014031146,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.9894854667171042,
+     "activity": {
+      "moving_frame_fraction": 0.40585774058577406,
+      "strong_moving_frame_fraction": 0.008368200836820083,
+      "pose_step_mean_cm": 0.4851822650941133,
+      "leg_travel_cm": 278.38901099892774,
+      "toe_height_range_cm": 5.338396608829498,
+      "foot_lift_fraction": 0.09791666666666667,
+      "toe_speed_mean_cm_per_frame": 1.1846402388744401
+     },
+     "contact_coverage_pred": 0.0794979079497908,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9999867677688599
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.1825657416608615,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.263019404674093,
+     "jitter": 0.45353047943167957,
+     "official": {
+      "mpjpe": 8.582008192274305,
+      "mpjpe_count": 5760,
+      "root_ade": 7.758151245117188,
+      "jitter": 0.45353036234024857,
+      "fs_local": 1.8755887746810913,
+      "fs_local_count": 2,
+      "fs_world": 0.65000411699403,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.3032077432263685,
+     "activity": {
+      "moving_frame_fraction": 0.6150627615062761,
+      "strong_moving_frame_fraction": 0.2217573221757322,
+      "pose_step_mean_cm": 0.7276756903966012,
+      "leg_travel_cm": 461.2440636385712,
+      "toe_height_range_cm": 9.254266142845154,
+      "foot_lift_fraction": 0.26458333333333334,
+      "toe_speed_mean_cm_per_frame": 2.0871476774623794
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1789385958300045,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.937568128517144,
+     "jitter": 0.6773411332986419,
+     "official": {
+      "mpjpe": 8.261394585503472,
+      "mpjpe_count": 5760,
+      "root_ade": 6.5207066853841145,
+      "jitter": 0.6773412367876839,
+      "fs_local": 0.6995847821235657,
+      "fs_local_count": 1,
+      "fs_world": 1.1123080897975612,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.2650519801720534,
+     "activity": {
+      "moving_frame_fraction": 0.9330543933054394,
+      "strong_moving_frame_fraction": 0.25523012552301255,
+      "pose_step_mean_cm": 0.8565664737606891,
+      "leg_travel_cm": 528.8471396951619,
+      "toe_height_range_cm": 5.118608891963959,
+      "foot_lift_fraction": 0.18958333333333333,
+      "toe_speed_mean_cm_per_frame": 2.4742182100197163
+     },
+     "contact_coverage_pred": 0.0041841004184100415,
+     "style_pred": {
+      "predicted": 89,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.5300296545028687
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.144208174998615,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.916715774118946,
+     "jitter": 0.6393765959046839,
+     "official": {
+      "mpjpe": 19.255940755208332,
+      "mpjpe_count": 5760,
+      "root_ade": 17.290824381510415,
+      "jitter": 0.6393766002494747,
+      "fs_local": 0.7444606423377991,
+      "fs_local_count": 2,
+      "fs_world": 0.8770547274885506,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 8.711046152949978,
+     "activity": {
+      "moving_frame_fraction": 0.8870292887029289,
+      "strong_moving_frame_fraction": 0.19665271966527198,
+      "pose_step_mean_cm": 0.7967542014306456,
+      "leg_travel_cm": 451.8756349969668,
+      "toe_height_range_cm": 4.953020334243774,
+      "foot_lift_fraction": 0.14791666666666667,
+      "toe_speed_mean_cm_per_frame": 2.0408819512420595
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9999924898147583
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1515215916679153,
+     "invariant_violations": 0,
+     "local_mpjpe": 9.10834707414504,
+     "jitter": 0.6726406042256221,
+     "official": {
+      "mpjpe": 12.511546495225694,
+      "mpjpe_count": 5760,
+      "root_ade": 7.1078369140625,
+      "jitter": 0.6726406321806067,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 3.0106102195945947,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.0476671012911605,
+     "activity": {
+      "moving_frame_fraction": 0.8200836820083682,
+      "strong_moving_frame_fraction": 0.200836820083682,
+      "pose_step_mean_cm": 0.7645852986216154,
+      "leg_travel_cm": 506.02012135090513,
+      "toe_height_range_cm": 10.405490279197693,
+      "foot_lift_fraction": 0.23333333333333334,
+      "toe_speed_mean_cm_per_frame": 2.283430799762713
+     },
+     "contact_coverage_pred": 0.02092050209205021,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 0.9999873638153076
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.1541463249983885,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.6705584524274193,
+     "jitter": 0.3963258565904245,
+     "official": {
+      "mpjpe": 4.7351023356119795,
+      "mpjpe_count": 5760,
+      "root_ade": 1.9868685404459636,
+      "jitter": 0.3963258887539391,
+      "fs_local": 0.7619627118110657,
+      "fs_local_count": 32,
+      "fs_world": 0.6675570580267137,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.162438794980369,
+     "activity": {
+      "moving_frame_fraction": 0.24686192468619247,
+      "strong_moving_frame_fraction": 0.04602510460251046,
+      "pose_step_mean_cm": 0.4502152900538089,
+      "leg_travel_cm": 275.5937900770257,
+      "toe_height_range_cm": 3.577968657016754,
+      "foot_lift_fraction": 0.016666666666666666,
+      "toe_speed_mean_cm_per_frame": 1.2147119122779526
+     },
+     "contact_coverage_pred": 0.0794979079497908,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.999996542930603
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1575323041664283,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.3823629612353,
+     "jitter": 0.303539525254418,
+     "official": {
+      "mpjpe": 4.618056233723959,
+      "mpjpe_count": 5760,
+      "root_ade": 2.9022860209147137,
+      "jitter": 0.30353962874212187,
+      "fs_local": 0.6994822446037742,
+      "fs_local_count": 34,
+      "fs_world": 0.4926500822368421,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.826882961632084,
+     "activity": {
+      "moving_frame_fraction": 0.1087866108786611,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.36358040249899126,
+      "leg_travel_cm": 257.1758567052764,
+      "toe_height_range_cm": 6.513572096824646,
+      "foot_lift_fraction": 0.08333333333333333,
+      "toe_speed_mean_cm_per_frame": 1.1501518523745708
+     },
+     "contact_coverage_pred": 0.07322175732217573,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.155799687496559,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.8508123859548506,
+     "jitter": 0.46416547896587557,
+     "official": {
+      "mpjpe": 9.43521457248264,
+      "mpjpe_count": 5760,
+      "root_ade": 8.952169799804688,
+      "jitter": 0.4641654391248687,
+      "fs_local": 1.044464683532715,
+      "fs_local_count": 10,
+      "fs_world": 0.7687231154668899,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.87549027773811,
+     "activity": {
+      "moving_frame_fraction": 0.803347280334728,
+      "strong_moving_frame_fraction": 0.100418410041841,
+      "pose_step_mean_cm": 0.6923377714892273,
+      "leg_travel_cm": 489.7070428458042,
+      "toe_height_range_cm": 8.427865862846375,
+      "foot_lift_fraction": 0.18958333333333333,
+      "toe_speed_mean_cm_per_frame": 2.191484025708774
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 2.1450159624995044,
+     "invariant_violations": 0,
+     "local_mpjpe": 1.5408609038931558,
+     "jitter": 0.07724709470623205,
+     "official": {
+      "mpjpe": 1.9028150770399306,
+      "mpjpe_count": 5760,
+      "root_ade": 0.6507644653320312,
+      "jitter": 0.07724718152641916,
+      "fs_local": 0.10828901634056698,
+      "fs_local_count": 478,
+      "fs_world": 0.1100708869710627,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 33.78661133389419,
+     "activity": {
+      "moving_frame_fraction": 0.0,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.04748537901786846,
+      "leg_travel_cm": 25.0482435283836,
+      "toe_height_range_cm": 0.07184731960296631,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.10828902981063139
+     },
+     "contact_coverage_pred": 0.9560669456066946,
+     "style_pred": {
+      "predicted": 45,
+      "target": 44,
+      "correct": 0,
+      "confidence": 0.27924078702926636
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.148801941666534,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.5133213875509623,
+     "jitter": 0.289735968902203,
+     "official": {
+      "mpjpe": 3.6860137939453126,
+      "mpjpe_count": 5760,
+      "root_ade": 1.2654701232910157,
+      "jitter": 0.2897359596914938,
+      "fs_local": 0.5143060684204102,
+      "fs_local_count": 30,
+      "fs_world": 0.46141068307976973,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.3871884730896267,
+     "activity": {
+      "moving_frame_fraction": 0.04602510460251046,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.3210677186355825,
+      "leg_travel_cm": 224.93692849153726,
+      "toe_height_range_cm": 5.6822509765625,
+      "foot_lift_fraction": 0.075,
+      "toe_speed_mean_cm_per_frame": 0.9879525645312027
+     },
+     "contact_coverage_pred": 0.10460251046025104,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1465821166657406,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.478499013655484,
+     "jitter": 0.5763674449051734,
+     "official": {
+      "mpjpe": 6.516212972005208,
+      "mpjpe_count": 5760,
+      "root_ade": 1.9565916697184245,
+      "jitter": 0.5763673755635067,
+      "fs_local": 0.7331262316022601,
+      "fs_local_count": 35,
+      "fs_world": 0.5908447690957099,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.823405383009002,
+     "activity": {
+      "moving_frame_fraction": 0.42677824267782427,
+      "strong_moving_frame_fraction": 0.08786610878661087,
+      "pose_step_mean_cm": 0.5440963346961007,
+      "leg_travel_cm": 271.01809894750716,
+      "toe_height_range_cm": 4.416428744792938,
+      "foot_lift_fraction": 0.035416666666666666,
+      "toe_speed_mean_cm_per_frame": 1.1915775641998174
+     },
+     "contact_coverage_pred": 0.06276150627615062,
+     "style_pred": {
+      "predicted": 35,
+      "target": 35,
+      "correct": 1,
+      "confidence": 0.9999983310699463
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 4.430580737285189,
+     "std": 1.8550288161081145,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.46014521617009163,
+     "std": 0.1716824427781753,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 8.14534612584997,
+     "std": 4.929804923057387,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 5.927001539866129,
+     "std": 4.999690461799349,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.8028573339616497,
+     "std": 0.4136215342328767,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 0.8884799697919222,
+     "std": 0.7046945494881688,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 6.695883506898983,
+     "std": 8.337909823072998,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.5083682008368201,
+     "std": 0.33244294987580103,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.10669456066945605,
+     "std": 0.09220065048856436,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.5660473469638992,
+     "std": 0.23108252322435702,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.12151324965132497,
+     "std": 0.2536065640884152,
+     "n": 12
+    },
+    "style_accuracy": 0.8333333333333334
+   }
+  },
+  {
+   "config": {
+    "id": "R0",
+    "requantize": false,
+    "note": "requantize off (diagnostic only)"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.0110003708320314,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.985816867189591,
+     "jitter": 0.5444683567406423,
+     "official": {
+      "mpjpe": 13.032435438368056,
+      "mpjpe_count": 5760,
+      "root_ade": 9.950367228190105,
+      "jitter": 0.5444683854987308,
+      "fs_local": 1.4351452589035034,
+      "fs_local_count": 1,
+      "fs_world": 1.3984176732931928,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.687019288694285,
+     "activity": {
+      "moving_frame_fraction": 0.899581589958159,
+      "strong_moving_frame_fraction": 0.2217573221757322,
+      "pose_step_mean_cm": 0.8078990964948197,
+      "leg_travel_cm": 398.7924836434936,
+      "toe_height_range_cm": 8.900599241256714,
+      "foot_lift_fraction": 0.16041666666666668,
+      "toe_speed_mean_cm_per_frame": 1.7776218557281034
+     },
+     "contact_coverage_pred": 0.01882845188284519,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 0.9999967813491821
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.0043547874972014,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.0132804338055768,
+     "jitter": 0.3004553383877387,
+     "official": {
+      "mpjpe": 3.8507700602213544,
+      "mpjpe_count": 5760,
+      "root_ade": 1.6848822275797526,
+      "jitter": 0.30045534449131217,
+      "fs_local": 0.5171487331390381,
+      "fs_local_count": 48,
+      "fs_world": 0.4921776506813075,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.177535889509209,
+     "activity": {
+      "moving_frame_fraction": 0.3514644351464435,
+      "strong_moving_frame_fraction": 0.008368200836820083,
+      "pose_step_mean_cm": 0.4572357577317515,
+      "leg_travel_cm": 268.68287068666996,
+      "toe_height_range_cm": 5.5124096274375916,
+      "foot_lift_fraction": 0.10208333333333333,
+      "toe_speed_mean_cm_per_frame": 1.1422035314561707
+     },
+     "contact_coverage_pred": 0.06485355648535565,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9999986886978149
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.0141446458334635,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.2282991882850474,
+     "jitter": 0.3868047083432393,
+     "official": {
+      "mpjpe": 9.972798665364584,
+      "mpjpe_count": 5760,
+      "root_ade": 9.131685384114583,
+      "jitter": 0.3868045753457633,
+      "fs_local": 1.2279527187347412,
+      "fs_local_count": 2,
+      "fs_world": 0.5754449232569281,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.063445429648985,
+     "activity": {
+      "moving_frame_fraction": 0.6359832635983264,
+      "strong_moving_frame_fraction": 0.23430962343096234,
+      "pose_step_mean_cm": 0.72736446631975,
+      "leg_travel_cm": 453.29665576061893,
+      "toe_height_range_cm": 9.678371131420135,
+      "foot_lift_fraction": 0.29583333333333334,
+      "toe_speed_mean_cm_per_frame": 2.0494981796915193
+     },
+     "contact_coverage_pred": 0.014644351464435146,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.0093745041701063,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.743311967140559,
+     "jitter": 0.6202495817012978,
+     "official": {
+      "mpjpe": 8.551549614800347,
+      "mpjpe_count": 5760,
+      "root_ade": 7.316200764973958,
+      "jitter": 0.620249686788778,
+      "fs_local": 0.4166559875011444,
+      "fs_local_count": 1,
+      "fs_world": 0.9482775507746516,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.3462608557787727,
+     "activity": {
+      "moving_frame_fraction": 0.9414225941422594,
+      "strong_moving_frame_fraction": 0.2301255230125523,
+      "pose_step_mean_cm": 0.8380152213777233,
+      "leg_travel_cm": 522.724725511325,
+      "toe_height_range_cm": 5.078164219856262,
+      "foot_lift_fraction": 0.20208333333333334,
+      "toe_speed_mean_cm_per_frame": 2.4484549519413803
+     },
+     "contact_coverage_pred": 0.0020920502092050207,
+     "style_pred": {
+      "predicted": 51,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.33935850858688354
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.0241648791625266,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.6697259550302315,
+     "jitter": 0.5372843283157581,
+     "official": {
+      "mpjpe": 21.096424696180556,
+      "mpjpe_count": 5760,
+      "root_ade": 18.982352701822915,
+      "jitter": 0.5372842313194809,
+      "fs_local": 0.796480119228363,
+      "fs_local_count": 2,
+      "fs_world": 0.7615190177128233,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 9.301537891279766,
+     "activity": {
+      "moving_frame_fraction": 0.8702928870292888,
+      "strong_moving_frame_fraction": 0.16317991631799164,
+      "pose_step_mean_cm": 0.7781841088940004,
+      "leg_travel_cm": 448.6826751882823,
+      "toe_height_range_cm": 5.935471296310425,
+      "foot_lift_fraction": 0.15,
+      "toe_speed_mean_cm_per_frame": 2.0414685365668404
+     },
+     "contact_coverage_pred": 0.02301255230125523,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9999967813491821
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.0072653124998396,
+     "invariant_violations": 0,
+     "local_mpjpe": 7.953721838234479,
+     "jitter": 0.5370477873368564,
+     "official": {
+      "mpjpe": 10.175237358940972,
+      "mpjpe_count": 5760,
+      "root_ade": 4.868153381347656,
+      "jitter": 0.5370478696849834,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 1.7486747123099662,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.670231854089787,
+     "activity": {
+      "moving_frame_fraction": 0.7489539748953975,
+      "strong_moving_frame_fraction": 0.09205020920502092,
+      "pose_step_mean_cm": 0.680604223973477,
+      "leg_travel_cm": 464.14314863227304,
+      "toe_height_range_cm": 8.322736203670502,
+      "foot_lift_fraction": 0.2520833333333333,
+      "toe_speed_mean_cm_per_frame": 2.076986822501974
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 1.9944502625018383,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.5571431981667647,
+     "jitter": 0.2672733711250073,
+     "official": {
+      "mpjpe": 5.035802883572049,
+      "mpjpe_count": 5760,
+      "root_ade": 2.7518684387207033,
+      "jitter": 0.2672733766358106,
+      "fs_local": 0.6115494966506958,
+      "fs_local_count": 32,
+      "fs_world": 0.5035594817130796,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.437707046949968,
+     "activity": {
+      "moving_frame_fraction": 0.20502092050209206,
+      "strong_moving_frame_fraction": 0.03347280334728033,
+      "pose_step_mean_cm": 0.426223144912588,
+      "leg_travel_cm": 261.2864258658483,
+      "toe_height_range_cm": 3.8783167004585266,
+      "foot_lift_fraction": 0.01875,
+      "toe_speed_mean_cm_per_frame": 1.144027622201405
+     },
+     "contact_coverage_pred": 0.08368200836820083,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.9999997615814209
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.0124674500038964,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.4575872685184135,
+     "jitter": 0.2374020954921915,
+     "official": {
+      "mpjpe": 4.173326280381945,
+      "mpjpe_count": 5760,
+      "root_ade": 2.676788330078125,
+      "jitter": 0.23740213858981093,
+      "fs_local": 0.5760873345767751,
+      "fs_local_count": 34,
+      "fs_world": 0.3864606355365954,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.6695945862781656,
+     "activity": {
+      "moving_frame_fraction": 0.100418410041841,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.3648057285971234,
+      "leg_travel_cm": 255.84491562350843,
+      "toe_height_range_cm": 7.180421829223633,
+      "foot_lift_fraction": 0.08541666666666667,
+      "toe_speed_mean_cm_per_frame": 1.146200559341239
+     },
+     "contact_coverage_pred": 0.06694560669456066,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.014286395827488,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9499814694335833,
+     "jitter": 0.4446108993827957,
+     "official": {
+      "mpjpe": 11.848111979166667,
+      "mpjpe_count": 5760,
+      "root_ade": 10.958628336588541,
+      "jitter": 0.4446108948950674,
+      "fs_local": 0.7997401237487793,
+      "fs_local_count": 10,
+      "fs_world": 0.7234043666294643,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.401721620689979,
+     "activity": {
+      "moving_frame_fraction": 0.8075313807531381,
+      "strong_moving_frame_fraction": 0.11715481171548117,
+      "pose_step_mean_cm": 0.7063039236322335,
+      "leg_travel_cm": 472.086463346758,
+      "toe_height_range_cm": 8.05783861875534,
+      "foot_lift_fraction": 0.19166666666666668,
+      "toe_speed_mean_cm_per_frame": 2.110504732865059
+     },
+     "contact_coverage_pred": 0.01882845188284519,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 2.0112409958301214,
+     "invariant_violations": 0,
+     "local_mpjpe": 2.888120026117699,
+     "jitter": 0.1285731136539212,
+     "official": {
+      "mpjpe": 3.0122660319010417,
+      "mpjpe_count": 5760,
+      "root_ade": 0.9429019927978516,
+      "jitter": 0.12857307840128238,
+      "fs_local": 0.1898719596064739,
+      "fs_local_count": 478,
+      "fs_world": 0.18992340215579237,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 39.379322528933095,
+     "activity": {
+      "moving_frame_fraction": 0.012552301255230125,
+      "strong_moving_frame_fraction": 0.008368200836820083,
+      "pose_step_mean_cm": 0.09885094698617314,
+      "leg_travel_cm": 43.90667325567043,
+      "toe_height_range_cm": 0.9816019535064697,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.18987196380583204
+     },
+     "contact_coverage_pred": 0.8870292887029289,
+     "style_pred": {
+      "predicted": 2,
+      "target": 44,
+      "correct": 0,
+      "confidence": 0.6098947525024414
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.001968591662262,
+     "invariant_violations": 0,
+     "local_mpjpe": 8.41523356186244,
+     "jitter": 0.5354768370116434,
+     "official": {
+      "mpjpe": 9.711446126302084,
+      "mpjpe_count": 5760,
+      "root_ade": 3.9937103271484373,
+      "jitter": 0.5354768555371368,
+      "fs_local": 0.5558827082316081,
+      "fs_local_count": 30,
+      "fs_world": 0.4843742504454496,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 7.569774424514509,
+     "activity": {
+      "moving_frame_fraction": 0.4895397489539749,
+      "strong_moving_frame_fraction": 0.12552301255230125,
+      "pose_step_mean_cm": 0.601067386748813,
+      "leg_travel_cm": 238.02322133295644,
+      "toe_height_range_cm": 6.793061792850494,
+      "foot_lift_fraction": 0.16458333333333333,
+      "toe_speed_mean_cm_per_frame": 1.024970758387758
+     },
+     "contact_coverage_pred": 0.1087866108786611,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 0.9938490986824036
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.001608679165656,
+     "invariant_violations": 0,
+     "local_mpjpe": 8.348431627185889,
+     "jitter": 0.5550316890663212,
+     "official": {
+      "mpjpe": 10.454079861111111,
+      "mpjpe_count": 5760,
+      "root_ade": 5.0781407674153645,
+      "jitter": 0.5550316134754684,
+      "fs_local": 0.8732663835797991,
+      "fs_local_count": 35,
+      "fs_world": 0.7669847867214721,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.663449129858837,
+     "activity": {
+      "moving_frame_fraction": 0.5230125523012552,
+      "strong_moving_frame_fraction": 0.06276150627615062,
+      "pose_step_mean_cm": 0.5586584362397742,
+      "leg_travel_cm": 282.0023296037238,
+      "toe_height_range_cm": 5.361777365207672,
+      "foot_lift_fraction": 0.12916666666666668,
+      "toe_speed_mean_cm_per_frame": 1.2732448005666273
+     },
+     "contact_coverage_pred": 0.043933054393305436,
+     "style_pred": {
+      "predicted": 18,
+      "target": 35,
+      "correct": 0,
+      "confidence": 0.9881269335746765
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 5.184221116747523,
+     "std": 2.0968300610456474,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.4245565088797844,
+     "std": 0.15054428432374478,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 9.242854083025895,
+     "std": 4.800315330496656,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 6.527973323398167,
+     "std": 4.906410103796999,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.727252802172811,
+     "std": 0.34087816666240306,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 0.7482682042692269,
+     "std": 0.4215330777576122,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 7.780633378852112,
+     "std": 9.706082339232164,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.5488145048814504,
+     "std": 0.30890561621723955,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.10808926080892607,
+     "std": 0.08495945002522708,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.5871010368256857,
+     "std": 0.20864693804065987,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.11244769874476988,
+     "std": 0.23563384302302906,
+     "n": 12
+    },
+    "style_accuracy": 0.75
+   }
+  },
+  {
+   "config": {
+    "id": "S2",
+    "steps": 2,
+    "note": "Euler 2 steps"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 1.5341900875000647,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.291140609933837,
+     "jitter": 0.4037742210359874,
+     "official": {
+      "mpjpe": 10.44903564453125,
+      "mpjpe_count": 5760,
+      "root_ade": 8.67900899251302,
+      "jitter": 0.4037743149017419,
+      "fs_local": 1.1617660522460938,
+      "fs_local_count": 1,
+      "fs_world": 0.8041474652138485,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.376099556300329,
+     "activity": {
+      "moving_frame_fraction": 0.8242677824267782,
+      "strong_moving_frame_fraction": 0.11297071129707113,
+      "pose_step_mean_cm": 0.720056662902178,
+      "leg_travel_cm": 345.8024138756466,
+      "toe_height_range_cm": 6.172436237335205,
+      "foot_lift_fraction": 0.25833333333333336,
+      "toe_speed_mean_cm_per_frame": 1.5452950037446607
+     },
+     "contact_coverage_pred": 0.03347280334728033,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 1.540652758330907,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.1274533452182385,
+     "jitter": 0.2937096952235731,
+     "official": {
+      "mpjpe": 3.1769476996527777,
+      "mpjpe_count": 5760,
+      "root_ade": 0.8722298940022787,
+      "jitter": 0.2937096347327994,
+      "fs_local": 0.5047211647033691,
+      "fs_local_count": 48,
+      "fs_world": 0.4833973147797345,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.9566230513444056,
+     "activity": {
+      "moving_frame_fraction": 0.3305439330543933,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.4484833515547976,
+      "leg_travel_cm": 256.08818523695686,
+      "toe_height_range_cm": 5.454188525676727,
+      "foot_lift_fraction": 0.11666666666666667,
+      "toe_speed_mean_cm_per_frame": 1.08359075966586
+     },
+     "contact_coverage_pred": 0.07531380753138076,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9999812841415405
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 1.5410600875005305,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.3839890509193182,
+     "jitter": 0.33983240199889864,
+     "official": {
+      "mpjpe": 11.083055962456598,
+      "mpjpe_count": 5760,
+      "root_ade": 10.464431762695312,
+      "jitter": 0.33983242344789477,
+      "fs_local": 0.7997347116470337,
+      "fs_local_count": 2,
+      "fs_world": 0.5694991417650906,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.632482479587517,
+     "activity": {
+      "moving_frame_fraction": 0.5941422594142259,
+      "strong_moving_frame_fraction": 0.20502092050209206,
+      "pose_step_mean_cm": 0.6992811679259214,
+      "leg_travel_cm": 451.450419724077,
+      "toe_height_range_cm": 9.362424969673157,
+      "foot_lift_fraction": 0.26666666666666666,
+      "toe_speed_mean_cm_per_frame": 2.0424793607515683
+     },
+     "contact_coverage_pred": 0.014644351464435146,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 1.5396420541643845,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.720564034553509,
+     "jitter": 0.5185819237652979,
+     "official": {
+      "mpjpe": 8.355638292100695,
+      "mpjpe_count": 5760,
+      "root_ade": 7.030962117513021,
+      "jitter": 0.5185819567084646,
+      "fs_local": 1.2471814155578613,
+      "fs_local_count": 1,
+      "fs_world": 0.918264440588049,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.5680868158770522,
+     "activity": {
+      "moving_frame_fraction": 0.891213389121339,
+      "strong_moving_frame_fraction": 0.18410041841004185,
+      "pose_step_mean_cm": 0.7830106211532364,
+      "leg_travel_cm": 504.47545673147505,
+      "toe_height_range_cm": 5.002804815769196,
+      "foot_lift_fraction": 0.2,
+      "toe_speed_mean_cm_per_frame": 2.3527213590059923
+     },
+     "contact_coverage_pred": 0.010460251046025104,
+     "style_pred": {
+      "predicted": 89,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.8107448816299438
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 1.5360020749994874,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.47201722200472,
+     "jitter": 0.407403866039261,
+     "official": {
+      "mpjpe": 14.489857313368056,
+      "mpjpe_count": 5760,
+      "root_ade": 12.538956705729166,
+      "jitter": 0.40740381235502016,
+      "fs_local": 0.8968135714530945,
+      "fs_local_count": 2,
+      "fs_world": 0.7199394489156788,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 6.55244264648017,
+     "activity": {
+      "moving_frame_fraction": 0.803347280334728,
+      "strong_moving_frame_fraction": 0.14225941422594143,
+      "pose_step_mean_cm": 0.7277550772971885,
+      "leg_travel_cm": 427.782099894413,
+      "toe_height_range_cm": 5.205569624900818,
+      "foot_lift_fraction": 0.1625,
+      "toe_speed_mean_cm_per_frame": 1.9398765944470007
+     },
+     "contact_coverage_pred": 0.02092050209205021,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9999995231628418
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 1.5396714708382813,
+     "invariant_violations": 0,
+     "local_mpjpe": 9.666389972316951,
+     "jitter": 0.39897544556853515,
+     "official": {
+      "mpjpe": 13.932398817274306,
+      "mpjpe_count": 5760,
+      "root_ade": 7.090524291992187,
+      "jitter": 0.39897536162902664,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 2.741980640308277,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.2261555923798513,
+     "activity": {
+      "moving_frame_fraction": 0.7238493723849372,
+      "strong_moving_frame_fraction": 0.058577405857740586,
+      "pose_step_mean_cm": 0.6324370566213666,
+      "leg_travel_cm": 432.65545725721796,
+      "toe_height_range_cm": 8.440962076187134,
+      "foot_lift_fraction": 0.26875,
+      "toe_speed_mean_cm_per_frame": 1.9265843272312257
+     },
+     "contact_coverage_pred": 0.03556485355648536,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 1.566669600000144,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.105141642738134,
+     "jitter": 0.38072262362786896,
+     "official": {
+      "mpjpe": 4.445284695095486,
+      "mpjpe_count": 5760,
+      "root_ade": 1.3035326639811198,
+      "jitter": 0.38072268702402834,
+      "fs_local": 0.7279978394508362,
+      "fs_local_count": 32,
+      "fs_world": 0.8367259363974294,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.6132339912461635,
+     "activity": {
+      "moving_frame_fraction": 0.2384937238493724,
+      "strong_moving_frame_fraction": 0.06276150627615062,
+      "pose_step_mean_cm": 0.4199235785653879,
+      "leg_travel_cm": 265.97104684412784,
+      "toe_height_range_cm": 3.5886738896369934,
+      "foot_lift_fraction": 0.03125,
+      "toe_speed_mean_cm_per_frame": 1.1718296796213794
+     },
+     "contact_coverage_pred": 0.11297071129707113,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.9999998807907104
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 1.5382908541596407,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.920772069934646,
+     "jitter": 0.23779893116033998,
+     "official": {
+      "mpjpe": 4.723391723632813,
+      "mpjpe_count": 5760,
+      "root_ade": 3.0370356241861978,
+      "jitter": 0.237798931217995,
+      "fs_local": 0.5936176075654871,
+      "fs_local_count": 34,
+      "fs_world": 0.4169592606393914,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.585010356419887,
+     "activity": {
+      "moving_frame_fraction": 0.09205020920502092,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.3530006261844267,
+      "leg_travel_cm": 248.80584921738043,
+      "toe_height_range_cm": 6.032095968723297,
+      "foot_lift_fraction": 0.09583333333333334,
+      "toe_speed_mean_cm_per_frame": 1.1054112878064786
+     },
+     "contact_coverage_pred": 0.05439330543933055,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 1.5386449333315493,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.045556716040723,
+     "jitter": 0.32842723596402285,
+     "official": {
+      "mpjpe": 8.428185356987846,
+      "mpjpe_count": 5760,
+      "root_ade": 7.92196044921875,
+      "jitter": 0.3284272693452381,
+      "fs_local": 0.7804076671600342,
+      "fs_local_count": 10,
+      "fs_world": 0.6028201148623512,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.4131707515913887,
+     "activity": {
+      "moving_frame_fraction": 0.7698744769874477,
+      "strong_moving_frame_fraction": 0.06694560669456066,
+      "pose_step_mean_cm": 0.6605744869831524,
+      "leg_travel_cm": 472.96212370428657,
+      "toe_height_range_cm": 8.340018212795258,
+      "foot_lift_fraction": 0.17708333333333334,
+      "toe_speed_mean_cm_per_frame": 2.111095822010325
+     },
+     "contact_coverage_pred": 0.014644351464435146,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 1.538722058330677,
+     "invariant_violations": 0,
+     "local_mpjpe": 1.4297692996121074,
+     "jitter": 0.07413614830592512,
+     "official": {
+      "mpjpe": 1.4796201917860243,
+      "mpjpe_count": 5760,
+      "root_ade": 0.43953606287638347,
+      "jitter": 0.07413617302389706,
+      "fs_local": 0.11390269451061552,
+      "fs_local_count": 478,
+      "fs_world": 0.11602881363745016,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 42.332741516608586,
+     "activity": {
+      "moving_frame_fraction": 0.0,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.044264889654326525,
+      "leg_travel_cm": 26.82369574728282,
+      "toe_height_range_cm": 0.14413535594940186,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.11390269148918973
+     },
+     "contact_coverage_pred": 0.9602510460251046,
+     "style_pred": {
+      "predicted": 44,
+      "target": 44,
+      "correct": 1,
+      "confidence": 0.8999026417732239
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 1.5400994666682284,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9630766165590505,
+     "jitter": 0.20863647783374178,
+     "official": {
+      "mpjpe": 4.000228203667534,
+      "mpjpe_count": 5760,
+      "root_ade": 1.19315554300944,
+      "jitter": 0.20863660710866377,
+      "fs_local": 0.3203877449035645,
+      "fs_local_count": 30,
+      "fs_world": 0.3774040623715049,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.3799131755176592,
+     "activity": {
+      "moving_frame_fraction": 0.016736401673640166,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.2891770344755153,
+      "leg_travel_cm": 209.7578906996809,
+      "toe_height_range_cm": 5.514859616756439,
+      "foot_lift_fraction": 0.09166666666666666,
+      "toe_speed_mean_cm_per_frame": 0.9211171879098707
+     },
+     "contact_coverage_pred": 0.12133891213389121,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 1.540243591663663,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.498353174281833,
+     "jitter": 0.27485320394148516,
+     "official": {
+      "mpjpe": 5.657233005099826,
+      "mpjpe_count": 5760,
+      "root_ade": 2.126470692952474,
+      "jitter": 0.2748531694171809,
+      "fs_local": 0.5144168853759765,
+      "fs_local_count": 35,
+      "fs_world": 0.4847065463714068,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.4071241491715294,
+     "activity": {
+      "moving_frame_fraction": 0.15481171548117154,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.3785733179842768,
+      "leg_travel_cm": 264.5685023832532,
+      "toe_height_range_cm": 4.595783591270447,
+      "foot_lift_fraction": 0.05,
+      "toe_speed_mean_cm_per_frame": 1.17038410096542
+     },
+     "contact_coverage_pred": 0.06694560669456066,
+     "style_pred": {
+      "predicted": 35,
+      "target": 35,
+      "correct": 1,
+      "confidence": 0.9999977350234985
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 4.468685312842755,
+     "std": 1.8672862445119702,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.32223768120541146,
+     "std": 0.11058866990041936,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 7.5184064088044344,
+     "std": 4.092445546641777,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 5.224817066722446,
+     "std": 4.028648261566068,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.6964497595067243,
+     "std": 0.32191702119884724,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 0.7559894321541845,
+     "std": 0.6360417770077544,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 6.920257006877044,
+     "std": 10.729503963725755,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.4532775453277545,
+     "std": 0.33191958737244837,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.0700836820083682,
+     "std": 0.07180589659999505,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.513044822608481,
+     "std": 0.21582155123121652,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.1267433751743375,
+     "std": 0.25384949412711155,
+     "n": 12
+    },
+    "style_accuracy": 0.9166666666666666
+   }
+  },
+  {
+   "config": {
+    "id": "S8",
+    "steps": 8,
+    "note": "Euler 8 steps"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 3.349383149998175,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.602437600930447,
+     "jitter": 0.981771005173346,
+     "official": {
+      "mpjpe": 13.813840060763889,
+      "mpjpe_count": 5760,
+      "root_ade": 11.497083536783855,
+      "jitter": 0.9817709188167455,
+      "fs_local": 1.1381620168685913,
+      "fs_local_count": 1,
+      "fs_world": 1.6830450167321855,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.6472231325463715,
+     "activity": {
+      "moving_frame_fraction": 0.899581589958159,
+      "strong_moving_frame_fraction": 0.35564853556485354,
+      "pose_step_mean_cm": 0.9443610728570686,
+      "leg_travel_cm": 427.71368907142846,
+      "toe_height_range_cm": 6.137155652046204,
+      "foot_lift_fraction": 0.14375,
+      "toe_speed_mean_cm_per_frame": 1.8878957384850827
+     },
+     "contact_coverage_pred": 0.02301255230125523,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 0.9999936819076538
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 3.3743151666688695,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.0042847082356046,
+     "jitter": 0.5504138432738276,
+     "official": {
+      "mpjpe": 3.384381103515625,
+      "mpjpe_count": 5760,
+      "root_ade": 1.0120591481526693,
+      "jitter": 0.5504138422947303,
+      "fs_local": 0.8926995595296224,
+      "fs_local_count": 48,
+      "fs_world": 0.8238529473244147,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.9720850058870547,
+     "activity": {
+      "moving_frame_fraction": 0.5815899581589958,
+      "strong_moving_frame_fraction": 0.02092050209205021,
+      "pose_step_mean_cm": 0.5493202271516708,
+      "leg_travel_cm": 316.4803129897916,
+      "toe_height_range_cm": 5.3829944133758545,
+      "foot_lift_fraction": 0.09375,
+      "toe_speed_mean_cm_per_frame": 1.3544719061540884
+     },
+     "contact_coverage_pred": 0.04811715481171548,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9999614953994751
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 3.363503645831164,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.4322060093491538,
+     "jitter": 0.5456444126740829,
+     "official": {
+      "mpjpe": 6.371307373046875,
+      "mpjpe_count": 5760,
+      "root_ade": 5.836509195963542,
+      "jitter": 0.5456443807991946,
+      "fs_local": 1.0506250858306885,
+      "fs_local_count": 2,
+      "fs_world": 0.8002441694151681,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.0679975548786538,
+     "activity": {
+      "moving_frame_fraction": 0.6401673640167364,
+      "strong_moving_frame_fraction": 0.26359832635983266,
+      "pose_step_mean_cm": 0.7551145134172557,
+      "leg_travel_cm": 474.20691840729035,
+      "toe_height_range_cm": 9.764994621276855,
+      "foot_lift_fraction": 0.28125,
+      "toe_speed_mean_cm_per_frame": 2.136221986234336
+     },
+     "contact_coverage_pred": 0.010460251046025104,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 3.369780695834379,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.771675086176853,
+     "jitter": 0.9594365079327891,
+     "official": {
+      "mpjpe": 9.602008734809028,
+      "mpjpe_count": 5760,
+      "root_ade": 8.330843607584635,
+      "jitter": 0.9594365822500875,
+      "fs_local": 1.0317533016204834,
+      "fs_local_count": 1,
+      "fs_world": 1.2435578011177681,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.545694974100296,
+     "activity": {
+      "moving_frame_fraction": 0.9748953974895398,
+      "strong_moving_frame_fraction": 0.35564853556485354,
+      "pose_step_mean_cm": 0.9607217632147761,
+      "leg_travel_cm": 557.6861328845666,
+      "toe_height_range_cm": 5.207583546638489,
+      "foot_lift_fraction": 0.20416666666666666,
+      "toe_speed_mean_cm_per_frame": 2.5985146627118967
+     },
+     "contact_coverage_pred": 0.0041841004184100415,
+     "style_pred": {
+      "predicted": 89,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.43585819005966187
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 3.393419474999367,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.394042215086095,
+     "jitter": 0.8368902886851517,
+     "official": {
+      "mpjpe": 18.8851318359375,
+      "mpjpe_count": 5760,
+      "root_ade": 16.7836669921875,
+      "jitter": 0.8368902981114321,
+      "fs_local": 1.029593825340271,
+      "fs_local_count": 2,
+      "fs_world": 1.0703181825835129,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 8.697442622995181,
+     "activity": {
+      "moving_frame_fraction": 0.899581589958159,
+      "strong_moving_frame_fraction": 0.26359832635983266,
+      "pose_step_mean_cm": 0.8710943499252933,
+      "leg_travel_cm": 487.4217433806692,
+      "toe_height_range_cm": 5.179863214492798,
+      "foot_lift_fraction": 0.12291666666666666,
+      "toe_speed_mean_cm_per_frame": 2.196687376912394
+     },
+     "contact_coverage_pred": 0.02092050209205021,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9999982118606567
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 3.3624945291649055,
+     "invariant_violations": 0,
+     "local_mpjpe": 10.028151673353051,
+     "jitter": 0.7057106808670068,
+     "official": {
+      "mpjpe": 14.673860677083333,
+      "mpjpe_count": 5760,
+      "root_ade": 7.5021311442057295,
+      "jitter": 0.7057107449913559,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 3.115657002217061,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.928472082710248,
+     "activity": {
+      "moving_frame_fraction": 0.8368200836820083,
+      "strong_moving_frame_fraction": 0.1506276150627615,
+      "pose_step_mean_cm": 0.7363128206836662,
+      "leg_travel_cm": 480.24811374604457,
+      "toe_height_range_cm": 8.690722465515137,
+      "foot_lift_fraction": 0.21875,
+      "toe_speed_mean_cm_per_frame": 2.13740309748109
+     },
+     "contact_coverage_pred": 0.027196652719665274,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 3.3577502249954705,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.7290485203327233,
+     "jitter": 0.5510120601599703,
+     "official": {
+      "mpjpe": 4.641185167100694,
+      "mpjpe_count": 5760,
+      "root_ade": 1.7784825642903646,
+      "jitter": 0.5510121406961221,
+      "fs_local": 1.2167928218841553,
+      "fs_local_count": 32,
+      "fs_world": 0.8934868597215222,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.264100819632071,
+     "activity": {
+      "moving_frame_fraction": 0.4100418410041841,
+      "strong_moving_frame_fraction": 0.058577405857740586,
+      "pose_step_mean_cm": 0.520436116987667,
+      "leg_travel_cm": 312.34002109766095,
+      "toe_height_range_cm": 3.7159565687179565,
+      "foot_lift_fraction": 0.025,
+      "toe_speed_mean_cm_per_frame": 1.3609798961733766
+     },
+     "contact_coverage_pred": 0.07740585774058577,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.9999997615814209
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 3.346049291659862,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.5690206405574485,
+     "jitter": 0.4599220462510469,
+     "official": {
+      "mpjpe": 4.707510375976563,
+      "mpjpe_count": 5760,
+      "root_ade": 3.1566739400227863,
+      "jitter": 0.45992204254748775,
+      "fs_local": 0.8959082435159123,
+      "fs_local_count": 34,
+      "fs_world": 0.6445886444627194,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.1566070066026155,
+     "activity": {
+      "moving_frame_fraction": 0.25523012552301255,
+      "strong_moving_frame_fraction": 0.012552301255230125,
+      "pose_step_mean_cm": 0.42744093485514084,
+      "leg_travel_cm": 271.1313267413068,
+      "toe_height_range_cm": 6.3574658036231995,
+      "foot_lift_fraction": 0.07708333333333334,
+      "toe_speed_mean_cm_per_frame": 1.2110584636909805
+     },
+     "contact_coverage_pred": 0.08368200836820083,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 3.385966641667437,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.1648298027656825,
+     "jitter": 0.6223121116117887,
+     "official": {
+      "mpjpe": 9.84693603515625,
+      "mpjpe_count": 5760,
+      "root_ade": 9.47255350748698,
+      "jitter": 0.6223120168477547,
+      "fs_local": 1.1561065673828126,
+      "fs_local_count": 10,
+      "fs_world": 0.9986790248325893,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.824683231737532,
+     "activity": {
+      "moving_frame_fraction": 0.8451882845188284,
+      "strong_moving_frame_fraction": 0.11715481171548117,
+      "pose_step_mean_cm": 0.7318076610161479,
+      "leg_travel_cm": 500.2644359712358,
+      "toe_height_range_cm": 8.80523830652237,
+      "foot_lift_fraction": 0.2,
+      "toe_speed_mean_cm_per_frame": 2.23511775746068
+     },
+     "contact_coverage_pred": 0.01882845188284519,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 3.3665658833342604,
+     "invariant_violations": 0,
+     "local_mpjpe": 1.9958888762854403,
+     "jitter": 0.1275141889222965,
+     "official": {
+      "mpjpe": 2.0697014702690972,
+      "mpjpe_count": 5760,
+      "root_ade": 0.6862581888834636,
+      "jitter": 0.12751414194828323,
+      "fs_local": 0.16956134620570737,
+      "fs_local_count": 478,
+      "fs_world": 0.17044940453692958,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 20.02720168271576,
+     "activity": {
+      "moving_frame_fraction": 0.0,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.07653015098624659,
+      "leg_travel_cm": 37.98720820703412,
+      "toe_height_range_cm": 0.13221675157546997,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.169561346211779
+     },
+     "contact_coverage_pred": 0.8870292887029289,
+     "style_pred": {
+      "predicted": 47,
+      "target": 44,
+      "correct": 0,
+      "confidence": 0.9754604697227478
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 3.381255462500121,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.3845728259903636,
+     "jitter": 0.4075287591128988,
+     "official": {
+      "mpjpe": 3.76229248046875,
+      "mpjpe_count": 5760,
+      "root_ade": 1.807807159423828,
+      "jitter": 0.40752870362011995,
+      "fs_local": 0.7434045155843099,
+      "fs_local_count": 30,
+      "fs_world": 0.6224330433628016,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.7183883565372193,
+     "activity": {
+      "moving_frame_fraction": 0.1589958158995816,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.36486994664696093,
+      "leg_travel_cm": 246.38047926057163,
+      "toe_height_range_cm": 5.326672673225403,
+      "foot_lift_fraction": 0.07708333333333334,
+      "toe_speed_mean_cm_per_frame": 1.080866925302992
+     },
+     "contact_coverage_pred": 0.0899581589958159,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 3.363264983333162,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.88161985400466,
+     "jitter": 0.8197515798400746,
+     "official": {
+      "mpjpe": 7.830653211805555,
+      "mpjpe_count": 5760,
+      "root_ade": 2.256724548339844,
+      "jitter": 0.8197515578497023,
+      "fs_local": 0.8465297154017857,
+      "fs_local_count": 35,
+      "fs_world": 0.8123179578614983,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.731022151531107,
+     "activity": {
+      "moving_frame_fraction": 0.7489539748953975,
+      "strong_moving_frame_fraction": 0.08786610878661087,
+      "pose_step_mean_cm": 0.6736190872528667,
+      "leg_travel_cm": 304.1988565486745,
+      "toe_height_range_cm": 4.8688947558403015,
+      "foot_lift_fraction": 0.06666666666666667,
+      "toe_speed_mean_cm_per_frame": 1.3342550987680164
+     },
+     "contact_coverage_pred": 0.04184100418410042,
+     "style_pred": {
+      "predicted": 35,
+      "target": 35,
+      "correct": 1,
+      "confidence": 0.9475206732749939
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 4.746481484422294,
+     "std": 2.1067832043382686,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.6306589570420232,
+     "std": 0.23584376473626095,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 8.299067377161096,
+     "std": 5.008039730527926,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 5.843399461110433,
+     "std": 4.800984394769515,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.9246488181058491,
+     "std": 0.27532121686690547,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 1.0732191711806809,
+     "std": 0.7081088239499359,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 5.548409885156175,
+     "std": 4.637638754767384,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.6042538354253836,
+     "std": 0.3121969750778203,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.14051603905160392,
+     "std": 0.13011653488371197,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.6343023870828968,
+     "std": 0.24857830320716856,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.11105299860529987,
+     "std": 0.23561423626879188,
+     "n": 12
+    },
+    "style_accuracy": 0.8333333333333334
+   }
+  },
+  {
+   "config": {
+    "id": "N0",
+    "noise_scale": 0.0,
+    "note": "inference noise std=0 (z0=latent_offset)"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1654536333320116,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.038264911259791,
+     "jitter": 0.3393332445510005,
+     "official": {
+      "mpjpe": 11.146698676215278,
+      "mpjpe_count": 5760,
+      "root_ade": 9.140445963541667,
+      "jitter": 0.33933326443370315,
+      "fs_local": 0.8770548105239868,
+      "fs_local_count": 1,
+      "fs_world": 0.7177223156971536,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.658618459335232,
+     "activity": {
+      "moving_frame_fraction": 0.7866108786610879,
+      "strong_moving_frame_fraction": 0.10460251046025104,
+      "pose_step_mean_cm": 0.7014242073053206,
+      "leg_travel_cm": 341.53562587531434,
+      "toe_height_range_cm": 5.888618648052216,
+      "foot_lift_fraction": 0.18333333333333332,
+      "toe_speed_mean_cm_per_frame": 1.518237854987734
+     },
+     "contact_coverage_pred": 0.03347280334728033,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.154128825001559,
+     "invariant_violations": 0,
+     "local_mpjpe": 2.820149425543332,
+     "jitter": 0.2367200089381116,
+     "official": {
+      "mpjpe": 3.9819620768229167,
+      "mpjpe_count": 5760,
+      "root_ade": 1.8770577748616537,
+      "jitter": 0.23672010918625264,
+      "fs_local": 0.5548445383707682,
+      "fs_local_count": 48,
+      "fs_world": 0.45816341132224603,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.6782583685417802,
+     "activity": {
+      "moving_frame_fraction": 0.2803347280334728,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.410931569179977,
+      "leg_travel_cm": 247.26643382903958,
+      "toe_height_range_cm": 5.77824854850769,
+      "foot_lift_fraction": 0.09375,
+      "toe_speed_mean_cm_per_frame": 1.0364281879813677
+     },
+     "contact_coverage_pred": 0.09414225941422594,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9992268085479736
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.171635887498269,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9662001359015018,
+     "jitter": 0.33354702323070035,
+     "official": {
+      "mpjpe": 8.132798936631945,
+      "mpjpe_count": 5760,
+      "root_ade": 7.994764200846354,
+      "jitter": 0.33354704186362044,
+      "fs_local": 0.7357344627380371,
+      "fs_local_count": 2,
+      "fs_world": 0.5747611567659198,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.836598155393894,
+     "activity": {
+      "moving_frame_fraction": 0.5606694560669456,
+      "strong_moving_frame_fraction": 0.2217573221757322,
+      "pose_step_mean_cm": 0.6807936030395051,
+      "leg_travel_cm": 441.9149386263,
+      "toe_height_range_cm": 8.556764304637909,
+      "foot_lift_fraction": 0.23958333333333334,
+      "toe_speed_mean_cm_per_frame": 1.9917839320436062
+     },
+     "contact_coverage_pred": 0.029288702928870293,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1581739249995735,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.2022355170400845,
+     "jitter": 0.4142737127990649,
+     "official": {
+      "mpjpe": 6.609488932291667,
+      "mpjpe_count": 5760,
+      "root_ade": 3.9700419108072915,
+      "jitter": 0.41427377225304185,
+      "fs_local": 0.7466056942939758,
+      "fs_local_count": 1,
+      "fs_world": 0.812003367655986,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.978825474187177,
+     "activity": {
+      "moving_frame_fraction": 0.8619246861924686,
+      "strong_moving_frame_fraction": 0.14225941422594143,
+      "pose_step_mean_cm": 0.7543164926905793,
+      "leg_travel_cm": 475.4723687418991,
+      "toe_height_range_cm": 4.7553858160972595,
+      "foot_lift_fraction": 0.11666666666666667,
+      "toe_speed_mean_cm_per_frame": 2.2119311601596277
+     },
+     "contact_coverage_pred": 0.006276150627615063,
+     "style_pred": {
+      "predicted": 51,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.9092488288879395
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1687203249939557,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.8890509196325445,
+     "jitter": 0.35137167964648264,
+     "official": {
+      "mpjpe": 10.226569281684029,
+      "mpjpe_count": 5760,
+      "root_ade": 7.033134969075521,
+      "jitter": 0.35137161554074753,
+      "fs_local": 0.4446336328983307,
+      "fs_local_count": 2,
+      "fs_world": 0.7109432878165409,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.105178636103049,
+     "activity": {
+      "moving_frame_fraction": 0.8117154811715481,
+      "strong_moving_frame_fraction": 0.1087866108786611,
+      "pose_step_mean_cm": 0.7087499979489875,
+      "leg_travel_cm": 429.3855156055349,
+      "toe_height_range_cm": 4.756623446941376,
+      "foot_lift_fraction": 0.15208333333333332,
+      "toe_speed_mean_cm_per_frame": 1.9396316285248347
+     },
+     "contact_coverage_pred": 0.02301255230125523,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9918379187583923
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.166148754167807,
+     "invariant_violations": 0,
+     "local_mpjpe": 8.975222324984955,
+     "jitter": 0.348619086385897,
+     "official": {
+      "mpjpe": 12.858787706163195,
+      "mpjpe_count": 5760,
+      "root_ade": 6.700619506835937,
+      "jitter": 0.3486190710415025,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 2.5463606550886824,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.802560994401158,
+     "activity": {
+      "moving_frame_fraction": 0.7447698744769874,
+      "strong_moving_frame_fraction": 0.05439330543933055,
+      "pose_step_mean_cm": 0.6320057084624141,
+      "leg_travel_cm": 433.3618891109156,
+      "toe_height_range_cm": 8.980496406555176,
+      "foot_lift_fraction": 0.275,
+      "toe_speed_mean_cm_per_frame": 1.9297211518523734
+     },
+     "contact_coverage_pred": 0.029288702928870293,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.165515299998333,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.244960626100237,
+     "jitter": 0.2422317733767738,
+     "official": {
+      "mpjpe": 5.034417724609375,
+      "mpjpe_count": 5760,
+      "root_ade": 1.8313220977783202,
+      "jitter": 0.24223178040747548,
+      "fs_local": 0.5599520206451416,
+      "fs_local_count": 32,
+      "fs_world": 0.6271457302954889,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 4.886671467231341,
+     "activity": {
+      "moving_frame_fraction": 0.15481171548117154,
+      "strong_moving_frame_fraction": 0.0502092050209205,
+      "pose_step_mean_cm": 0.3611172888492022,
+      "leg_travel_cm": 229.72640696773158,
+      "toe_height_range_cm": 3.1043547987937927,
+      "foot_lift_fraction": 0.052083333333333336,
+      "toe_speed_mean_cm_per_frame": 1.0096398295901066
+     },
+     "contact_coverage_pred": 0.20292887029288703,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.999998927116394
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.165239554165055,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.5508785907874065,
+     "jitter": 0.2024983850102386,
+     "official": {
+      "mpjpe": 3.9705902099609376,
+      "mpjpe_count": 5760,
+      "root_ade": 2.0803953806559243,
+      "jitter": 0.2024983424766391,
+      "fs_local": 0.32691489948945884,
+      "fs_local_count": 34,
+      "fs_world": 0.4577318693462171,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.1352775186014763,
+     "activity": {
+      "moving_frame_fraction": 0.06694560669456066,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.3186365034465436,
+      "leg_travel_cm": 223.73377516665806,
+      "toe_height_range_cm": 6.103547930717468,
+      "foot_lift_fraction": 0.09375,
+      "toe_speed_mean_cm_per_frame": 0.9772042118974864
+     },
+     "contact_coverage_pred": 0.16317991631799164,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1607280375064875,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.21567041573591,
+     "jitter": 0.28245180113227836,
+     "official": {
+      "mpjpe": 7.375387912326389,
+      "mpjpe_count": 5760,
+      "root_ade": 6.641807047526042,
+      "jitter": 0.2824517899200696,
+      "fs_local": 0.6098093032836914,
+      "fs_local_count": 10,
+      "fs_world": 0.5668474469866072,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.264605549498709,
+     "activity": {
+      "moving_frame_fraction": 0.7698744769874477,
+      "strong_moving_frame_fraction": 0.05439330543933055,
+      "pose_step_mean_cm": 0.6432678047983477,
+      "leg_travel_cm": 470.44954252658056,
+      "toe_height_range_cm": 7.83769029378891,
+      "foot_lift_fraction": 0.19791666666666666,
+      "toe_speed_mean_cm_per_frame": 2.092826845526336
+     },
+     "contact_coverage_pred": 0.02301255230125523,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 2.160747783333742,
+     "invariant_violations": 0,
+     "local_mpjpe": 1.129471662322089,
+     "jitter": 0.007020273924654607,
+     "official": {
+      "mpjpe": 1.586557345920139,
+      "mpjpe_count": 5760,
+      "root_ade": 0.6765638987223307,
+      "jitter": 0.007020281142547351,
+      "fs_local": 0.00906289671255455,
+      "fs_local_count": 478,
+      "fs_world": 0.016036997280360267,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 14.107832866781685,
+     "activity": {
+      "moving_frame_fraction": 0.0,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.0037425102167050234,
+      "leg_travel_cm": 2.1510155740272014,
+      "toe_height_range_cm": 0.011535406112670898,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.009062890217649062
+     },
+     "contact_coverage_pred": 1.0,
+     "style_pred": {
+      "predicted": 44,
+      "target": 44,
+      "correct": 1,
+      "confidence": 0.7803232669830322
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.150350974996703,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.267554483423705,
+     "jitter": 0.17946239206218778,
+     "official": {
+      "mpjpe": 5.912694634331597,
+      "mpjpe_count": 5760,
+      "root_ade": 3.4316075642903647,
+      "jitter": 0.17946233669248948,
+      "fs_local": 0.46075280507405597,
+      "fs_local_count": 30,
+      "fs_world": 0.41142414829187224,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.347424673476244,
+     "activity": {
+      "moving_frame_fraction": 0.02510460251046025,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.26098181445474555,
+      "leg_travel_cm": 195.35041932088316,
+      "toe_height_range_cm": 5.414605677127838,
+      "foot_lift_fraction": 0.07916666666666666,
+      "toe_speed_mean_cm_per_frame": 0.8537836482620493
+     },
+     "contact_coverage_pred": 0.16736401673640167,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.163986395832277,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.7921117899228136,
+     "jitter": 0.2232460164957977,
+     "official": {
+      "mpjpe": 4.78260972764757,
+      "mpjpe_count": 5760,
+      "root_ade": 2.2309356689453126,
+      "jitter": 0.22324608554359243,
+      "fs_local": 0.6706158229282924,
+      "fs_local_count": 35,
+      "fs_world": 0.48401554120957646,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.9556956157960466,
+     "activity": {
+      "moving_frame_fraction": 0.09623430962343096,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.3315000831775918,
+      "leg_travel_cm": 243.9423794386825,
+      "toe_height_range_cm": 4.543897330760956,
+      "foot_lift_fraction": 0.035416666666666666,
+      "toe_speed_mean_cm_per_frame": 1.0720938428455973
+     },
+     "contact_coverage_pred": 0.12552301255230125,
+     "style_pred": {
+      "predicted": 35,
+      "target": 35,
+      "correct": 1,
+      "confidence": 0.9999998807907104
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 4.590980900221197,
+     "std": 1.9270962725818206,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.263397949796099,
+     "std": 0.10330818404979748,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 6.801546930383753,
+     "std": 3.1700302548029566,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 4.46739133199056,
+     "std": 2.748135440314322,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.545089171541663,
+     "std": 0.22553885914621252,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 0.6985963273130543,
+     "std": 0.5898894113021966,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 4.646462314945649,
+     "std": 2.979380071419801,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.4299163179916317,
+     "std": 0.3392740676354359,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.062412831241283113,
+     "std": 0.06704269314143319,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.48395563196415997,
+     "std": 0.22514464057597958,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.15812412831241282,
+     "std": 0.26209620813343615,
+     "n": 12
+    },
+    "style_accuracy": 0.9166666666666666
+   }
+  },
+  {
+   "config": {
+    "id": "N05",
+    "noise_scale": 0.5,
+    "note": "inference noise std=0.5"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.166897083331302,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.076245857550568,
+     "jitter": 0.39164390628319123,
+     "official": {
+      "mpjpe": 13.383311631944444,
+      "mpjpe_count": 5760,
+      "root_ade": 12.213783772786458,
+      "jitter": 0.39164387678899687,
+      "fs_local": 0.7145445346832275,
+      "fs_local_count": 1,
+      "fs_world": 0.8233470552286525,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 5.606565114343542,
+     "activity": {
+      "moving_frame_fraction": 0.8284518828451883,
+      "strong_moving_frame_fraction": 0.14225941422594143,
+      "pose_step_mean_cm": 0.7232573347461463,
+      "leg_travel_cm": 347.18967666063315,
+      "toe_height_range_cm": 5.753679811954498,
+      "foot_lift_fraction": 0.23541666666666666,
+      "toe_speed_mean_cm_per_frame": 1.553947287482506
+     },
+     "contact_coverage_pred": 0.02510460251046025,
+     "style_pred": {
+      "predicted": 40,
+      "target": 40,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.164973049995448,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.322095724032586,
+     "jitter": 0.28059493786862,
+     "official": {
+      "mpjpe": 3.796259223090278,
+      "mpjpe_count": 5760,
+      "root_ade": 1.406104278564453,
+      "jitter": 0.2805949406129639,
+      "fs_local": 0.5029916763305664,
+      "fs_local_count": 48,
+      "fs_world": 0.5203764542289402,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.7619554152760712,
+     "activity": {
+      "moving_frame_fraction": 0.3305439330543933,
+      "strong_moving_frame_fraction": 0.012552301255230125,
+      "pose_step_mean_cm": 0.4502357892029882,
+      "leg_travel_cm": 260.14999338528503,
+      "toe_height_range_cm": 5.282740354537964,
+      "foot_lift_fraction": 0.12083333333333333,
+      "toe_speed_mean_cm_per_frame": 1.0904241892660407
+     },
+     "contact_coverage_pred": 0.11506276150627615,
+     "style_pred": {
+      "predicted": 22,
+      "target": 22,
+      "correct": 1,
+      "confidence": 0.9974408149719238
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.154404779169757,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.667531378066096,
+     "jitter": 0.341781431911597,
+     "official": {
+      "mpjpe": 9.455174424913194,
+      "mpjpe_count": 5760,
+      "root_ade": 9.03241678873698,
+      "jitter": 0.34178140250240724,
+      "fs_local": 0.637049674987793,
+      "fs_local_count": 2,
+      "fs_world": 0.6506349095758402,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.707683754717237,
+     "activity": {
+      "moving_frame_fraction": 0.5774058577405857,
+      "strong_moving_frame_fraction": 0.2175732217573222,
+      "pose_step_mean_cm": 0.6728151695051017,
+      "leg_travel_cm": 440.19619265783297,
+      "toe_height_range_cm": 9.524618983268738,
+      "foot_lift_fraction": 0.2791666666666667,
+      "toe_speed_mean_cm_per_frame": 1.9843893982600058
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 55,
+      "target": 55,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1646132208388735,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.006463385485204,
+     "jitter": 0.474593216781191,
+     "official": {
+      "mpjpe": 9.261177571614583,
+      "mpjpe_count": 5760,
+      "root_ade": 7.705691019694011,
+      "jitter": 0.47459326137681634,
+      "fs_local": 1.0148042440414429,
+      "fs_local_count": 1,
+      "fs_world": 0.7418541263889622,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.255055170573734,
+     "activity": {
+      "moving_frame_fraction": 0.895397489539749,
+      "strong_moving_frame_fraction": 0.18410041841004185,
+      "pose_step_mean_cm": 0.782339892627383,
+      "leg_travel_cm": 502.4279132778325,
+      "toe_height_range_cm": 5.145940780639648,
+      "foot_lift_fraction": 0.16875,
+      "toe_speed_mean_cm_per_frame": 2.3426733355751894
+     },
+     "contact_coverage_pred": 0.0,
+     "style_pred": {
+      "predicted": 88,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.46390414237976074
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.153195829168908,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.604241215630276,
+     "jitter": 0.42412621778105614,
+     "official": {
+      "mpjpe": 15.506675889756945,
+      "mpjpe_count": 5760,
+      "root_ade": 13.83609619140625,
+      "jitter": 0.42412629114145656,
+      "fs_local": 0.8877121210098267,
+      "fs_local_count": 2,
+      "fs_world": 0.683709558947333,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 6.8924512640928,
+     "activity": {
+      "moving_frame_fraction": 0.8493723849372385,
+      "strong_moving_frame_fraction": 0.1297071129707113,
+      "pose_step_mean_cm": 0.7367012934772914,
+      "leg_travel_cm": 425.5100706472758,
+      "toe_height_range_cm": 4.783853471279144,
+      "foot_lift_fraction": 0.11875,
+      "toe_speed_mean_cm_per_frame": 1.911418039652503
+     },
+     "contact_coverage_pred": 0.03347280334728033,
+     "style_pred": {
+      "predicted": 0,
+      "target": 0,
+      "correct": 1,
+      "confidence": 0.9999995231628418
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.157556262500293,
+     "invariant_violations": 0,
+     "local_mpjpe": 7.509579547616819,
+     "jitter": 0.4892846278757803,
+     "official": {
+      "mpjpe": 12.411013454861111,
+      "mpjpe_count": 5760,
+      "root_ade": 8.260703531901042,
+      "jitter": 0.4892845688079919,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 2.3489853317673144,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.258257229315785,
+     "activity": {
+      "moving_frame_fraction": 0.7866108786610879,
+      "strong_moving_frame_fraction": 0.100418410041841,
+      "pose_step_mean_cm": 0.7073097183022864,
+      "leg_travel_cm": 493.9099188874676,
+      "toe_height_range_cm": 8.797809422016144,
+      "foot_lift_fraction": 0.2375,
+      "toe_speed_mean_cm_per_frame": 2.2066953498739164
+     },
+     "contact_coverage_pred": 0.02092050209205021,
+     "style_pred": {
+      "predicted": 26,
+      "target": 26,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.1653599708315596,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9210304428091627,
+     "jitter": 0.3213631957030988,
+     "official": {
+      "mpjpe": 4.318878512912327,
+      "mpjpe_count": 5760,
+      "root_ade": 1.6705396016438803,
+      "jitter": 0.32136313387659754,
+      "fs_local": 0.589216411113739,
+      "fs_local_count": 32,
+      "fs_world": 0.6932093466481855,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.754345398014728,
+     "activity": {
+      "moving_frame_fraction": 0.22594142259414227,
+      "strong_moving_frame_fraction": 0.04602510460251046,
+      "pose_step_mean_cm": 0.40511916887878663,
+      "leg_travel_cm": 255.59100960529284,
+      "toe_height_range_cm": 3.415629744529724,
+      "foot_lift_fraction": 0.03958333333333333,
+      "toe_speed_mean_cm_per_frame": 1.1123135400540771
+     },
+     "contact_coverage_pred": 0.15481171548117154,
+     "style_pred": {
+      "predicted": 39,
+      "target": 39,
+      "correct": 1,
+      "confidence": 0.9999990463256836
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1647792208341343,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.8617647092972183,
+     "jitter": 0.24148907902269048,
+     "official": {
+      "mpjpe": 4.685899522569445,
+      "mpjpe_count": 5760,
+      "root_ade": 3.2533533732096354,
+      "jitter": 0.24148910052302172,
+      "fs_local": 0.6081861047183766,
+      "fs_local_count": 34,
+      "fs_world": 0.4581280624657347,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.0335943670724914,
+     "activity": {
+      "moving_frame_fraction": 0.08368200836820083,
+      "strong_moving_frame_fraction": 0.0041841004184100415,
+      "pose_step_mean_cm": 0.3501940038426113,
+      "leg_travel_cm": 253.34938799619803,
+      "toe_height_range_cm": 6.45955353975296,
+      "foot_lift_fraction": 0.09375,
+      "toe_speed_mean_cm_per_frame": 1.1272463390442937
+     },
+     "contact_coverage_pred": 0.04811715481171548,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1570758041661975,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9166452079327394,
+     "jitter": 0.33495653629463884,
+     "official": {
+      "mpjpe": 6.983120388454861,
+      "mpjpe_count": 5760,
+      "root_ade": 6.412020874023438,
+      "jitter": 0.334956470991717,
+      "fs_local": 0.8159882545471191,
+      "fs_local_count": 10,
+      "fs_world": 0.6182338169642857,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.160657337120377,
+     "activity": {
+      "moving_frame_fraction": 0.7656903765690377,
+      "strong_moving_frame_fraction": 0.07112970711297072,
+      "pose_step_mean_cm": 0.6648153842920882,
+      "leg_travel_cm": 478.58461815306225,
+      "toe_height_range_cm": 8.283527493476868,
+      "foot_lift_fraction": 0.18958333333333333,
+      "toe_speed_mean_cm_per_frame": 2.136116035653007
+     },
+     "contact_coverage_pred": 0.03347280334728033,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 2.152395666666962,
+     "invariant_violations": 0,
+     "local_mpjpe": 1.1434842193259596,
+     "jitter": 0.021379595535836418,
+     "official": {
+      "mpjpe": 1.3592228359646268,
+      "mpjpe_count": 5760,
+      "root_ade": 0.5797547658284505,
+      "jitter": 0.0213795723367472,
+      "fs_local": 0.03383963676676092,
+      "fs_local_count": 478,
+      "fs_world": 0.03736812799046728,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 26.08807901200178,
+     "activity": {
+      "moving_frame_fraction": 0.0,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.012278124885940149,
+      "leg_travel_cm": 7.905456736400583,
+      "toe_height_range_cm": 0.034595489501953125,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.033839627239555685
+     },
+     "contact_coverage_pred": 1.0,
+     "style_pred": {
+      "predicted": 44,
+      "target": 44,
+      "correct": 1,
+      "confidence": 0.885668933391571
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.163606895836286,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.9173705249038244,
+     "jitter": 0.2112323271321096,
+     "official": {
+      "mpjpe": 4.026321750217014,
+      "mpjpe_count": 5760,
+      "root_ade": 0.931628672281901,
+      "jitter": 0.21123241777179622,
+      "fs_local": 0.3980143864949544,
+      "fs_local_count": 30,
+      "fs_world": 0.3742503383703399,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 2.526450593795177,
+     "activity": {
+      "moving_frame_fraction": 0.03765690376569038,
+      "strong_moving_frame_fraction": 0.0,
+      "pose_step_mean_cm": 0.28512879868541025,
+      "leg_travel_cm": 205.0716626968142,
+      "toe_height_range_cm": 5.62362664937973,
+      "foot_lift_fraction": 0.09166666666666666,
+      "toe_speed_mean_cm_per_frame": 0.8998656899151006
+     },
+     "contact_coverage_pred": 0.11506276150627615,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1597119166699486,
+     "invariant_violations": 0,
+     "local_mpjpe": 4.454515789438089,
+     "jitter": 0.28117711855528404,
+     "official": {
+      "mpjpe": 5.64341057671441,
+      "mpjpe_count": 5760,
+      "root_ade": 2.0461092631022137,
+      "jitter": 0.28117703990776,
+      "fs_local": 0.6049726213727679,
+      "fs_local_count": 35,
+      "fs_world": 0.4775566074490963,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 3.939215365686961,
+     "activity": {
+      "moving_frame_fraction": 0.12552301255230125,
+      "strong_moving_frame_fraction": 0.008368200836820083,
+      "pose_step_mean_cm": 0.3717150318158596,
+      "leg_travel_cm": 258.62789638673814,
+      "toe_height_range_cm": 4.443438470363617,
+      "foot_lift_fraction": 0.035416666666666666,
+      "toe_speed_mean_cm_per_frame": 1.1394085363541449
+     },
+     "contact_coverage_pred": 0.03765690376569038,
+     "style_pred": {
+      "predicted": 35,
+      "target": 35,
+      "correct": 1,
+      "confidence": 0.9999895095825195
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 4.283414000174045,
+     "std": 1.4454989814180133,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 0.3178018492287578,
+     "std": 0.12227086171110405,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 7.569205481917771,
+     "std": 4.232329078434517,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 5.612350177764893,
+     "std": 4.412959985289216,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 0.6188472423696886,
+     "std": 0.24918628688462574,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 0.7023044780020959,
+     "std": 0.5347063702223576,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 5.748692501834224,
+     "std": 6.2400355136525185,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.45885634588563456,
+     "std": 0.34227600927760354,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.07635983263598327,
+     "std": 0.07406616119204551,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 0.5134924758551577,
+     "std": 0.22690473109757567,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.13336820083682008,
+     "std": 0.26525503407411777,
+     "n": 12
+    },
+    "style_accuracy": 0.9166666666666666
+   }
+  },
+  {
+   "config": {
+    "id": "H0",
+    "zero_history": true,
+    "note": "history ablation (zero history latent; OOD diagnostic)"
+   },
+   "per_source": [
+    {
+     "source_entry_id": 323,
+     "style": "LeanLeft",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.2068221791641918,
+     "invariant_violations": 0,
+     "local_mpjpe": 9.480843246860353,
+     "jitter": 1.4728445475367362,
+     "official": {
+      "mpjpe": 20.82015109592014,
+      "mpjpe_count": 5760,
+      "root_ade": 18.527496337890625,
+      "jitter": 1.4728446554403012,
+      "fs_local": 0.5966621041297913,
+      "fs_local_count": 1,
+      "fs_world": 1.8960783162694068,
+      "fs_world_count": 157,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 17.904365884618862,
+     "activity": {
+      "moving_frame_fraction": 0.8410041841004184,
+      "strong_moving_frame_fraction": 0.4351464435146444,
+      "pose_step_mean_cm": 1.0644469126324037,
+      "leg_travel_cm": 511.61494933014694,
+      "toe_height_range_cm": 4.9425817131996155,
+      "foot_lift_fraction": 0.008333333333333333,
+      "toe_speed_mean_cm_per_frame": 2.211837725767614
+     },
+     "contact_coverage_pred": 0.04811715481171548,
+     "style_pred": {
+      "predicted": 68,
+      "target": 40,
+      "correct": 0,
+      "confidence": 0.6564887166023254
+     }
+    },
+    {
+     "source_entry_id": 184,
+     "style": "DragRightLeg",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1611001166699375,
+     "invariant_violations": 0,
+     "local_mpjpe": 3.22928016840081,
+     "jitter": 1.736607535191981,
+     "official": {
+      "mpjpe": 27.48589409722222,
+      "mpjpe_count": 5760,
+      "root_ade": 25.97890828450521,
+      "jitter": 1.7366074847907913,
+      "fs_local": 1.3798993428548176,
+      "fs_local_count": 48,
+      "fs_world": 1.9222506009615385,
+      "fs_world_count": 299,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 34.11748029148218,
+     "activity": {
+      "moving_frame_fraction": 0.803347280334728,
+      "strong_moving_frame_fraction": 0.5648535564853556,
+      "pose_step_mean_cm": 1.1089004606584312,
+      "leg_travel_cm": 515.5129418496006,
+      "toe_height_range_cm": 2.490988254547119,
+      "foot_lift_fraction": 0.0020833333333333333,
+      "toe_speed_mean_cm_per_frame": 2.2321304143922402
+     },
+     "contact_coverage_pred": 0.04811715481171548,
+     "style_pred": {
+      "predicted": 74,
+      "target": 22,
+      "correct": 0,
+      "confidence": 0.9071557521820068
+     }
+    },
+    {
+     "source_entry_id": 451,
+     "style": "OnPhoneRight",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.1810768708292017,
+     "invariant_violations": 0,
+     "local_mpjpe": 8.682341532110602,
+     "jitter": 2.970155905533362,
+     "official": {
+      "mpjpe": 46.06231011284722,
+      "mpjpe_count": 5760,
+      "root_ade": 42.50595703125,
+      "jitter": 2.970156031162465,
+      "fs_local": 2.4103269577026367,
+      "fs_local_count": 2,
+      "fs_world": 2.63720040951135,
+      "fs_world_count": 212,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 22.32603611820208,
+     "activity": {
+      "moving_frame_fraction": 0.9707112970711297,
+      "strong_moving_frame_fraction": 0.7154811715481172,
+      "pose_step_mean_cm": 1.917189540808048,
+      "leg_travel_cm": 662.107082907331,
+      "toe_height_range_cm": 4.6928651332855225,
+      "foot_lift_fraction": 0.07083333333333333,
+      "toe_speed_mean_cm_per_frame": 2.8944359052420503
+     },
+     "contact_coverage_pred": 0.016736401673640166,
+     "style_pred": {
+      "predicted": 29,
+      "target": 55,
+      "correct": 0,
+      "confidence": 0.9846134185791016
+     }
+    },
+    {
+     "source_entry_id": 571,
+     "style": "Rushed",
+     "suffix": "SW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1604304125048657,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.570092451391342,
+     "jitter": 3.2012854609972834,
+     "official": {
+      "mpjpe": 53.847216796875,
+      "mpjpe_count": 5760,
+      "root_ade": 50.220560709635414,
+      "jitter": 3.2012853969712887,
+      "fs_local": 2.6649606227874756,
+      "fs_local_count": 1,
+      "fs_world": 3.48699951171875,
+      "fs_world_count": 74,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 27.29831378632492,
+     "activity": {
+      "moving_frame_fraction": 0.9874476987447699,
+      "strong_moving_frame_fraction": 0.9414225941422594,
+      "pose_step_mean_cm": 2.0218706289940185,
+      "leg_travel_cm": 732.8508651461586,
+      "toe_height_range_cm": 4.8256338238716125,
+      "foot_lift_fraction": 0.08125,
+      "toe_speed_mean_cm_per_frame": 3.2285407387868488
+     },
+     "contact_coverage_pred": 0.006276150627615063,
+     "style_pred": {
+      "predicted": 91,
+      "target": 70,
+      "correct": 0,
+      "confidence": 0.9996104836463928
+     }
+    },
+    {
+     "source_entry_id": 0,
+     "style": "Aeroplane",
+     "suffix": "BR",
+     "group": "run",
+     "latency_ms_per_frame": 2.1818748708331746,
+     "invariant_violations": 0,
+     "local_mpjpe": 10.853898124134234,
+     "jitter": 1.5288664708900241,
+     "official": {
+      "mpjpe": 20.99439154730903,
+      "mpjpe_count": 5760,
+      "root_ade": 15.6317138671875,
+      "jitter": 1.5288663805365896,
+      "fs_local": 3.431756019592285,
+      "fs_local_count": 2,
+      "fs_world": 2.110741556101832,
+      "fs_world_count": 145,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 12.446295351687173,
+     "activity": {
+      "moving_frame_fraction": 0.895397489539749,
+      "strong_moving_frame_fraction": 0.401673640167364,
+      "pose_step_mean_cm": 1.084688906835733,
+      "leg_travel_cm": 558.0535711508714,
+      "toe_height_range_cm": 2.770629405975342,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 2.4496015556857818
+     },
+     "contact_coverage_pred": 0.02092050209205021,
+     "style_pred": {
+      "predicted": 68,
+      "target": 0,
+      "correct": 0,
+      "confidence": 0.9969300627708435
+     }
+    },
+    {
+     "source_entry_id": 212,
+     "style": "FairySteps",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.159983666668571,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.757723493500526,
+     "jitter": 2.874561315766981,
+     "official": {
+      "mpjpe": 39.954541015625,
+      "mpjpe_count": 5760,
+      "root_ade": 37.9837158203125,
+      "jitter": 2.874561641062675,
+      "fs_local": NaN,
+      "fs_local_count": 0,
+      "fs_world": 5.013641522381757,
+      "fs_world_count": 185,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 13.803542898309793,
+     "activity": {
+      "moving_frame_fraction": 0.9623430962343096,
+      "strong_moving_frame_fraction": 0.8284518828451883,
+      "pose_step_mean_cm": 1.8267221871462325,
+      "leg_travel_cm": 1044.9929504119636,
+      "toe_height_range_cm": 4.228350758552551,
+      "foot_lift_fraction": 0.04583333333333333,
+      "toe_speed_mean_cm_per_frame": 4.667284173454517
+     },
+     "contact_coverage_pred": 0.006276150627615063,
+     "style_pred": {
+      "predicted": 21,
+      "target": 26,
+      "correct": 0,
+      "confidence": 0.9319760203361511
+     }
+    },
+    {
+     "source_entry_id": 322,
+     "style": "LeanBack",
+     "suffix": "TR1",
+     "group": "turn",
+     "latency_ms_per_frame": 2.1727765083369377,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.856565563892532,
+     "jitter": 1.3893907027728176,
+     "official": {
+      "mpjpe": 8.117647298177083,
+      "mpjpe_count": 5760,
+      "root_ade": 5.021168009440104,
+      "jitter": 1.3893907050124736,
+      "fs_local": 1.4015179872512817,
+      "fs_local_count": 32,
+      "fs_world": 1.6547528666834677,
+      "fs_world_count": 310,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 9.235976701374614,
+     "activity": {
+      "moving_frame_fraction": 0.6192468619246861,
+      "strong_moving_frame_fraction": 0.26359832635983266,
+      "pose_step_mean_cm": 0.9405615573391736,
+      "leg_travel_cm": 447.14750442148465,
+      "toe_height_range_cm": 4.108765482902527,
+      "foot_lift_fraction": 0.004166666666666667,
+      "toe_speed_mean_cm_per_frame": 1.9715969460251845
+     },
+     "contact_coverage_pred": 0.043933054393305436,
+     "style_pred": {
+      "predicted": 46,
+      "target": 39,
+      "correct": 0,
+      "confidence": 0.9999796152114868
+     }
+    },
+    {
+     "source_entry_id": 525,
+     "style": "RaisedRightArm",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1752641624971147,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.543469998800528,
+     "jitter": 2.2597884385225364,
+     "official": {
+      "mpjpe": 37.354166666666664,
+      "mpjpe_count": 5760,
+      "root_ade": 35.38515625,
+      "jitter": 2.2597883635876226,
+      "fs_local": 0.985629586612477,
+      "fs_local_count": 34,
+      "fs_world": 1.6900355288856908,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 34.79348632853738,
+     "activity": {
+      "moving_frame_fraction": 0.8619246861924686,
+      "strong_moving_frame_fraction": 0.42677824267782427,
+      "pose_step_mean_cm": 1.34615735968905,
+      "leg_travel_cm": 430.5902852124309,
+      "toe_height_range_cm": 4.460489928722382,
+      "foot_lift_fraction": 0.008333333333333333,
+      "toe_speed_mean_cm_per_frame": 1.83157440547944
+     },
+     "contact_coverage_pred": 0.060669456066945605,
+     "style_pred": {
+      "predicted": 65,
+      "target": 65,
+      "correct": 1,
+      "confidence": 0.9960334897041321
+     }
+    },
+    {
+     "source_entry_id": 82,
+     "style": "BentKnees",
+     "suffix": "FR",
+     "group": "run",
+     "latency_ms_per_frame": 2.169115112496911,
+     "invariant_violations": 0,
+     "local_mpjpe": 7.252137576401272,
+     "jitter": 1.8576156840500042,
+     "official": {
+      "mpjpe": 35.27413194444444,
+      "mpjpe_count": 5760,
+      "root_ade": 32.37488606770833,
+      "jitter": 1.8576157513786764,
+      "fs_local": 2.3652673721313477,
+      "fs_local_count": 10,
+      "fs_world": 1.8550057547433036,
+      "fs_world_count": 210,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 12.058809755972943,
+     "activity": {
+      "moving_frame_fraction": 0.9707112970711297,
+      "strong_moving_frame_fraction": 0.5815899581589958,
+      "pose_step_mean_cm": 1.3684187599856852,
+      "leg_travel_cm": 581.6018509247449,
+      "toe_height_range_cm": 7.91249942779541,
+      "foot_lift_fraction": 0.11666666666666667,
+      "toe_speed_mean_cm_per_frame": 2.561040892966645
+     },
+     "contact_coverage_pred": 0.01882845188284519,
+     "style_pred": {
+      "predicted": 10,
+      "target": 10,
+      "correct": 1,
+      "confidence": 0.9989417195320129
+     }
+    },
+    {
+     "source_entry_id": 360,
+     "style": "LimpLeft",
+     "suffix": "ID",
+     "group": "idle",
+     "latency_ms_per_frame": 2.1710170583370805,
+     "invariant_violations": 0,
+     "local_mpjpe": 6.039024167181484,
+     "jitter": 0.3600884580960484,
+     "official": {
+      "mpjpe": 30.111935763888887,
+      "mpjpe_count": 5760,
+      "root_ade": 34.2439697265625,
+      "jitter": 0.36008848729921655,
+      "fs_local": 0.5515443171417364,
+      "fs_local_count": 478,
+      "fs_world": 0.6325935778757519,
+      "fs_world_count": 478,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 70.68648979530985,
+     "activity": {
+      "moving_frame_fraction": 0.0502092050209205,
+      "strong_moving_frame_fraction": 0.012552301255230125,
+      "pose_step_mean_cm": 0.23662789862154285,
+      "leg_travel_cm": 132.26111283056565,
+      "toe_height_range_cm": 0.6262122392654419,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 0.5515442998464469
+     },
+     "contact_coverage_pred": 0.399581589958159,
+     "style_pred": {
+      "predicted": 78,
+      "target": 44,
+      "correct": 0,
+      "confidence": 0.9989157915115356
+     }
+    },
+    {
+     "source_entry_id": 658,
+     "style": "Superman",
+     "suffix": "BW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.1636471875050725,
+     "invariant_violations": 0,
+     "local_mpjpe": 5.063918306271071,
+     "jitter": 1.1002409487019467,
+     "official": {
+      "mpjpe": 11.227100287543403,
+      "mpjpe_count": 5760,
+      "root_ade": 8.08911844889323,
+      "jitter": 1.1002409264487045,
+      "fs_local": 1.308251190185547,
+      "fs_local_count": 30,
+      "fs_world": 1.27889907569216,
+      "fs_world_count": 285,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 12.262907878447647,
+     "activity": {
+      "moving_frame_fraction": 0.7866108786610879,
+      "strong_moving_frame_fraction": 0.1297071129707113,
+      "pose_step_mean_cm": 0.7122044205867578,
+      "leg_travel_cm": 339.1529544879005,
+      "toe_height_range_cm": 3.2277302742004395,
+      "foot_lift_fraction": 0.01875,
+      "toe_speed_mean_cm_per_frame": 1.4772820977769268
+     },
+     "contact_coverage_pred": 0.04811715481171548,
+     "style_pred": {
+      "predicted": 81,
+      "target": 81,
+      "correct": 1,
+      "confidence": 1.0
+     }
+    },
+    {
+     "source_entry_id": 286,
+     "style": "InTheDark",
+     "suffix": "FW",
+     "group": "walk",
+     "latency_ms_per_frame": 2.202391712504929,
+     "invariant_violations": 0,
+     "local_mpjpe": 10.513481203895026,
+     "jitter": 0.6696237480090803,
+     "official": {
+      "mpjpe": 17.048008897569446,
+      "mpjpe_count": 5760,
+      "root_ade": 8.699393717447917,
+      "jitter": 0.6696237516002495,
+      "fs_local": 1.369912610735212,
+      "fs_local_count": 35,
+      "fs_world": 0.9563477413164199,
+      "fs_world_count": 287,
+      "contact_possible": 478
+     },
+     "vel_dir_err_deg": 26.79545324601078,
+     "activity": {
+      "moving_frame_fraction": 0.3807531380753138,
+      "strong_moving_frame_fraction": 0.05439330543933055,
+      "pose_step_mean_cm": 0.531539947378052,
+      "leg_travel_cm": 316.4156791808918,
+      "toe_height_range_cm": 3.2230167984962463,
+      "foot_lift_fraction": 0.0,
+      "toe_speed_mean_cm_per_frame": 1.3560399276764175
+     },
+     "contact_coverage_pred": 0.07740585774058577,
+     "style_pred": {
+      "predicted": 59,
+      "target": 35,
+      "correct": 0,
+      "confidence": 0.797243595123291
+     }
+    }
+   ],
+   "summary": {
+    "local_mpjpe": {
+     "mean": 7.153564652736648,
+     "std": 2.2074105431739848,
+     "n": 12
+    },
+    "jitter": {
+     "mean": 1.7850891013390668,
+     "std": 0.8608874245972183,
+     "n": 12
+    },
+    "world_mpjpe": {
+     "mean": 29.024791293674042,
+     "std": 13.438084428645604,
+     "n": 12
+    },
+    "root_ade": {
+     "mean": 26.221837022569442,
+     "std": 14.20782240851159,
+     "n": 12
+    },
+    "fs_local": {
+     "mean": 1.6787025555567825,
+     "std": 0.8724518428130312,
+     "n": 11
+    },
+    "fs_world": {
+     "mean": 2.094545538511786,
+     "std": 1.130499999908174,
+     "n": 12
+    },
+    "vel_dir_err_deg": {
+     "mean": 24.477429836356517,
+     "std": 16.30488608881251,
+     "n": 12
+    },
+    "moving": {
+     "mean": 0.7608089260808927,
+     "std": 0.27184222743304814,
+     "n": 12
+    },
+    "strong": {
+     "mean": 0.4463040446304045,
+     "std": 0.2848741184197888,
+     "n": 12
+    },
+    "pose_step": {
+     "mean": 1.179944048389594,
+     "std": 0.5281777415902222,
+     "n": 12
+    },
+    "contact_coverage": {
+     "mean": 0.06624825662482565,
+     "std": 0.10275329637367664,
+     "n": 12
+    },
+    "style_accuracy": 0.25
+   }
+  }
+ ]
+}
