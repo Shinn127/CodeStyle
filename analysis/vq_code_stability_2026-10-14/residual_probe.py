@@ -39,6 +39,8 @@ N_JOINTS = len(SELECTED_24_NAMES)  # 24
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--vq-ckpt', type=Path, required=True)
+    ap.add_argument('--teacher-ckpt', type=Path, default=None,
+                    help='optional frozen teacher; adds r_fixed = P(D(q)) - P(D0(E0(x)))')
     ap.add_argument('--tag', required=True)
     ap.add_argument('--clips', type=int, default=12)
     ap.add_argument('--frames', type=int, default=120)
@@ -65,16 +67,29 @@ def main():
     picks = [pool[i] for i in rng.choice(len(pool), min(args.clips, len(pool)), replace=False)]
 
     def frames_of(motion_norm: torch.Tensor, traj_block: torch.Tensor):
-        """normalized motion291 [T,291] + normalized traj block [T,84] -> (local_cm, world_cm)."""
+        """normalized motion291 [T,291] + normalized traj block [T,84] -> (local_cm, world_cm).
+
+        The trajectory block is NOT integrated here: the 24-joint globals are rebuilt from the
+        motion block's own root-motion channels (channels 0:3 of motion291), exactly like
+        `reconstruct_selected_globals_from_375` does for a full 375 feature row. The traj block
+        is only carried along to satisfy the feature layout; it does not affect positions.
+        """
         motion_raw = motion_norm * std_t[84:] + mean_t[84:]
         local = motion_raw[:, 3:3 + N_JOINTS * 3].reshape(-1, N_JOINTS, 3) * 100.0
         features = torch.cat((traj_block, motion_raw), -1).cpu().numpy()
         world, _ = reconstruct_selected_globals_from_375(features)
         return local, torch.as_tensor(world, device=motion_norm.device) * 100.0
 
+    # Optional frozen-teacher target: the alignment term B actually optimized is
+    # ||D_theta(q) - sg(D0(E0(x)))||^2, so the residual against D0 is the term's own error
+    # metric (r_fixed), distinct from the self-consistency residual r_self above.
+    teacher = None
+    if args.teacher_ckpt is not None:
+        teacher = build_vqvae_from_checkpoint(args.teacher_ckpt, freeze=True).to(dev).eval()
 
     loc_r, loc_dr, loc_d2r = [], [], []
     wor_r, wor_dr, wor_d2r = [], [], []
+    tch_r, tch_dr, tch_d2r = [], [], []
     jq_loc, jc_loc, jgt_loc = [], [], []
     d2q_loc, d2c_loc, d2gt_loc = [], [], []
     per_clip = []
@@ -86,6 +101,7 @@ def main():
             z_q, _, _ = vq.encode(x)
             motion_q = vq.decode(z_q)
             motion_c = vq.decode(z_e)
+            motion_t = teacher.decode(teacher.encode_pre_vq(x)) if teacher is not None else None
         traj = x[:, :84]
         lq, wq = frames_of(motion_q, traj)
         lc, wc = frames_of(motion_c, traj)
@@ -98,7 +114,16 @@ def main():
             store[0].append(r.norm(dim=-1).reshape(-1).cpu())
             store[1].append(dr.norm(dim=-1).reshape(-1).cpu())
             store[2].append(d2r.norm(dim=-1).reshape(-1).cpu())
-        # jitter / second differences (local frame)
+        if motion_t is not None:
+            lt, _ = frames_of(motion_t, traj)
+            r = lq - lt
+            dr = r[1:] - r[:-1]
+            d2r = dr[1:] - dr[:-1]
+            tch_r.append(r.norm(dim=-1).reshape(-1).cpu())
+            tch_dr.append(dr.norm(dim=-1).reshape(-1).cpu())
+            tch_d2r.append(d2r.norm(dim=-1).reshape(-1).cpu())
+        # first-order displacement and second-difference magnitudes (local frame); the former
+        # is NOT the project's official Jitter metric, only a cheap kinematic proxy.
         jq_loc.append((lq[1:] - lq[:-1]).norm(dim=-1).reshape(-1).cpu())
         jc_loc.append((lc[1:] - lc[:-1]).norm(dim=-1).reshape(-1).cpu())
         jgt_loc.append((lg[1:] - lg[:-1]).norm(dim=-1).reshape(-1).cpu())
@@ -116,17 +141,24 @@ def main():
     out = dict(
         tag=args.tag, checkpoint=str(args.vq_ckpt), split=args.split,
         clips=len(picks), frames=args.frames, joints=N_JOINTS,
+        teacher_ckpt=None if args.teacher_ckpt is None else str(args.teacher_ckpt),
         r_local_cm=stat(cat(loc_r)), dr_local_cm=stat(cat(loc_dr)), d2r_local_cm=stat(cat(loc_d2r)),
         r_world_cm=stat(cat(wor_r)), dr_world_cm=stat(cat(wor_dr)), d2r_world_cm=stat(cat(wor_d2r)),
-        jitter_quant_local_cm=stat(cat(jq_loc)),
-        jitter_cont_local_cm=stat(cat(jc_loc)),
-        jitter_gt_local_cm=stat(cat(jgt_loc)),
+        # first-order displacement magnitudes (NOT the project's official Jitter metric)
+        step1_quant_local_cm=stat(cat(jq_loc)),
+        step1_cont_local_cm=stat(cat(jc_loc)),
+        step1_gt_local_cm=stat(cat(jgt_loc)),
         d2_quant_local_cm=stat(cat(d2q_loc)),
         d2_cont_local_cm=stat(cat(d2c_loc)),
         d2_gt_local_cm=stat(cat(d2gt_loc)),
-        identity_note='J_q - J_c != J(r); quantized/continuous/GT reported directly',
+        identity_note=('J_q - J_c != J(r); quantized/continuous/GT reported directly; '
+                       'step1_* are first-order displacement proxies, not formal Jitter'),
         per_clip=per_clip,
     )
+    if tch_r:
+        out['r_fixed_local_cm'] = stat(cat(tch_r))
+        out['dr_fixed_local_cm'] = stat(cat(tch_dr))
+        out['d2r_fixed_local_cm'] = stat(cat(tch_d2r))
     print(json.dumps({k: v for k, v in out.items() if k != 'per_clip'}, indent=1))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(out, indent=1))

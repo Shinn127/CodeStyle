@@ -227,6 +227,16 @@ def add_common_runtime_args(
     )
     parser.add_argument("--compile-fullgraph", action="store_true")
     parser.add_argument("--seed", type=int, default=defaults.seed)
+    parser.add_argument(
+        "--loader-generator-seed",
+        type=int,
+        default=0,
+        help=(
+            "Positive value: give each split's DataLoader an explicit generator seeded from "
+            "this base (train/val/test at +0/+1/+2), so sample order no longer depends on the "
+            "global torch RNG. 0 keeps the legacy implicit behavior."
+        ),
+    )
     parser.add_argument("--device", type=str, default=defaults.device, help="auto/cuda/cpu")
 
 
@@ -326,6 +336,20 @@ def build_grad_scaler(
     return torch.cuda.amp.GradScaler(enabled=scaler_enabled)
 
 
+def _loader_generator(args: Any, role: str):
+    """Deterministic per-loader generator so sampling order is independent of global RNG.
+
+    `--loader-generator-seed` (default 0) switches every split's DataLoader to an explicit
+    torch.Generator seeded from it; 0 keeps the legacy implicit behavior (global RNG), which
+    existing tests and bit-identical replays rely on.
+    """
+    seed = int(getattr(args, "loader_generator_seed", 0))
+    if seed <= 0:
+        return None
+    offsets = {"train": 0, "val": 1, "test": 2}
+    return torch.Generator().manual_seed(seed + offsets.get(role, 3))
+
+
 def prepare_data_loaders_from_args(
     *,
     args: Any,
@@ -371,6 +395,7 @@ def prepare_data_loaders_from_args(
         drop_last=True,
         persistent_workers=args.persistent_workers,
         prefetch_factor=args.prefetch_factor,
+        generator=_loader_generator(args, "train"),
     )
     val_loader = build_dataloader(
         val_dataset,
@@ -381,6 +406,7 @@ def prepare_data_loaders_from_args(
         drop_last=False,
         persistent_workers=args.persistent_workers,
         prefetch_factor=args.prefetch_factor,
+        generator=_loader_generator(args, "val"),
     )
     test_loader = build_dataloader(
         test_dataset,
@@ -391,6 +417,7 @@ def prepare_data_loaders_from_args(
         drop_last=False,
         persistent_workers=args.persistent_workers,
         prefetch_factor=args.prefetch_factor,
+        generator=_loader_generator(args, "test"),
     )
 
     print(f"[Info] train samples   : {len(bundle.train_dataset)} -> {len(train_dataset)}")

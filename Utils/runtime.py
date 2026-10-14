@@ -198,6 +198,7 @@ def build_dataloader(
     drop_last: bool,
     persistent_workers: bool,
     prefetch_factor: int,
+    generator: Optional[torch.Generator] = None,
 ) -> Optional[DataLoader]:
     if dataset is None:
         return None
@@ -208,6 +209,10 @@ def build_dataloader(
         "pin_memory": pin_memory,
         "drop_last": drop_last,
     }
+    if generator is not None:
+        # Explicit per-loader generator: sampling order (and worker seeding) no longer
+        # depends on the global torch RNG, so unrelated setup work cannot perturb it.
+        kwargs["generator"] = generator
     if num_workers > 0:
         kwargs["persistent_workers"] = bool(persistent_workers)
         kwargs["prefetch_factor"] = int(prefetch_factor)

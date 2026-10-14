@@ -81,6 +81,11 @@ from Utils.training import (
     write_config_json,
 )
 from arch import BasicVQVAE375to291, normalize_control_network_arch
+from Utils.reproducibility import isolated_rng
+
+
+# Teacher identity covers the whole alignment path D0(E0(x)): codes alone are not the target.
+TEACHER_FINGERPRINT_PREFIXES = ('encoder.', 'quantizer.', 'decoder.')
 
 
 METRIC_KEYS = (
@@ -477,7 +482,11 @@ def parse_args() -> argparse.Namespace:
 
 def validate_args(args: argparse.Namespace) -> None:
     if args.init_ckpt is not None and args.resume is not None:
-        raise ValueError("Use only one of --init-ckpt and --resume")
+        # Decoder-only resume needs both: --resume restores the run state (decoder+optimizer+
+        # epoch) while --init-ckpt documents/validates the frozen representation source. For a
+        # full run the combination stays rejected (two competing initializations).
+        if not args.decoder_only:
+            raise ValueError("Use only one of --init-ckpt and --resume")
     for name in ("code_align_weight", "latent_margin_weight", "roundtrip_weight", "latent_margin_target",
                  "teacher_align_weight"):
         value=getattr(args,name)
@@ -495,8 +504,16 @@ def validate_args(args: argparse.Namespace) -> None:
                 raise ValueError(
                     f"--decoder-only cannot be combined with --{name.replace('_','-')} > 0 "
                     "(those objectives train the frozen encoder)")
-        if args.init_ckpt is None:
-            raise ValueError("--decoder-only expects --init-ckpt (start from the VQ whose decoder is calibrated)")
+        if args.init_ckpt is None and args.resume is None:
+            raise ValueError(
+                "--decoder-only expects --init-ckpt (fresh calibration) or --resume (continue one)")
+        if args.norm_stats is None and getattr(args, "resume", None) is None:
+            # Without a fixed norm file, the run recomputes statistics from its own windows
+            # (seq_len differs from the source run), which shifts some code assignments and
+            # breaks the "only the decoder changed" claim. Warn loudly; the entry script
+            # defaults NORM_STATS to the source run's file.
+            print("[Warn] decoder-only without --norm-stats: normalization is recomputed and "
+                  "code assignments may differ from the source checkpoint")
         # The remaining representation losses/side objectives are zeroed because their targets
         # are frozen (no gradient path) or they belong to the other alignment direction; this
         # matches the calibration protocol (controls A/B in the plan) and is reported loudly.
@@ -622,23 +639,33 @@ def load_initial_vq_weights(model, checkpoint):
 
 
 def build_frozen_teacher(args, device):
-    """Separate no-grad copy of the teacher checkpoint; never enters the trained state_dict."""
-    teacher = build_model(args, device=device)
-    load_initial_vq_weights(teacher, load_checkpoint(args.teacher_ckpt, map_location='cpu'))
-    teacher = teacher.to(device).eval()
-    for parameter in teacher.parameters():
-        parameter.requires_grad_(False)
+    """Separate no-grad copy of the teacher checkpoint; never enters the trained state_dict.
+
+    Built inside `isolated_rng`: constructing (random-init) and loading the teacher must not
+    perturb the global torch RNG, otherwise every later sampler draw (and worker seeding)
+    differs from a run without a teacher and paired A/B comparisons lose their pairing.
+    """
+    with isolated_rng(args.seed + 555):
+        teacher = build_model(args, device=device)
+        load_initial_vq_weights(teacher, load_checkpoint(args.teacher_ckpt, map_location='cpu'))
+        teacher = teacher.to(device).eval()
+        for parameter in teacher.parameters():
+            parameter.requires_grad_(False)
     return teacher
 
 
 def validate_teacher_match(model, teacher):
-    """The teacher's representation must equal the frozen student's (same codes under D)."""
-    student = state_dict_fingerprint(model.state_dict(), prefix=('encoder.', 'quantizer.'))
-    source = state_dict_fingerprint(teacher.state_dict(), prefix=('encoder.', 'quantizer.'))
+    """The teacher must match the trained model on the whole alignment path.
+
+    The target is D0(E0(x)): it depends on the encoder AND the decoder, so comparing only
+    encoder+quantizer would accept a teacher with a different decoder under the same codes.
+    """
+    student = state_dict_fingerprint(model.state_dict(), prefix=TEACHER_FINGERPRINT_PREFIXES)
+    source = state_dict_fingerprint(teacher.state_dict(), prefix=TEACHER_FINGERPRINT_PREFIXES)
     if student != source:
         raise ValueError(
-            'Teacher encoder/quantizer differs from the trained model; decoder-only calibration '
-            'needs the same frozen representation on both sides')
+            'Teacher model differs from the trained model on the alignment path '
+            '(encoder+quantizer+decoder); decoder-only calibration needs the same source')
 
 
 def state_dict_fingerprint(state, *, prefix):
@@ -701,6 +728,13 @@ def main() -> None:
 
     validate_args(args)
     args.vq_stability_version=2 if args.latent_margin_mode=='nearest_boundary' else 1
+    # Teacher identity must be resolved BEFORE resume validation: the resume guard compares the
+    # recorded fingerprint against this run's, and a None-vs-hash mismatch would otherwise abort
+    # every legitimate teacher resume.
+    args.teacher_fingerprint = None
+    if args.teacher_ckpt is not None:
+        teacher_state = sanitize_state_dict_keys(load_checkpoint(args.teacher_ckpt, map_location='cpu')['model'])
+        args.teacher_fingerprint = state_dict_fingerprint(teacher_state, prefix=TEACHER_FINGERPRINT_PREFIXES)
     if args.resume is not None:
         validate_stability_resume(args,load_checkpoint(args.resume,map_location='cpu'))
     set_seed(args.seed)
@@ -763,13 +797,7 @@ def main() -> None:
             f"(needs about {db_size_gb + 2.0:.1f} GB memory for X + overhead)."
         )
 
-    # Record the teacher's representation fingerprint before the config is written: it is the
-    # identity that resume validation later requires to match.
-    args.teacher_fingerprint = None
-    if args.teacher_ckpt is not None:
-        teacher_state = sanitize_state_dict_keys(load_checkpoint(args.teacher_ckpt, map_location='cpu')['model'])
-        args.teacher_fingerprint = state_dict_fingerprint(teacher_state, prefix=('encoder.', 'quantizer.'))
-
+    # (teacher fingerprint already resolved above, before resume validation)
     write_config_json(out_dir=args.out_dir, args=args)
 
     prepared = prepare_data_loaders_from_args(

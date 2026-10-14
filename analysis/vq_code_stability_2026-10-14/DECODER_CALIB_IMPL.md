@@ -86,7 +86,28 @@ quantized/continuous/GT 三个量，**不把 `J_q - J_c` 当作 `J(r)`**（方�
 `decode(encode_pre_vq(x))`（跳过 teacher 的量化前向）；方案允许后续对 q 与 teacher 目标
 做 train-only 预计算缓存，本轮未实现（先保证语义正确）。
 
-## 4. 边界与未决（沿用方案条款）
+## 4. 独立复核后的契约修复（2026-10-14 同日，在 A/B 之后）
+
+GPT-6 复核（[CALIB_AB_AUDIT.md](CALIB_AB_AUDIT.md)）指出 A/B 的若干实验契约缺口与代码
+隐患；逐项核实**均成立**并已修复：
+
+| 问题 | 修复 |
+|---|---|
+| teacher 构建消耗全局 RNG，B 的采样顺序与 A 不配对 | `build_frozen_teacher` 包进 `isolated_rng(seed+555)`；新增 `--loader-generator-seed`（>0 时各 split 用独立 generator，默认 0 保持旧行为） |
+| teacher 指纹只覆盖 encoder+quantizer，换 decoder 不被发现 | `TEACHER_FINGERPRINT_PREFIXES` 扩为 encoder+quantizer+**decoder**（目标 D0(E0(x)) 的完整路径）；写入 config 与 resume 校验 |
+| `--decoder-only` 强制 `--init-ckpt`，与 `--resume` 互斥 → 无法续训 | decoder-only 下允许两者共存（resume 续状态、init 校验表示来源）；普通 run 仍互斥 |
+| teacher 指纹在 resume 校验之后才赋值 → B 续训必失败 | 指纹解析提前到 `validate_stability_resume` 之前 |
+| norm 未固定（`norm_stats=null`，重算统计改变 0.16% slot 选码） | 入口脚本在 decoder-only 且未显式给 `NORM_STATS` 时自动采用来源 checkpoint 同目录的 `norm_stats.npz`；trainer 在缺失时打印明确警告 |
+| 探针口径：混合单位（normalized traj + raw motion）注释错误；`jitter_*` 实为一阶位移 | `frames_of` 注释改为"世界系 globals 由 motion291 自身 root 通道积分，traj 块不参与"；字段更名 `step1_*` 并注明**非**项目正式 Jitter；新增 `r_fixed/dr_fixed/d2r_fixed`（对冻结 teacher 的残差，即 B 真实优化的目标误差），`--teacher-ckpt` 可选启用 |
+
+新增测试 4 项（`tests/test_decoder_only_calibration.py` 共 14 项）：指纹覆盖 decoder、teacher
+构建不扰动全局 RNG、loader generator 确定性、decoder-only resume 组合与 norm 警告。
+回归：**CPU 410 passed / 21 deselected；GPU 21 passed**。
+
+**旧 A/B 结果保留并注明偏差**（不改配置、不重跑冒充）；结论的正确读法见
+[CALIB_AB_RESULT.md](CALIB_AB_RESULT.md) 顶部横幅。
+
+## 5. 边界与未决（沿用方案条款）
 
 1. teacher 有自身误差，不能取代 GT 监督；真实 GT 的 recon/vel/root 仍是主监督。
 2. 冻结的是"当前这份" E/C；若之后换 VQ，q 与其下游缓存（`D(q)` 观测、controller 的

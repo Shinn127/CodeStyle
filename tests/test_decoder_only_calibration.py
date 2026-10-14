@@ -143,7 +143,7 @@ def test_validate_teacher_match_rejects_a_different_representation():
     b = _model()
     with torch.no_grad():
         next(b.encoder.parameters()).add_(0.01)
-    with pytest.raises(ValueError, match='representation'):
+    with pytest.raises(ValueError, match='alignment path'):
         trainer.validate_teacher_match(a, b)
 
 
@@ -176,3 +176,87 @@ def test_resume_guard_covers_decoder_only_and_teacher():
         trainer.validate_stability_resume(args, old)
     old['args']['teacher_fingerprint'] = 'abc'
     trainer.validate_stability_resume(args, old)
+
+
+def test_teacher_fingerprint_covers_the_decoder():
+    """The alignment target is D0(E0(x)); a different teacher decoder must be detected."""
+    a = _model()
+    b = copy.deepcopy(a)
+    assert trainer.state_dict_fingerprint(a.state_dict(), prefix=trainer.TEACHER_FINGERPRINT_PREFIXES) == \
+        trainer.state_dict_fingerprint(b.state_dict(), prefix=trainer.TEACHER_FINGERPRINT_PREFIXES)
+    # Change ONLY the decoder: encoder+quantizer stay identical, the target would change.
+    with torch.no_grad():
+        next(b.decoder.parameters()).add_(0.01)
+    assert trainer.state_dict_fingerprint(a.state_dict(), prefix=('encoder.', 'quantizer.')) == \
+        trainer.state_dict_fingerprint(b.state_dict(), prefix=('encoder.', 'quantizer.'))
+    assert trainer.state_dict_fingerprint(a.state_dict(), prefix=trainer.TEACHER_FINGERPRINT_PREFIXES) != \
+        trainer.state_dict_fingerprint(b.state_dict(), prefix=trainer.TEACHER_FINGERPRINT_PREFIXES)
+    with pytest.raises(ValueError, match='alignment path'):
+        trainer.validate_teacher_match(a, b)
+
+
+def test_teacher_build_does_not_perturb_global_rng(monkeypatch):
+    """Building the teacher must not consume the global RNG stream (paired A/B sampling)."""
+    args = SimpleNamespace(seed=7, model_type='x')
+    calls = {'n': 0}
+
+    def fake_build(args_, device):
+        calls['n'] += 1
+        return build_model_only()
+
+    def build_model_only():
+        return _model()
+
+    monkeypatch.setattr(trainer, 'build_model', lambda args, device: _model())
+    monkeypatch.setattr(trainer, 'load_initial_vq_weights', lambda m, c: False)
+    monkeypatch.setattr(trainer, 'load_checkpoint', lambda p, map_location=None: {'model': _model().state_dict(), 'args': {}})
+    device = torch.device('cpu')
+    torch.manual_seed(1234)
+    expected = torch.randn(4).clone()
+    torch.manual_seed(1234)
+    trainer.build_frozen_teacher(SimpleNamespace(seed=7, teacher_ckpt=Path('/tmp/x.pt')), device)
+    after = torch.randn(4)
+    assert torch.equal(after, expected), 'teacher build consumed global RNG'
+
+
+def test_loader_generator_flags_produce_deterministic_order():
+    from Utils.training import _loader_generator
+    off = SimpleNamespace(loader_generator_seed=0)
+    assert _loader_generator(off, 'train') is None
+    on = SimpleNamespace(loader_generator_seed=999)
+    g1, g2 = _loader_generator(on, 'train'), _loader_generator(on, 'train')
+    assert isinstance(g1, torch.Generator) and torch.equal(
+        torch.randperm(10, generator=g1), torch.randperm(10, generator=g2))
+    # Splits get decorrelated but reproducible streams.
+    gv = _loader_generator(on, 'val')
+    gt = _loader_generator(on, 'test')
+    assert not torch.equal(torch.randperm(10, generator=g1), torch.randperm(10, generator=gv))
+    assert not torch.equal(torch.randperm(10, generator=gv), torch.randperm(10, generator=gt))
+
+
+def _full_args(extra=(), tmp_path=Path('/tmp')):
+    old = sys.argv
+    sys.argv = ['vq', '--db', str(tmp_path / 'db'), '--out-dir', str(tmp_path / 'out'), *extra]
+    try:
+        return trainer.parse_args()
+    finally:
+        sys.argv = old
+
+
+def test_decoder_only_resume_allows_init_and_resume_together(tmp_path):
+    """Decoder-only resume needs both flags; a full run still rejects the combination."""
+    args = _full_args(['--decoder-only', '--init-ckpt', '/tmp/init.pt',
+                       '--resume', '/tmp/latest.pt', '--norm-stats', '/tmp/norm.npz'], tmp_path)
+    trainer.validate_args(args)  # must not raise for decoder-only
+    args.decoder_only = False
+    with pytest.raises(ValueError, match='init-ckpt and --resume'):
+        trainer.validate_args(args)
+
+
+def test_decoder_only_without_norm_stats_warns(tmp_path, capsys):
+    args = _full_args(['--decoder-only', '--init-ckpt', '/tmp/init.pt',
+                       '--vq-weight', '1', '--code-align-weight', '2'], tmp_path)
+    trainer.validate_args(args)
+    captured = capsys.readouterr()
+    assert 'norm-stats' in captured.out
+    assert args.vq_weight == 0.0 and args.code_align_weight == 0.0

@@ -70,6 +70,13 @@ NUM_EMBEDDINGS="${NUM_EMBEDDINGS:-2048}"
 DECODER_ONLY="${DECODER_ONLY:-0}"
 TEACHER_CKPT="${TEACHER_CKPT:-}"
 TEACHER_ALIGN_WEIGHT="${TEACHER_ALIGN_WEIGHT:-0.0}"
+# Reuse the source run's normalization when calibrating a decoder: the representation input
+# Q(E((x-mu)/sigma)) depends on mu/sigma, so a recomputed norm would change some code
+# assignments and break the single-variable contract. Explicit NORM_STATS still wins.
+if [[ "${DECODER_ONLY}" == "1" && -z "${NORM_STATS}" && -n "${INIT_CKPT}" ]]; then
+  _source_norm="$(dirname "${INIT_CKPT}")/norm_stats.npz"
+  if [[ -f "${_source_norm}" ]]; then NORM_STATS="${_source_norm}"; fi
+fi
 EVAL_EVERY="${EVAL_EVERY:-10}"
 # Primary metric: reported in the logs and stored as best_metric. It is always part of the
 # gate below, but never decides alone.
@@ -88,6 +95,8 @@ KMEANS_ITERS="${KMEANS_ITERS:-10}"
 # EMA assignments per batch below which a code is replaced (library quantizer only).
 # NOT a step count: with batch 512 x 32 heads over 2048 codes the per-code mean is ~8.
 DEAD_CODE_THRESHOLD="${DEAD_CODE_THRESHOLD:-2}"
+# Positive value: deterministic per-split DataLoader generators (paired A/B order). 0 = legacy.
+LOADER_SEED="${LOADER_SEED:-0}"
 
 ru_require_file "${TRAIN_PY}" "train script"
 ru_require_python_modules "${PYTHON_BIN}" numpy torch
@@ -132,6 +141,7 @@ cmd=(
   --eval-window-frames "${EVAL_WINDOW_FRAMES}"
   --dead-code-threshold "${DEAD_CODE_THRESHOLD}"
   --kmeans-iters "${KMEANS_ITERS}"
+  --loader-generator-seed "${LOADER_SEED}"
 )
 
 ru_append_bool_flag cmd "${TF32}" --tf32 --no-tf32
