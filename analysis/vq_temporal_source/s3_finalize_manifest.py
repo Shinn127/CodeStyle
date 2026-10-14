@@ -84,7 +84,7 @@ def main() -> None:
                 for k in shared_keys if k.startswith("quantizer.")
             ),
         ),
-        dataset=artifact_fingerprints(DB, init_ckpt, config.get("norm_stats", str(SRC_NORM))),
+        dataset=artifact_fingerprints(DB, init_ckpt, Path(config.get("norm_stats") or SRC_NORM)),
         norm_stats=dict(path=str(config.get("norm_stats")), sha256=file_sha256(config["norm_stats"])),
         epochs=[
             dict(
