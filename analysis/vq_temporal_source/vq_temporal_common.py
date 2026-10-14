@@ -485,15 +485,23 @@ def full_probe(ckpt: Path, *, device: str = "cuda", style: bool = True, tag: str
 
 
 def git_commit() -> dict:
+    """HEAD plus a dirty flag for MODIFIED TRACKED files only.
+
+    New untracked files (run logs, probe JSONs that land before their commit) are counted
+    separately: they cannot change the behavior of already-committed code, while a modified
+    tracked file can, so the two must not be conflated in the experiment record.
+    """
     import subprocess
 
     def run(*args):
         return subprocess.run(args, cwd=ROOT, capture_output=True, text=True).stdout.strip()
 
+    untracked = [line for line in run("git", "ls-files", "--others", "--exclude-standard").splitlines() if line]
     return dict(
         commit=run("git", "rev-parse", "HEAD"),
         branch=run("git", "rev-parse", "--abbrev-ref", "HEAD"),
-        dirty=bool(run("git", "status", "--porcelain")),
+        dirty=bool(run("git", "status", "--porcelain", "--untracked-files=no")),
+        untracked_files=len(untracked),
     )
 
 

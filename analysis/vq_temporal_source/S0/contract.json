@@ -1,9 +1,10 @@
 {
  "protocol": "docs/VQ_SOURCE_AGENT_EXECUTION_PLAN.md S0",
  "git": {
-  "commit": "b070f312acad96f4d2f62136f39728d5e39f1895",
+  "commit": "28ac8a0e8d19804acb56d4f3473dd35d21fd0b4b",
   "branch": "main",
-  "dirty": false
+  "dirty": true,
+  "untracked_files": 0
  },
  "environment": {
   "torch": "2.13.0+cu132",
@@ -132,7 +133,7 @@
   "compile": 0
  },
  "dry_run_B0": {
-  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-decoder-only --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
+  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
   "checks": {
    "init_ckpt": true,
    "norm_stats": true,
@@ -140,13 +141,15 @@
    "seq_len": true,
    "loader_seed": true,
    "epochs": true,
-   "out_dir": true
+   "out_dir": true,
+   "trainer_argparse_valid": true
   },
   "passed": true,
+  "argparse_error": null,
   "out_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_s0check"
  },
  "dry_run_B1": {
-  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 5.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-decoder-only --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
+  "command": "[Dry run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_s0check --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 5.0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\\,jitter\\,foot_sliding\\,root_ade --best-min-delta 0.0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-compile --use-rotation-trick --kmeans-init --lr 0.0001 --min-lr 1e-05 --seed 42 --save-every 5",
   "checks": {
    "init_ckpt": true,
    "norm_stats": true,
@@ -154,9 +157,11 @@
    "seq_len": true,
    "loader_seed": true,
    "epochs": true,
-   "out_dir": true
+   "out_dir": true,
+   "trainer_argparse_valid": true
   },
   "passed": true,
+  "argparse_error": null,
   "out_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_s0check"
  },
  "fixed_val12": {
@@ -193,6 +198,8 @@
   "archived_residual_sha256": "9640b14bd8e6e8aabf638f83b309f112cfcaee50ca3d3c3b9570f92ebfb4b573",
   "match_archived": true
  },
- "verdict": "PASS",
- "blockers": []
+ "verdict": "BLOCKED",
+ "blockers": [
+  "working tree dirty at S0 time (recorded; new commits change the id)"
+ ]
 }
