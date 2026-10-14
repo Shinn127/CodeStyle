@@ -1,7 +1,7 @@
 # S0 契约核验（只读，不更新模型）
 
-- 结论：**BLOCKED**；blockers：['working tree dirty at S0 time (recorded; new commits change the id)']
-- git：`28ac8a0e8d19804acb56d4f3473dd35d21fd0b4b`（main，dirty=True）
+- 结论：**PASS**（全部条件满足）
+- git：`ef32703408c3302a18055f42d191b612412e67dd`（main，dirty=False）
 - 源 checkpoint：epoch=90（期望 90），sha256=825be6785b3e7fc2…，recipe_ok=True
 - init-ckpt 全量位级恢复：True（恢复后 state sha256=918b5e07046266f7…）
 - norm：`norm_stats.npz` sha256=bfbe62d548b525de…（显式传入，不重算）
