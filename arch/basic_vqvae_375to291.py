@@ -770,7 +770,7 @@ class BasicVQVAE375to291(nn.Module):
         if roundtrip_weight < 0.0:
             raise ValueError(f"roundtrip_weight must be >= 0, got {roundtrip_weight}")
         details = self.forward(x, return_details=True,
-                               continuous_decode=code_align_weight > 0.0 or roundtrip_weight > 0.0)
+                               continuous_decode=code_align_weight > 0.0)
         pred = details["motion_hat"]
         latent = details["latent"]
 
@@ -869,26 +869,33 @@ class BasicVQVAE375to291(nn.Module):
             if embed.dim() == 3 and embed.size(0) == 1:
                 embed = embed[0]
             z_flat = latent_bt.reshape(-1, self.code_dim)
-            # Chunked nearest/second-nearest search: [B*T*32, 2048] distance matrices otherwise
-            # dominate activation memory at batch 512.
-            idx1 = torch.empty(z_flat.size(0), dtype=torch.long, device=z_flat.device)
-            d1 = torch.empty(z_flat.size(0), device=z_flat.device)
-            d2 = torch.empty_like(d1)
-            idx2 = torch.empty_like(idx1)
-            for begin in range(0, z_flat.size(0), 8192):
-                end = min(begin + 8192, z_flat.size(0))
-                dist = torch.cdist(z_flat[begin:end].float(), embed.float())
-                d1[begin:end], idx1[begin:end] = dist.min(dim=-1)
-                # Non-inplace masking: scatter_ would bump `dist`'s version counter and break
-                # the autograd graph that cdist recorded.
-                masked = dist.masked_fill(
-                    torch.nn.functional.one_hot(idx1[begin:end], dist.size(-1)).bool(),
-                    float('inf'))
-                d2[begin:end], idx2[begin:end] = masked.min(dim=-1)
-            c1 = embed[idx1]
-            c2 = embed[idx2]
+            # Index search is non-differentiable (argmin) and only the two selected codes
+            # matter for the hinge, so the search runs under no_grad and the differentiable
+            # part is two gathers + two norms. The earlier full-cdist-with-grad version built
+            # a 32k x 2048 autograd graph per batch and cost ~30% of an epoch.
+            with torch.no_grad():
+                idx1 = torch.empty(z_flat.size(0), dtype=torch.long, device=z_flat.device)
+                idx2 = torch.empty_like(idx1)
+                embed_f = embed.float()
+                weight = -2.0 * embed_f.t()
+                bias = embed_f.square().sum(-1)
+                z_search = z_flat.detach().float()
+                for begin in range(0, z_flat.size(0), 8192):
+                    end = min(begin + 8192, z_flat.size(0))
+                    score = torch.addmm(bias[None], z_search[begin:end], weight)
+                    best = score.argmin(dim=-1)
+                    idx1[begin:end] = best
+                    # mask the winner and take the runner-up
+                    score.scatter_(1, best[:, None], float('inf'))
+                    idx2[begin:end] = score.argmin(dim=-1)
+            c1 = embed[idx1].float()
+            c2 = embed[idx2].float()
+            zf = z_flat.float()
             gap12 = (c1 - c2).norm(dim=-1).clamp_min(1e-9)
-            signed = (d2.square() - d1.square()) / (2.0 * gap12)
+            # Exact signed distance to the Voronoi boundary between the two nearest codes:
+            # (||z-c2||^2 - ||z-c1||^2) / (2 ||c1-c2||), positive on c1's side, so gradient
+            # descent pushes along the unit vector away from c2.
+            signed = ((zf - c2).square().sum(-1) - (zf - c1).square().sum(-1)) / (2.0 * gap12)
             boundary_distance = signed.mean()
             latent_margin_loss = torch.relu(float(latent_margin_target) - signed).mean()
 

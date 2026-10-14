@@ -39,12 +39,14 @@ def main():
     ap.add_argument('--frames', type=int, default=120)
     ap.add_argument('--split', default='test')
     ap.add_argument('--device', default='cuda')
+    ap.add_argument('--vq-ckpt', type=Path, default=VQ_CKPT,
+                    help='VQ checkpoint to probe (default: the frozen 150ep K=2048 baseline)')
     ap.add_argument('--out', default=str(Path(__file__).with_name('vq_anatomy.json')))
     args = ap.parse_args()
     dev = torch.device(args.device)
     torch.set_float32_matmul_precision('highest')
     torch.backends.cuda.matmul.allow_tf32 = False
-    vq = build_vqvae_from_checkpoint(VQ_CKPT).to(dev).eval()
+    vq = build_vqvae_from_checkpoint(args.vq_ckpt).to(dev).eval()
     for p in vq.parameters():
         p.requires_grad_(False)
     mean, std = load_norm_stats(NORM)
@@ -62,7 +64,8 @@ def main():
     print(f'[Info] split={args.split} clips={len(picks)} frames={args.frames} K={K} D={D}')
 
     r1s, bdists, dmags, dctrl, dcont, recon_cms = [], [], [], [], [], []
-    flips, flips_ctrl_list, ratios, per_head_flip, per_head_n = [], [], [], np.zeros(32), np.zeros(32)
+    n_heads = int(vq.num_latents)
+    flips, flips_ctrl_list, ratios, per_head_flip, per_head_n = [], [], [], np.zeros(n_heads), np.zeros(n_heads)
     switch_gts = []
     for s in picks:
         rows = np.array(data[s['frame_start']:s['frame_start'] + args.frames + 1], dtype=np.float32)
@@ -70,7 +73,7 @@ def main():
         with torch.no_grad():
             z_e = vq.encode_pre_vq(x)                    # [T,128] continuous
             z_q, idx, _ = vq.encode(x)                   # quantized path
-            idx = idx.reshape(len(x), 32)
+            idx = idx.reshape(len(x), n_heads)
             motion_hat = vq.decode(z_q)
             x2 = torch.cat((x[:, :84], motion_hat), -1)
             z_e2 = vq.encode_pre_vq(x2)
@@ -86,7 +89,7 @@ def main():
             x_ctrl = torch.cat((x[:, :84], x[:, 84:] + eps), -1)
             z_ectrl = vq.encode_pre_vq(x_ctrl)
         # per-slot geometry of the ORIGINAL encode
-        ze = z_e.reshape(-1, 32, D); c1 = z_q.reshape(-1, 32, D)
+        ze = z_e.reshape(-1, n_heads, D); c1 = z_q.reshape(-1, n_heads, D)
         r1 = (ze - c1).norm(dim=-1)                                       # [T,32]
         d2_all = torch.cdist(ze.reshape(-1, D).float(), embed)            # [T*32,K]
         own = idx.reshape(-1)
@@ -99,9 +102,9 @@ def main():
         bdist_exact = ((d2v.squeeze(1) ** 2 - d1_all.squeeze(1) ** 2) / (2 * cc.clamp_min(1e-9)))
         r1 = r1.reshape(-1); bdist_exact = bdist_exact.reshape(-1)
         # roundtrip drift and flips
-        dq = (z_e2 - z_e).reshape(-1, 32, D).norm(dim=-1).reshape(-1)
-        dc = (z_e3 - z_e).reshape(-1, 32, D).norm(dim=-1).reshape(-1)
-        dk = (z_ectrl - z_e).reshape(-1, 32, D).norm(dim=-1).reshape(-1)
+        dq = (z_e2 - z_e).reshape(-1, n_heads, D).norm(dim=-1).reshape(-1)
+        dc = (z_e3 - z_e).reshape(-1, n_heads, D).norm(dim=-1).reshape(-1)
+        dk = (z_ectrl - z_e).reshape(-1, n_heads, D).norm(dim=-1).reshape(-1)
         idx2 = (torch.cdist(z_e2.reshape(-1, D).float(), embed).argmin(-1))
         flip = (idx2 != own).float()
         d2_all = torch.cdist(z_ectrl.reshape(-1, D).float(), embed)
@@ -112,7 +115,7 @@ def main():
         dctrl.append(dk.cpu()); dcont.append(dc.cpu()); flips.append(flip.cpu())
         flips_ctrl_list.append(flip_ctrl.cpu()); recon_cms.append(float(rec_cm))
         ratios.append((dq / bdist_exact.clamp_min(1e-9)).cpu())
-        ph = flip.reshape(-1, 32).mean(0).cpu().numpy()
+        ph = flip.reshape(-1, n_heads).mean(0).cpu().numpy()
         per_head_flip += ph; per_head_n += 1
         sw = (idx[1:] != idx[:-1]).float().sum(-1).mean().item()
         switch_gts.append(sw)
