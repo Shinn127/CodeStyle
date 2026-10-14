@@ -1,0 +1,111 @@
+{
+ "stage": "C0",
+ "protocol": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_controller_recovery/C0/PROTOCOL.md",
+ "config": {
+  "seed": 42,
+  "noise_std": 1.0,
+  "frames": 241,
+  "perturb": {
+   "t0": 120,
+   "amplitude": 0.5,
+   "seed": 4242
+  },
+  "buckets": [
+   [
+    1,
+    16
+   ],
+   [
+    17,
+    32
+   ],
+   [
+    33,
+    60
+   ],
+   [
+    61,
+    120
+   ],
+   [
+    121,
+    240
+   ]
+  ],
+  "planner_schedule": [
+   [
+    60,
+    1.0,
+    0.0,
+    0.0,
+    1.2
+   ],
+   [
+    120,
+    1.0,
+    0.0,
+    0.3,
+    1.2
+   ],
+   [
+    180,
+    0.8,
+    0.2,
+    0.0,
+    1.0
+   ],
+   [
+    240,
+    1.0,
+    0.0,
+    -0.2,
+    1.2
+   ]
+  ],
+  "vq_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+  "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "controller_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf100/best.pt",
+  "controller_sha256": "adc4deb2d7da200ce6c7494b65e2e377613f32ee140216f40492779a4c2a56a9",
+  "norm_sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4"
+ },
+ "sources": [
+  323,
+  184,
+  451,
+  571,
+  0,
+  212,
+  322,
+  525,
+  82,
+  360,
+  658,
+  286
+ ],
+ "n_sources": 12,
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "git": {
+  "commit": "3ab090df559447dec82332ace3a29b84c3ba8ec4",
+  "branch": "recovery/vq-controller-2026-10-15",
+  "dirty": false,
+  "untracked_files": 3
+ },
+ "controller_state_sha256": "26dc40eb30bb93708aa81f7e619b7e9f27d230bbac6d6ad2d6945c6a869b9b98",
+ "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "state_unchanged": true,
+ "vq_checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+ "controller_checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf100/best.pt",
+ "wall_sec": 30.4,
+ "invariant_violations_total": 0,
+ "commands": [
+  "python analysis/vq_controller_recovery/C0/c0_run.py --sources 12"
+ ]
+}
