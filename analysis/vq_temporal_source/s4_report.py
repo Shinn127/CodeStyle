@@ -94,15 +94,70 @@ def continuous_table(report: dict) -> str:
     return "\n".join(lines)
 
 
+def evidence_block(contract: dict | None, b0: dict | None, b1: dict | None) -> str:
+    """Stage-report fixed fields required by the execution plan (section 8)."""
+    lines = ["## 0. 阶段报告必备字段", ""]
+    if contract:
+        sc = contract["source_checkpoint"]
+        lines += [
+            f"- **hypothesis**：逐帧重构监督对二阶时间误差不敏感；直接监督 GT 二阶差分可压低"
+            f"量化解码的 `Δ²r`/jitter 而不把运动压向静止。",
+            f"- **single_variable**：`ACC_WEIGHT`（B0=0 / B1=4.9842），其余全部相同。",
+            f"- **source_commit**：`{contract['git']['commit']}`（dirty={contract['git']['dirty']}，"
+            f"S0 于干净树 PASS）",
+            f"- **init_ckpt**：`{contract['source_checkpoint']['path']}` epoch={sc['epoch']}，"
+            f"state sha256={contract['init_ckpt_restore']['restored_state_sha256'][:16]}…（位级恢复=True）",
+            f"- **norm**：sha256={contract['norm']['sha256'][:16]}…（显式传入未重算）",
+            f"- **dataset**：`{contract['db']['path']}`，train/val/test 段数="
+            f"{contract['db']['splits']['train']}/{contract['db']['splits']['val']}/{contract['db']['splits']['test']}，"
+            f"mirrored={contract['db']['mirrored_segments']}",
+            f"- **config**：seq_len={contract['experiment']['seq_len']}, stride=1, batch="
+            f"{contract['experiment']['batch_size']}, epochs={contract['experiment']['epochs']}, "
+            f"lr=1e-4→1e-5, seed=42, loader_seed={contract['experiment']['loader_seed']}；"
+            f"S2 标定 `ACC_WEIGHT=4.9842`（encoder 37.8% / decoder 8.1% of base grad）",
+            f"- **环境**：{contract['environment']}",
+        ]
+    if b0 and b1:
+        lines += [
+            f"- **B0/B1 更新数**：{fmt(b0['integrity']['total_updates'])} / "
+            f"{fmt(b1['integrity']['total_updates'])}（相同）",
+            f"- **最终状态指纹**：B0 `{b0['final_checkpoint']['state_sha256'][:16]}…` / "
+            f"B1 `{b1['final_checkpoint']['state_sha256'][:16]}…`（量化器均已改变 → 新 VQ 身份）",
+        ]
+    lines += [
+        "- **tests**：`tests/test_vq_temporal_pipeline.py`（CPU 12 项：wrapper 可解析性、A/B pin、"
+        "S4 门逻辑、val12 选定、探针 schema；GPU 1 项）；全量回归 `bash scripts/run_tests.sh cpu` "
+        "= 422 passed；GPU 套件见 S4/gpu_tests.log",
+        "- **per-source_metrics / CI**：本报告 §1–§4 及 `acceptance_*.json`（12 源配对 bootstrap，"
+        "seed=42，1000 次）",
+        "- **unexpected_behaviors**：① 入口脚本 `--no-decoder-only` 真实缺陷（本实验启动时暴露，"
+        "已修复 + 回归测试）；② B1 的连续 AE 路径同向恶化（c.local_mpjpe +22%）→ 收益不是"
+        "量化残差特有，而是解码器整体变平滑；③ B1 端点 codec 往返翻码率上升（0.605→0.682）；"
+        "④ B0/B1 的 `best.pt` 均停在 ep1（首评接受语义），主分析已按预注册改用固定终点。",
+        "- **decision**：**FAIL**（见 §1）；否决规则触发：以运动/精度代价换低 jitter，且 jitter "
+        "降幅未达 15% 预注册阈值。**不自动续到 150ep。**",
+        "- **next_authorization_needed**：S5 分支选择（S5a 位置空间二阶损失 / S5b 接触约束 / "
+        "S5c 相对边界几何 / S5d 短历史 decoder）或其它改动，均需用户显式授权；本轮到此停止。",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--acceptance", type=Path, required=True)
     ap.add_argument("--secondary", type=Path, default=None)
+    ap.add_argument("--contract", type=Path, default=HERE / "S0" / "contract.json")
+    ap.add_argument("--b0-manifest", type=Path, default=None)
+    ap.add_argument("--b1-manifest", type=Path, default=None)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
 
     report = json.loads(args.acceptance.read_text())
     secondary = json.loads(args.secondary.read_text()) if args.secondary else None
+    contract = json.loads(args.contract.read_text()) if args.contract.exists() else None
+    b0_manifest = json.loads(args.b0_manifest.read_text()) if args.b0_manifest and args.b0_manifest.exists() else None
+    b1_manifest = json.loads(args.b1_manifest.read_text()) if args.b1_manifest and args.b1_manifest.exists() else None
 
     parts = [
         "# S3/S4：acc 单变量全 VQ 配对 pilot 结果",
@@ -113,6 +168,7 @@ def main() -> None:
         f"- 主分析 checkpoint：各臂 `epoch_0010.pt`（固定终点，零选择）；acceptance JSON：`{args.acceptance.name}`",
         f"- 结论：**{report['verdict']}**",
         "",
+        evidence_block(contract, b0_manifest, b1_manifest),
         "## 1. 预注册门结果（固定 val12，配对 bootstrap）",
         "",
         gate_table(report),

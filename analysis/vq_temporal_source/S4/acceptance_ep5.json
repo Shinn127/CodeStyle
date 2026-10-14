@@ -1,0 +1,425 @@
+{
+ "label": "ep5",
+ "b0": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B0_ep5.json",
+ "b1": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B1_ep5.json",
+ "protocol": "COMMON.md section 7 (pre-registered before B0/B1 started)",
+ "thresholds": {
+  "jitter_drop_required": 0.15,
+  "quality_regression_limit": 0.03,
+  "fs_regression_limit": 0.005,
+  "d2e_limit": 0.005,
+  "activity_drop_limit": 0.05,
+  "style_drop_limit": 0.02
+ },
+ "gates": {
+  "g1_d2r_down": {
+   "name": "d2r mean & p95 both drop (95% CI upper < 0)",
+   "result": "PASS",
+   "detail": {
+    "d2r_local_mean": {
+     "statistic": "mean",
+     "point": -0.04672771203404621,
+     "ci": [
+      -0.06591755849734271,
+      -0.0287189196621054
+     ],
+     "b0_absolute": 0.4080245345880584,
+     "b1_absolute": 0.36129682255401213,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.11452181933427741
+    },
+    "d2r_local_p95": {
+     "statistic": "mean",
+     "point": -0.1607685635808794,
+     "ci": [
+      -0.24576729229628053,
+      -0.07291807579632276
+     ],
+     "b0_absolute": 1.2925129581878727,
+     "b1_absolute": 1.1317443946069934,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.1243844888071991
+    }
+   },
+   "note": "CI including 0 counts as not confirmed for the final verdict"
+  },
+  "g2_d2e_not_up": {
+   "name": "||d2 e_q|| mean change <= +0.5%",
+   "result": "PASS",
+   "detail": {
+    "statistic": "mean",
+    "point": -0.04637972008201959,
+    "ci": [
+     -0.06625481410251789,
+     -0.027698117950725836
+    ],
+    "b0_absolute": 0.4159739333684815,
+    "b1_absolute": 0.36959421328646197,
+    "n_sources": 12,
+    "seed": 42,
+    "draws": 1000,
+    "relative_change": -0.11149669813789764
+   },
+   "note": ""
+  },
+  "g3_jitter_drop": {
+   "name": "official quantized jitter drop >= 15%",
+   "result": "FAIL",
+   "detail": {
+    "b0": 0.42976562916731637,
+    "b1": 0.38390846546290636,
+    "relative_change": -0.10670272490906174,
+    "paired": {
+     "statistic": "mean",
+     "point": -0.04585716370441,
+     "ci": [
+      -0.06425505065116563,
+      -0.02797812704278642
+     ],
+     "b0_absolute": 0.4297656291673164,
+     "b1_absolute": 0.38390846546290636,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000
+    }
+   },
+   "note": ""
+  },
+  "g4_foot_sliding": {
+   "name": "world & local FS change <= +0.5%",
+   "result": "PASS",
+   "detail": {
+    "fs_world_q": {
+     "b0": 0.4973288894562913,
+     "b1": 0.4643954879127889,
+     "relative_change": -0.06622056800180476,
+     "paired": {
+      "statistic": "mean",
+      "point": -0.033953496084657954,
+      "ci": [
+       -0.061826737812200855,
+       -0.007936364107311755
+      ],
+      "b0_absolute": 0.5572074320873229,
+      "b1_absolute": 0.523253936002665,
+      "n_sources": 12,
+      "seed": 42,
+      "draws": 1000
+     },
+     "within_limit": true
+    },
+    "fs_local_q": {
+     "b0": 0.2878892510495287,
+     "b1": 0.25139884460479656,
+     "relative_change": -0.1267515418227766,
+     "paired": {
+      "statistic": "mean",
+      "point": -0.07882416756930523,
+      "ci": [
+       -0.169889485194316,
+       -0.008824226347839137
+      ],
+      "b0_absolute": 0.5352911509243404,
+      "b1_absolute": 0.45646698335503527,
+      "n_sources": 12,
+      "seed": 42,
+      "draws": 1000
+     },
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "g5_quality": {
+   "name": "MPJPE/local/rootADE regression <= 3%",
+   "result": "FAIL",
+   "detail": {
+    "mpjpe_q": {
+     "b0": 1.485020044640295,
+     "b1": 1.6711170907629205,
+     "relative_change": 0.1253161846496842,
+     "within_limit": false
+    },
+    "local_mpjpe_q": {
+     "b0": 1.1035205880999943,
+     "b1": 1.298132394860108,
+     "relative_change": 0.17635539278446077,
+     "within_limit": false
+    },
+    "root_ade_q": {
+     "b0": 0.6594596841775353,
+     "b1": 0.7425562067793748,
+     "relative_change": 0.12600697903993296,
+     "within_limit": false
+    }
+   },
+   "note": ""
+  },
+  "g6_activity": {
+   "name": "activity proxies drop <= 5%",
+   "result": "FAIL",
+   "detail": {
+    "activity_q.moving_frame_fraction": {
+     "b0": 0.49583333333333335,
+     "b1": 0.4680555555555556,
+     "relative_change": -0.056022408963585346,
+     "within_limit": false
+    },
+    "activity_q.strong_moving_frame_fraction": {
+     "b0": 0.075,
+     "b1": 0.06180555555555556,
+     "relative_change": -0.17592592592592582,
+     "within_limit": false
+    },
+    "activity_q.pose_step_mean_cm": {
+     "b0": 0.5417340983729002,
+     "b1": 0.5188755244564918,
+     "relative_change": -0.042195191303379675,
+     "within_limit": true
+    },
+    "activity_q.leg_travel_cm": {
+     "b0": 166.20430905425798,
+     "b1": 162.15485962781693,
+     "relative_change": -0.024364286639037003,
+     "within_limit": true
+    },
+    "activity_q.toe_height_range_cm": {
+     "b0": 5.224751467506091,
+     "b1": 5.097832356890042,
+     "relative_change": -0.024291894342800324,
+     "within_limit": true
+    },
+    "activity_q.foot_lift_fraction": {
+     "b0": 0.14084022038567492,
+     "b1": 0.14049586776859505,
+     "relative_change": -0.0024449877750610804,
+     "within_limit": true
+    },
+    "activity_q.toe_speed_mean_cm_per_frame": {
+     "b0": 1.4896534993971908,
+     "b1": 1.4587372570195685,
+     "relative_change": -0.020753982312083363,
+     "within_limit": true
+    },
+    "contact.pred_contact_coverage": {
+     "b0": 0.12361111111111112,
+     "b1": 0.1298611111111111,
+     "relative_change": 0.05056179775280878,
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "g7_style": {
+   "name": "style proxy accuracy drop <= 2%",
+   "result": "PASS",
+   "detail": {
+    "b0": 0.9222222222222223,
+    "b1": 0.9222222222222223,
+    "change": 0.0,
+    "paired": {
+     "statistic": "mean",
+     "point": 0.0,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "b0_absolute": 0.9222222222222223,
+     "b1_absolute": 0.9222222222222223,
+     "n_sources": 90,
+     "seed": 42,
+     "draws": 1000
+    }
+   },
+   "note": ""
+  }
+ },
+ "pairs": {
+  "d2r_local_mean": {
+   "statistic": "mean",
+   "point": -0.04672771203404621,
+   "ci": [
+    -0.06591755849734271,
+    -0.0287189196621054
+   ],
+   "b0_absolute": 0.4080245345880584,
+   "b1_absolute": 0.36129682255401213,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.11452181933427741
+  },
+  "d2r_local_p95": {
+   "statistic": "mean",
+   "point": -0.1607685635808794,
+   "ci": [
+    -0.24576729229628053,
+    -0.07291807579632276
+   ],
+   "b0_absolute": 1.2925129581878727,
+   "b1_absolute": 1.1317443946069934,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.1243844888071991
+  },
+  "d2e_local_mean": {
+   "statistic": "mean",
+   "point": -0.04637972008201959,
+   "ci": [
+    -0.06625481410251789,
+    -0.027698117950725836
+   ],
+   "b0_absolute": 0.4159739333684815,
+   "b1_absolute": 0.36959421328646197,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "jitter_quant_local": {
+   "statistic": "mean",
+   "point": -0.04585716370441,
+   "ci": [
+    -0.06425505065116563,
+    -0.02797812704278642
+   ],
+   "b0_absolute": 0.4297656291673164,
+   "b1_absolute": 0.38390846546290636,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "fs_world_q": {
+   "statistic": "mean",
+   "point": -0.033953496084657954,
+   "ci": [
+    -0.061826737812200855,
+    -0.007936364107311755
+   ],
+   "b0_absolute": 0.5572074320873229,
+   "b1_absolute": 0.523253936002665,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "fs_local_q": {
+   "statistic": "mean",
+   "point": -0.07882416756930523,
+   "ci": [
+    -0.169889485194316,
+    -0.008824226347839137
+   ],
+   "b0_absolute": 0.5352911509243404,
+   "b1_absolute": 0.45646698335503527,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "style_correct": {
+   "statistic": "mean",
+   "point": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "b0_absolute": 0.9222222222222223,
+   "b1_absolute": 0.9222222222222223,
+   "n_sources": 90,
+   "seed": 42,
+   "draws": 1000
+  }
+ },
+ "continuous_contrast": {
+  "jitter": {
+   "b0": 0.1232395946812563,
+   "b1": 0.12603125184857877,
+   "relative_change": 0.022652274819166207
+  },
+  "fs_world": {
+   "b0": 0.2088092505107827,
+   "b1": 0.23738989820599635,
+   "relative_change": 0.13687443264750265
+  },
+  "fs_local": {
+   "b0": 0.12364277814296966,
+   "b1": 0.1275123029630235,
+   "relative_change": 0.03129600352055695
+  },
+  "mpjpe": {
+   "b0": 1.4768042165933124,
+   "b1": 1.5964852115011083,
+   "relative_change": 0.08104052897673575
+  },
+  "local_mpjpe": {
+   "b0": 1.0545267474148101,
+   "b1": 1.2534881410902572,
+   "relative_change": 0.1886736340858155
+  },
+  "root_ade": {
+   "b0": 0.7215114533080214,
+   "b1": 0.7061516601520464,
+   "relative_change": -0.021288356665098762
+  }
+ },
+ "gt_reference": {
+  "jitter": 0.09173414108354727,
+  "fs_world": 0.09066741367638935
+ },
+ "group_breakdown": {
+  "run": {
+   "n": 4,
+   "d2r_local": {
+    "b0": 0.5065957464330741,
+    "b1": 0.4506531632416216
+   },
+   "jitter_q": {
+    "b0": 0.5465923063561362,
+    "b1": 0.48870265116544664
+   }
+  },
+  "walk": {
+   "n": 5,
+   "d2r_local": {
+    "b0": 0.40206817828439173,
+    "b1": 0.35504640253536157
+   },
+   "jitter_q": {
+    "b0": 0.41903183026140145,
+    "b1": 0.37590706021178005
+   }
+  },
+  "turn": {
+   "n": 2,
+   "d2r_local": {
+    "b0": 0.3868968299417641,
+    "b1": 0.33587890009646015
+   },
+   "jitter_q": {
+    "b0": 0.3950595374868697,
+    "b1": 0.34359039178415507
+   }
+  },
+  "idle": {
+   "n": 1,
+   "d2r_local": {
+    "b0": 0.08577687801891618,
+    "b1": 0.08595940481193091
+   },
+   "jitter_q": {
+    "b0": 0.0855400983025046,
+    "b1": 0.0853748962658794
+   }
+  }
+ },
+ "manifest_checks": null,
+ "verdict": "FAIL",
+ "verdict_note": "PASS = every registered gate met and d2r CIs exclude 0 below; FAIL = confirmed reversal or registered veto; INCONCLUSIVE = budget-limited/no separation"
+}

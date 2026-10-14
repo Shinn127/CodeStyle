@@ -1,0 +1,273 @@
+{
+ "arm": "B1",
+ "run_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep",
+ "log": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S3/B1.log",
+ "git": {
+  "commit": "a138cf0eb3c9890a9bb4ccb02b4997292d40953f",
+  "branch": "main",
+  "dirty": true,
+  "untracked_files": 6
+ },
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "contract": {
+  "pinned": {
+   "seq_len": 8,
+   "stride": 1,
+   "batch_size": 512,
+   "epochs": 10,
+   "eval_every": 1,
+   "save_every": 5,
+   "lr": 0.0001,
+   "min_lr": 1e-05,
+   "seed": 42,
+   "loader_generator_seed": 4242,
+   "recon_weight": 3.0,
+   "vq_weight": 1.0,
+   "vel_weight": 15.0,
+   "root_weight": 3.0,
+   "code_align_weight": 2.0,
+   "latent_l1_weight": 0.01,
+   "latent_vel_weight": 0.1,
+   "latent_margin_weight": 0.0,
+   "roundtrip_weight": 0.0,
+   "teacher_align_weight": 0.0,
+   "decoder_only": false,
+   "amp_dtype": "fp32",
+   "tf32": false,
+   "matmul_precision": "highest"
+  },
+  "acc_weight_expected": 4.9842,
+  "acc_weight_actual": 4.9842
+ },
+ "init_checkpoint": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+  "sha256": "825be6785b3e7fc258c196f49b70b3874af792c6aaf4a2912a5bdd5765a9962c",
+  "state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c"
+ },
+ "final_checkpoint": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B1_ep90seq8_10ep/epoch_0010.pt",
+  "sha256": "bd90bd706e0aef8a03100893f239f619d690b88d38cfe7455f3762afc445657a",
+  "epoch": 10,
+  "state_sha256": "ea111ea2ff2c79d7a31590cd00c49f20e12b35e54ad12fe15e6f9fc378d4b831"
+ },
+ "state_change": {
+  "shared_tensor_count": 52,
+  "tensors_changed": 51,
+  "quantizer_changed": true
+ },
+ "dataset": {
+  "db_sha256": "6d308e18f05285e604aad4e7011019b8ff966a30f2d46da8649fa8068272697d",
+  "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+  "norm_fingerprint": "a7e1628d637acc71",
+  "split_sha256": "c3987af0f1c91568b24756e6c8f24f69833995236d33bc0a89b67b772e540dd0"
+ },
+ "norm_stats": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "sha256": "bfbe62d548b525deab6f1410b03b0ed9fd4fae501c25ecf1e292f979e70e96d4"
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "time_sec": 251.31131839752197,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.641025185585022,
+   "train_acc": 0.027332713827490807,
+   "dead_codes_reset": 0.002323330147191882,
+   "perplexity": 1102.19873046875,
+   "eval": {
+    "mpjpe_cm": 1.4432841750721872,
+    "local_mpjpe_cm": 1.2692330796041607,
+    "jitter_cm": 0.4173718397035757,
+    "foot_sliding_cm": 0.1846204525993799,
+    "root_ade_cm": 0.4485351539099658,
+    "codebook_usage": 0.9638671875
+   },
+   "best_gate": true
+  },
+  {
+   "epoch": 2,
+   "time_sec": 250.76789236068726,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6486169099807739,
+   "train_acc": 0.02722523920238018,
+   "dead_codes_reset": 0.007550823036581278,
+   "perplexity": 971.3128051757812,
+   "eval": {
+    "mpjpe_cm": 1.4190820369014034,
+    "local_mpjpe_cm": 1.2691792551676433,
+    "jitter_cm": 0.42499555798478206,
+    "foot_sliding_cm": 0.17731094362036262,
+    "root_ade_cm": 0.41234057082070247,
+    "codebook_usage": 0.953125
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 3,
+   "time_sec": 250.85344529151917,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6469104886054993,
+   "train_acc": 0.026863573119044304,
+   "dead_codes_reset": 0.011616650968790054,
+   "perplexity": 932.0448608398438,
+   "eval": {
+    "mpjpe_cm": 1.4150857647554373,
+    "local_mpjpe_cm": 1.2819644226262599,
+    "jitter_cm": 0.4082169188393487,
+    "foot_sliding_cm": 0.18003759060608862,
+    "root_ade_cm": 0.4225482232482345,
+    "codebook_usage": 0.9482421875
+   },
+   "best_gate": true
+  },
+  {
+   "epoch": 4,
+   "time_sec": 250.77780961990356,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.648284375667572,
+   "train_acc": 0.026788316667079926,
+   "dead_codes_reset": 0.01471442449837923,
+   "perplexity": 889.9403076171875,
+   "eval": {
+    "mpjpe_cm": 1.3986848176555868,
+    "local_mpjpe_cm": 1.258009379822531,
+    "jitter_cm": 0.3990355057125652,
+    "foot_sliding_cm": 0.18479721391770448,
+    "root_ade_cm": 0.42675452576743234,
+    "codebook_usage": 0.95166015625
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 5,
+   "time_sec": 250.80624890327454,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6457501649856567,
+   "train_acc": 0.026643328368663788,
+   "dead_codes_reset": 0.013165537267923355,
+   "perplexity": 870.7860717773438,
+   "eval": {
+    "mpjpe_cm": 1.4407773142685125,
+    "local_mpjpe_cm": 1.2992137649912894,
+    "jitter_cm": 0.40825703022276,
+    "foot_sliding_cm": 0.19270512427125966,
+    "root_ade_cm": 0.4270887436248638,
+    "codebook_usage": 0.9462890625
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 6,
+   "time_sec": 250.80279922485352,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6504371762275696,
+   "train_acc": 0.026732536032795906,
+   "dead_codes_reset": 0.013359148055315018,
+   "perplexity": 840.9208984375,
+   "eval": {
+    "mpjpe_cm": 1.4152465655479902,
+    "local_mpjpe_cm": 1.2796556364459757,
+    "jitter_cm": 0.3984423251292106,
+    "foot_sliding_cm": 0.1892979913693892,
+    "root_ade_cm": 0.4309463624601011,
+    "codebook_usage": 0.9462890625
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 7,
+   "time_sec": 250.8766508102417,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6499279141426086,
+   "train_acc": 0.026696674525737762,
+   "dead_codes_reset": 0.01277831569314003,
+   "perplexity": 814.1082153320312,
+   "eval": {
+    "mpjpe_cm": 1.448651498394248,
+    "local_mpjpe_cm": 1.3341691141952703,
+    "jitter_cm": 0.4003032956848047,
+    "foot_sliding_cm": 0.1796421503164864,
+    "root_ade_cm": 0.41655659905186404,
+    "codebook_usage": 0.943359375
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 8,
+   "time_sec": 250.81246185302734,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6482152342796326,
+   "train_acc": 0.026649683713912964,
+   "dead_codes_reset": 0.01277831569314003,
+   "perplexity": 812.2313842773438,
+   "eval": {
+    "mpjpe_cm": 1.4226240087438513,
+    "local_mpjpe_cm": 1.3070296040287723,
+    "jitter_cm": 0.4079930229966516,
+    "foot_sliding_cm": 0.20862204011649718,
+    "root_ade_cm": 0.40448109172008656,
+    "codebook_usage": 0.94580078125
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 9,
+   "time_sec": 250.78931331634521,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6536151170730591,
+   "train_acc": 0.0268079936504364,
+   "dead_codes_reset": 0.013359148055315018,
+   "perplexity": 774.7374877929688,
+   "eval": {
+    "mpjpe_cm": 1.4699343405829535,
+    "local_mpjpe_cm": 1.34136683381634,
+    "jitter_cm": 0.40340365130325845,
+    "foot_sliding_cm": 0.18185888669664674,
+    "root_ade_cm": 0.41942355544478804,
+    "codebook_usage": 0.94140625
+   },
+   "best_gate": false
+  },
+  {
+   "epoch": 10,
+   "time_sec": 250.78718519210815,
+   "num_updates": 5165.0,
+   "num_samples": 2644480.0,
+   "train_loss": 0.6562394499778748,
+   "train_acc": 0.026896974071860313,
+   "dead_codes_reset": 0.01200387254357338,
+   "perplexity": 752.472412109375,
+   "eval": {
+    "mpjpe_cm": 1.475579310287664,
+    "local_mpjpe_cm": 1.3547309456342533,
+    "jitter_cm": 0.4025384560703166,
+    "foot_sliding_cm": 0.184468340231848,
+    "root_ade_cm": 0.4195997456268028,
+    "codebook_usage": 0.9423828125
+   },
+   "best_gate": false
+  }
+ ],
+ "integrity": {
+  "epochs_recorded": 10,
+  "total_updates": 51650.0,
+  "final_epoch": 10
+ }
+}

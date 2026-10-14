@@ -1,94 +1,211 @@
-[Run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\,jitter\,foot_sliding\,root_ade --best-min-delta 0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-decoder-only --no-compile --use-rotation-trick --kmeans-init --lr 1e-4 --min-lr 1e-5 --seed 42 --save-every 5
-usage: train_basic_vqvae_375to291.py [-h] [--db DB] [--out-dir OUT_DIR]
-                                     [--resume RESUME] [--reset-optimizer]
-                                     [--seq-len SEQ_LEN] [--stride STRIDE]
-                                     [--enforce-same-label]
-                                     [--no-enforce-same-label]
-                                     [--val-ratio VAL_RATIO]
-                                     [--test-ratio TEST_RATIO]
-                                     [--batch-size BATCH_SIZE]
-                                     [--num-workers NUM_WORKERS]
-                                     [--persistent-workers]
-                                     [--no-persistent-workers]
-                                     [--prefetch-factor PREFETCH_FACTOR]
-                                     [--pin-memory] [--no-pin-memory]
-                                     [--load-into-memory] [--normalize]
-                                     [--no-normalize]
-                                     [--split-mode {auto,precomputed,clip,none}]
-                                     [--norm-stats NORM_STATS]
-                                     [--norm-eps NORM_EPS]
-                                     [--max-windows-for-stats MAX_WINDOWS_FOR_STATS]
-                                     [--stats-windows-chunk-size STATS_WINDOWS_CHUNK_SIZE]
-                                     [--train-fraction TRAIN_FRACTION]
-                                     [--val-fraction VAL_FRACTION]
-                                     [--test-fraction TEST_FRACTION]
-                                     [--subset-seed SUBSET_SEED]
-                                     [--epochs EPOCHS] [--lr LR]
-                                     [--min-lr MIN_LR]
-                                     [--weight-decay WEIGHT_DECAY]
-                                     [--beta1 BETA1] [--beta2 BETA2]
-                                     [--grad-accum-steps GRAD_ACCUM_STEPS]
-                                     [--grad-clip GRAD_CLIP]
-                                     [--eval-every EVAL_EVERY]
-                                     [--eval-metric {mpjpe,local_mpjpe,jitter,mpjpe_jitter,loss,none}]
-                                     [--best-metrics BEST_METRICS]
-                                     [--best-min-delta BEST_MIN_DELTA]
-                                     [--eval-clips EVAL_CLIPS]
-                                     [--eval-window-frames EVAL_WINDOW_FRAMES]
-                                     [--eval-windows-per-clip EVAL_WINDOWS_PER_CLIP]
-                                     [--eval-min-frames EVAL_MIN_FRAMES]
-                                     [--eval-clip-seed EVAL_CLIP_SEED]
-                                     [--eval-batch-windows EVAL_BATCH_WINDOWS]
-                                     [--amp] [--no-amp]
-                                     [--amp-dtype {auto,fp16,bf16,fp32}]
-                                     [--tf32] [--no-tf32] [--cudnn-benchmark]
-                                     [--no-cudnn-benchmark]
-                                     [--matmul-precision {highest,high,medium}]
-                                     [--fused-adamw] [--no-fused-adamw]
-                                     [--compile] [--no-compile]
-                                     [--compile-mode {default,reduce-overhead,max-autotune}]
-                                     [--compile-fullgraph] [--seed SEED]
-                                     [--loader-generator-seed LOADER_GENERATOR_SEED]
-                                     [--device DEVICE] [--input-dim INPUT_DIM]
-                                     [--traj-dim TRAJ_DIM]
-                                     [--motion-dim MOTION_DIM]
-                                     [--input-mode {traj_motion,motion_only}]
-                                     [--encoder-arch {mlp,skip_mlp,skip_cat_mlp}]
-                                     [--decoder-arch {mlp,skip_mlp,skip_cat_mlp}]
-                                     [--hidden-dim HIDDEN_DIM]
-                                     [--encoder-layers ENCODER_LAYERS]
-                                     [--decoder-hidden-dim DECODER_HIDDEN_DIM]
-                                     [--decoder-layers DECODER_LAYERS]
-                                     [--num-latents NUM_LATENTS]
-                                     [--code-dim CODE_DIM]
-                                     [--num-embeddings NUM_EMBEDDINGS]
-                                     [--commitment-cost COMMITMENT_COST]
-                                     [--use-rotation-trick]
-                                     [--no-use-rotation-trick]
-                                     [--ema-decay EMA_DECAY]
-                                     [--ema-eps EMA_EPS] [--kmeans-init]
-                                     [--no-kmeans-init]
-                                     [--kmeans-iters KMEANS_ITERS]
-                                     [--dead-code-threshold DEAD_CODE_THRESHOLD]
-                                     [--recon-type {l1,mse,smooth_l1}]
-                                     [--temporal-loss-type {l1,mse,smooth_l1}]
-                                     [--recon-weight RECON_WEIGHT]
-                                     [--vq-weight VQ_WEIGHT]
-                                     [--code-align-weight CODE_ALIGN_WEIGHT]
-                                     [--latent-margin-weight LATENT_MARGIN_WEIGHT]
-                                     [--latent-margin-target LATENT_MARGIN_TARGET]
-                                     [--latent-margin-mode {nearest_boundary,nearest_code}]
-                                     [--roundtrip-weight ROUNDTRIP_WEIGHT]
-                                     [--decoder-only]
-                                     [--teacher-ckpt TEACHER_CKPT]
-                                     [--teacher-align-weight TEACHER_ALIGN_WEIGHT]
-                                     [--vel-weight VEL_WEIGHT]
-                                     [--acc-weight ACC_WEIGHT]
-                                     [--latent-l1-weight LATENT_L1_WEIGHT]
-                                     [--latent-vel-weight LATENT_VEL_WEIGHT]
-                                     [--root-weight ROOT_WEIGHT]
-                                     [--init-ckpt INIT_CKPT]
-                                     [--save-every SAVE_EVERY]
-                                     [--val-every VAL_EVERY]
-                                     [--log-interval LOG_INTERVAL]
-train_basic_vqvae_375to291.py: error: unrecognized arguments: --no-decoder-only
+[Run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/training/train_basic_vqvae_375to291.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --out-dir /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep --device cuda --split-mode auto --input-mode traj_motion --encoder-arch skip_cat_mlp --decoder-arch skip_cat_mlp --encoder-layers 6 --decoder-layers 6 --epochs 10 --batch-size 512 --seq-len 8 --stride 1 --amp-dtype fp32 --matmul-precision highest --compile-mode max-autotune --recon-weight 3.0 --vq-weight 1.0 --vel-weight 15.0 --acc-weight 0 --latent-l1-weight 0.01 --latent-vel-weight 0.1 --root-weight 3.0 --code-align-weight 2.0 --latent-margin-weight 0.0 --latent-margin-target 0.05 --latent-margin-mode nearest_boundary --roundtrip-weight 0.0 --num-embeddings 2048 --teacher-align-weight 0.0 --eval-every 1 --eval-metric mpjpe --best-metrics mpjpe\,jitter\,foot_sliding\,root_ade --best-min-delta 0 --eval-clips 90 --eval-window-frames 60 --dead-code-threshold 2 --kmeans-iters 10 --loader-generator-seed 4242 --no-tf32 --norm-stats /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz --init-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt --no-compile --use-rotation-trick --kmeans-init --lr 1e-4 --min-lr 1e-5 --seed 42 --save-every 5
+[Info] model           : BasicVQVAE375to291[traj_motion;skip_cat_mlp->skip_cat_mlp]
+[Info] db              : /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror
+[Info] out_dir         : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep
+[Info] device          : cuda
+[Info] amp             : False (fp32)
+[Info] input mode      : traj_motion
+[Info] encoder arch    : skip_cat_mlp
+[Info] decoder arch    : skip_cat_mlp
+[Info] backend         : tf32=False cudnn_benchmark=True matmul_precision=highest
+[Info] seq_len         : 8
+[Info] loss weights    : recon=3.0 vq=1.0 vel=15.0 acc=0.0 root=3.0 z_l1=0.01 z_vel=0.1
+
+[Info] codebook        : num_latents=32 code_dim=4 num_embeddings=2048 ema=True
+[Info] rot trick       : True
+[Info] k-means init    : True (iters=10)
+[Info] dead code reset : threshold=2 (EMA assignments per batch)
+[Info] grad accum      : 1
+[Info] split ratio     : val=0.1 test=0.1
+[Info] data fraction   : train=1.0 val=1.0 test=1.0
+[Info] val every       : 1
+[Info] db size         : 4.95 GB
+[Tip] if RAM is sufficient, add --load-into-memory for faster training throughput (needs about 7.0 GB memory for X + overhead).
+[Info] split_mode=precomputed using /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror/segments.json (strategy=suffix_balanced_rotation_per_style); val_ratio/test_ratio/seed are ignored
+[Info] normalization stats loaded from /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz
+[Info] normalization over 2644949 train windows: fingerprint=a7e1628d637acc71
+[Info] train samples   : 2644949 -> 2644949
+[Info] val samples     : 440724 -> 440724
+[Info] test samples    : 443482 -> 443482
+[Info] test loader     : prepared (reserved for later evaluation)
+[Info] normalize       : True
+[Info] split mode      : auto (segments.json#suffix_balanced_rotation_per_style)
+[Info] norm fingerprint: a7e1628d637acc71
+[Info] norm stats      : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep/norm_stats.npz
+[Info] init from       : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt (full state)
+[Info] optimizer       : AdamW(fused=True)
+[Info] eval            : every 1 epochs, primary metric=mpjpe, 90 fixed val windows of 60 frames (5,400 frames total)
+[Info] best gate       : save best.pt only when ALL of mpjpe, jitter, foot_sliding, root_ade improve (min_delta=0.0)
+
+[Epoch 1/10] lr=0.00010000
+[train] epoch 1/10 step 500/5165 loss=0.480170 recon=0.048470 vq=0.001086 vel=0.019142 acc=0.000000 root=0.012908 z_l1=0.233908 align=0.000631 talign=0.000000 z_gap=0.004344 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.042183 ppl=1176.511 dead_reset=0 updates=500 10842.9 samples/s time=23.6s
+[train] epoch 1/10 step 1000/5165 loss=0.500857 recon=0.050464 vq=0.001132 vel=0.020067 acc=0.000000 root=0.013064 z_l1=0.236094 align=0.000668 talign=0.000000 z_gap=0.004527 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044467 ppl=1166.120 dead_reset=0 updates=1000 11025.6 samples/s time=46.4s
+[train] epoch 1/10 step 1500/5165 loss=0.500165 recon=0.050474 vq=0.001078 vel=0.020041 acc=0.000000 root=0.012944 z_l1=0.241754 align=0.000676 talign=0.000000 z_gap=0.004312 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044454 ppl=1162.934 dead_reset=0 updates=1500 11120.6 samples/s time=69.1s
+[train] epoch 1/10 step 2000/5165 loss=0.501890 recon=0.050751 vq=0.001066 vel=0.020050 acc=0.000000 root=0.013156 z_l1=0.243772 align=0.000658 talign=0.000000 z_gap=0.004264 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045946 ppl=1139.245 dead_reset=0 updates=2000 10929.9 samples/s time=93.7s
+[train] epoch 1/10 step 2500/5165 loss=0.486764 recon=0.049983 vq=0.001094 vel=0.019204 acc=0.000000 root=0.013286 z_l1=0.233790 align=0.000623 talign=0.000000 z_gap=0.004377 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.042231 ppl=1087.057 dead_reset=0 updates=2500 10811.5 samples/s time=118.4s
+[train] epoch 1/10 step 3000/5165 loss=0.498724 recon=0.050643 vq=0.001100 vel=0.019895 acc=0.000000 root=0.013082 z_l1=0.236169 align=0.000666 talign=0.000000 z_gap=0.004400 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043362 ppl=1079.223 dead_reset=0 updates=3000 10721.0 samples/s time=143.3s
+[train] epoch 1/10 step 3500/5165 loss=0.487731 recon=0.048988 vq=0.001372 vel=0.019379 acc=0.000000 root=0.013591 z_l1=0.232233 align=0.000646 talign=0.000000 z_gap=0.005489 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043214 ppl=1046.698 dead_reset=0 updates=3500 10648.7 samples/s time=168.3s
+[train] epoch 1/10 step 4000/5165 loss=0.494094 recon=0.049283 vq=0.000907 vel=0.019864 acc=0.000000 root=0.013131 z_l1=0.234510 align=0.000633 talign=0.000000 z_gap=0.003629 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043747 ppl=1061.047 dead_reset=0 updates=4000 10605.1 samples/s time=193.1s
+[train] epoch 1/10 step 4500/5165 loss=0.506616 recon=0.051112 vq=0.000975 vel=0.020264 acc=0.000000 root=0.013427 z_l1=0.235745 align=0.000653 talign=0.000000 z_gap=0.003900 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044001 ppl=1047.590 dead_reset=0 updates=4500 10584.7 samples/s time=217.7s
+[train] epoch 1/10 step 5000/5165 loss=0.495899 recon=0.050420 vq=0.001060 vel=0.019716 acc=0.000000 root=0.013241 z_l1=0.239377 align=0.000675 talign=0.000000 z_gap=0.004240 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043717 ppl=1017.250 dead_reset=0 updates=5000 10564.0 samples/s time=242.3s
+[train] epoch 1/10 step 5165/5165 loss=0.492167 recon=0.049210 vq=0.000949 vel=0.019714 acc=0.000000 root=0.013270 z_l1=0.241124 align=0.000617 talign=0.000000 z_gap=0.003795 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044283 ppl=1021.874 dead_reset=0 updates=5165 10559.1 samples/s time=250.4s
+[Eval  1/10] MPJPE=1.2389 cm  poseMPJPE=1.0990 cm  Jitter=0.4391 cm  F.S.=0.2087 cm  rootADE=0.3681 cm  codebook_usage=96.39%  clips=90  frames=5,400
+[Gate  1/10] accept: first evaluation (no reference checkpoint yet)
+[Epoch 1] train_loss=0.495127 train_recon=0.050102 train_vq=0.001095 train_vel=0.019761 train_acc=0.000000 train_root=0.013049 train_z_l1=0.238272 train_z_vel=0.044250 train_ppl=1110.685 | val_loss=0.664521 val_recon=0.080302 val_vq=0.000000 val_vel=0.024071 val_acc=0.000000 val_z_l1=0.264316 val_z_vel=0.044828 val_ppl=744.353 | eval_mpjpe=1.2389 eval_pose_mpjpe=1.0990 eval_jitter=0.4391 eval_fs=0.2087 eval_root_ade=0.3681 eval_cb_usage=96.39% | best_by=mpjpe(1.2389) | gate=accept | time=280.3s
+[Info] saved best checkpoint (metric=1.238947)
+
+[Epoch 2/10] lr=0.00009780
+[train] epoch 2/10 step 500/5165 loss=0.495968 recon=0.049844 vq=0.000875 vel=0.019913 acc=0.000000 root=0.012955 z_l1=0.236366 align=0.000604 talign=0.000000 z_gap=0.003499 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044250 ppl=1002.522 dead_reset=0 updates=500 10197.5 samples/s time=25.1s
+[train] epoch 2/10 step 1000/5165 loss=0.503735 recon=0.050951 vq=0.000960 vel=0.020112 acc=0.000000 root=0.013340 z_l1=0.240125 align=0.000628 talign=0.000000 z_gap=0.003842 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045607 ppl=994.315 dead_reset=0 updates=1000 10177.2 samples/s time=50.3s
+[train] epoch 2/10 step 1500/5165 loss=0.481565 recon=0.049431 vq=0.000994 vel=0.019056 acc=0.000000 root=0.012919 z_l1=0.232840 align=0.000616 talign=0.000000 z_gap=0.003974 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.041141 ppl=946.190 dead_reset=0 updates=1500 10220.4 samples/s time=75.1s
+[train] epoch 2/10 step 2000/5165 loss=0.497246 recon=0.050108 vq=0.000989 vel=0.019862 acc=0.000000 root=0.013283 z_l1=0.241962 align=0.000630 talign=0.000000 z_gap=0.003957 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044800 ppl=980.519 dead_reset=0 updates=2000 10299.0 samples/s time=99.4s
+[train] epoch 2/10 step 2500/5165 loss=0.523150 recon=0.052852 vq=0.001495 vel=0.020970 acc=0.000000 root=0.013231 z_l1=0.253761 align=0.000757 talign=0.000000 z_gap=0.005979 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.048042 ppl=1019.378 dead_reset=0 updates=2500 10359.0 samples/s time=123.6s
+[train] epoch 2/10 step 3000/5165 loss=0.495303 recon=0.050373 vq=0.000877 vel=0.019757 acc=0.000000 root=0.013057 z_l1=0.234413 align=0.000618 talign=0.000000 z_gap=0.003509 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.041974 ppl=963.678 dead_reset=0 updates=3000 10384.6 samples/s time=147.9s
+[train] epoch 2/10 step 3500/5165 loss=0.500026 recon=0.050254 vq=0.000862 vel=0.020057 acc=0.000000 root=0.013164 z_l1=0.236339 align=0.000624 talign=0.000000 z_gap=0.003448 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044438 ppl=945.994 dead_reset=0 updates=3500 10411.2 samples/s time=172.1s
+[train] epoch 2/10 step 4000/5165 loss=0.504157 recon=0.051397 vq=0.000993 vel=0.020062 acc=0.000000 root=0.013224 z_l1=0.242167 align=0.000700 talign=0.000000 z_gap=0.003973 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045501 ppl=972.495 dead_reset=0 updates=4000 10427.5 samples/s time=196.4s
+[train] epoch 2/10 step 4500/5165 loss=0.509118 recon=0.051397 vq=0.001013 vel=0.020331 acc=0.000000 root=0.013507 z_l1=0.248382 align=0.000668 talign=0.000000 z_gap=0.004052 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046065 ppl=983.057 dead_reset=0 updates=4500 10432.1 samples/s time=220.9s
+[train] epoch 2/10 step 5000/5165 loss=0.509257 recon=0.051365 vq=0.000984 vel=0.020314 acc=0.000000 root=0.013691 z_l1=0.246192 align=0.000682 talign=0.000000 z_gap=0.003936 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045639 ppl=952.975 dead_reset=0 updates=5000 10437.9 samples/s time=245.3s
+[train] epoch 2/10 step 5165/5165 loss=0.503221 recon=0.050893 vq=0.001021 vel=0.020138 acc=0.000000 root=0.013117 z_l1=0.239078 align=0.000666 talign=0.000000 z_gap=0.004084 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043769 ppl=930.919 dead_reset=0 updates=5165 10435.9 samples/s time=253.4s
+[Eval  2/10] MPJPE=1.2746 cm  poseMPJPE=1.1181 cm  Jitter=0.4425 cm  F.S.=0.1941 cm  rootADE=0.4044 cm  codebook_usage=95.07%  clips=90  frames=5,400
+[Gate  2/10] reject, best.pt kept: mpjpe 1.2389->1.2746, jitter 0.4391->0.4425, root_ade 0.3681->0.4044
+[Epoch 2] train_loss=0.501920 train_recon=0.050643 train_vq=0.000993 train_vel=0.020062 train_acc=0.000000 train_root=0.013288 train_z_l1=0.239713 train_z_vel=0.044602 train_ppl=975.874 | val_loss=0.667817 val_recon=0.080698 val_vq=0.000000 val_vel=0.024217 val_acc=0.000000 val_z_l1=0.265216 val_z_vel=0.045030 val_ppl=701.057 | eval_mpjpe=1.2746 eval_pose_mpjpe=1.1181 eval_jitter=0.4425 eval_fs=0.1941 eval_root_ade=0.4044 eval_cb_usage=95.07% | gate=reject | time=283.1s
+
+[Epoch 3/10] lr=0.00009141
+[train] epoch 3/10 step 500/5165 loss=0.497366 recon=0.050145 vq=0.000994 vel=0.019874 acc=0.000000 root=0.013260 z_l1=0.237435 align=0.000664 talign=0.000000 z_gap=0.003975 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043381 ppl=930.620 dead_reset=0 updates=500 10437.7 samples/s time=24.5s
+[train] epoch 3/10 step 1000/5165 loss=0.510071 recon=0.050988 vq=0.000990 vel=0.020444 acc=0.000000 root=0.013582 z_l1=0.238495 align=0.000945 talign=0.000000 z_gap=0.003958 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044398 ppl=940.533 dead_reset=0 updates=1000 10438.6 samples/s time=49.0s
+[train] epoch 3/10 step 1500/5165 loss=0.504648 recon=0.050122 vq=0.000928 vel=0.020304 acc=0.000000 root=0.013490 z_l1=0.240459 align=0.000629 talign=0.000000 z_gap=0.003711 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046573 ppl=957.127 dead_reset=0 updates=1500 10435.9 samples/s time=73.6s
+[train] epoch 3/10 step 2000/5165 loss=0.499679 recon=0.050570 vq=0.000961 vel=0.019876 acc=0.000000 root=0.013576 z_l1=0.241798 align=0.000646 talign=0.000000 z_gap=0.003845 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044238 ppl=926.975 dead_reset=0 updates=2000 10421.3 samples/s time=98.3s
+[train] epoch 3/10 step 2500/5165 loss=0.497542 recon=0.049610 vq=0.001055 vel=0.019910 acc=0.000000 root=0.013628 z_l1=0.236237 align=0.000638 talign=0.000000 z_gap=0.004222 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044910 ppl=920.816 dead_reset=0 updates=2500 10392.6 samples/s time=123.2s
+[train] epoch 3/10 step 3000/5165 loss=0.506927 recon=0.051038 vq=0.001005 vel=0.020261 acc=0.000000 root=0.013556 z_l1=0.239741 align=0.000673 talign=0.000000 z_gap=0.004019 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044844 ppl=922.144 dead_reset=0 updates=3000 10398.6 samples/s time=147.7s
+[train] epoch 3/10 step 3500/5165 loss=0.498198 recon=0.050124 vq=0.000885 vel=0.019882 acc=0.000000 root=0.013512 z_l1=0.239503 align=0.000632 talign=0.000000 z_gap=0.003541 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045112 ppl=939.745 dead_reset=0 updates=3500 10390.4 samples/s time=172.5s
+[train] epoch 3/10 step 4000/5165 loss=0.502458 recon=0.050396 vq=0.001284 vel=0.020035 acc=0.000000 root=0.013789 z_l1=0.238500 align=0.000649 talign=0.000000 z_gap=0.005135 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044178 ppl=920.280 dead_reset=0 updates=4000 10393.7 samples/s time=197.0s
+[train] epoch 3/10 step 4500/5165 loss=0.500561 recon=0.050977 vq=0.000868 vel=0.019858 acc=0.000000 root=0.013627 z_l1=0.240048 align=0.000629 talign=0.000000 z_gap=0.003474 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043562 ppl=910.903 dead_reset=0 updates=4500 10404.1 samples/s time=221.5s
+[train] epoch 3/10 step 5000/5165 loss=0.516081 recon=0.051886 vq=0.000935 vel=0.020729 acc=0.000000 root=0.013395 z_l1=0.243898 align=0.000663 talign=0.000000 z_gap=0.003740 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046004 ppl=950.359 dead_reset=0 updates=5000 10409.8 samples/s time=245.9s
+[train] epoch 3/10 step 5165/5165 loss=0.511271 recon=0.051849 vq=0.000956 vel=0.020380 acc=0.000000 root=0.013611 z_l1=0.243255 align=0.000642 talign=0.000000 z_gap=0.003825 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045239 ppl=940.653 dead_reset=0 updates=5165 10408.2 samples/s time=254.1s
+[Eval  3/10] MPJPE=1.2684 cm  poseMPJPE=1.1261 cm  Jitter=0.4560 cm  F.S.=0.1879 cm  rootADE=0.3765 cm  codebook_usage=95.46%  clips=90  frames=5,400
+[Gate  3/10] reject, best.pt kept: mpjpe 1.2389->1.2684, jitter 0.4391->0.4560, root_ade 0.3681->0.3765
+[Epoch 3] train_loss=0.504383 train_recon=0.050808 train_vq=0.000987 train_vel=0.020160 train_acc=0.000000 train_root=0.013448 train_z_l1=0.240229 train_z_vel=0.044742 train_ppl=938.635 | val_loss=0.670490 val_recon=0.081091 val_vq=0.000000 val_vel=0.024308 val_acc=0.000000 val_z_l1=0.265646 val_z_vel=0.045044 val_ppl=692.544 | eval_mpjpe=1.2684 eval_pose_mpjpe=1.1261 eval_jitter=0.4560 eval_fs=0.1879 eval_root_ade=0.3765 eval_cb_usage=95.46% | gate=reject | time=283.8s
+
+[Epoch 4/10] lr=0.00008145
+[train] epoch 4/10 step 500/5165 loss=0.513088 recon=0.051409 vq=0.001027 vel=0.020561 acc=0.000000 root=0.013670 z_l1=0.246179 align=0.000692 talign=0.000000 z_gap=0.004109 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045722 ppl=935.698 dead_reset=0 updates=500 10468.7 samples/s time=24.5s
+[train] epoch 4/10 step 1000/5165 loss=0.499967 recon=0.050356 vq=0.000936 vel=0.020024 acc=0.000000 root=0.013153 z_l1=0.241140 align=0.000627 talign=0.000000 z_gap=0.003743 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044829 ppl=919.890 dead_reset=0 updates=1000 10463.7 samples/s time=48.9s
+[train] epoch 4/10 step 1500/5165 loss=0.516151 recon=0.051664 vq=0.001006 vel=0.020737 acc=0.000000 root=0.013530 z_l1=0.242202 align=0.000747 talign=0.000000 z_gap=0.004024 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045919 ppl=932.766 dead_reset=0 updates=1500 10462.1 samples/s time=73.4s
+[train] epoch 4/10 step 2000/5165 loss=0.511975 recon=0.051555 vq=0.000958 vel=0.020500 acc=0.000000 root=0.013559 z_l1=0.238235 align=0.000653 talign=0.000000 z_gap=0.003834 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044854 ppl=911.124 dead_reset=0 updates=2000 10446.2 samples/s time=98.0s
+[train] epoch 4/10 step 2500/5165 loss=0.526332 recon=0.052834 vq=0.001120 vel=0.021119 acc=0.000000 root=0.013700 z_l1=0.252941 align=0.000730 talign=0.000000 z_gap=0.004482 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.048375 ppl=930.847 dead_reset=0 updates=2500 10452.3 samples/s time=122.5s
+[train] epoch 4/10 step 3000/5165 loss=0.485681 recon=0.049494 vq=0.000856 vel=0.019259 acc=0.000000 root=0.013241 z_l1=0.232437 align=0.000592 talign=0.000000 z_gap=0.003423 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.042252 ppl=854.932 dead_reset=0 updates=3000 10461.2 samples/s time=146.8s
+[train] epoch 4/10 step 3500/5165 loss=0.507199 recon=0.051186 vq=0.001098 vel=0.020236 acc=0.000000 root=0.013567 z_l1=0.242894 align=0.000677 talign=0.000000 z_gap=0.004391 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045118 ppl=897.265 dead_reset=0 updates=3500 10439.1 samples/s time=171.7s
+[train] epoch 4/10 step 4000/5165 loss=0.519241 recon=0.052498 vq=0.000906 vel=0.020781 acc=0.000000 root=0.013563 z_l1=0.244174 align=0.000665 talign=0.000000 z_gap=0.003623 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046724 ppl=910.082 dead_reset=0 updates=4000 10452.9 samples/s time=195.9s
+[train] epoch 4/10 step 4500/5165 loss=0.498469 recon=0.050654 vq=0.000923 vel=0.019802 acc=0.000000 root=0.013513 z_l1=0.236366 align=0.000614 talign=0.000000 z_gap=0.003692 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044229 ppl=869.693 dead_reset=0 updates=4500 10461.9 samples/s time=220.2s
+[train] epoch 4/10 step 5000/5165 loss=0.502175 recon=0.050303 vq=0.000875 vel=0.020091 acc=0.000000 root=0.013626 z_l1=0.240357 align=0.000629 talign=0.000000 z_gap=0.003501 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044805 ppl=879.870 dead_reset=0 updates=5000 10461.0 samples/s time=244.7s
+[train] epoch 4/10 step 5165/5165 loss=0.513468 recon=0.052462 vq=0.000922 vel=0.020493 acc=0.000000 root=0.013163 z_l1=0.237636 align=0.000689 talign=0.000000 z_gap=0.003688 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045137 ppl=892.700 dead_reset=0 updates=5165 10460.9 samples/s time=252.8s
+[Eval  4/10] MPJPE=1.4095 cm  poseMPJPE=1.2310 cm  Jitter=0.4629 cm  F.S.=0.2135 cm  rootADE=0.4375 cm  codebook_usage=94.82%  clips=90  frames=5,400
+[Gate  4/10] reject, best.pt kept: mpjpe 1.2389->1.4095, jitter 0.4391->0.4629, foot_sliding 0.2087->0.2135, root_ade 0.3681->0.4375
+[Warn] best.pt has not been replaced for 3 consecutive evaluations (blocked by mpjpe, jitter, foot_sliding, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 4] train_loss=0.506334 train_recon=0.051006 train_vq=0.000975 train_vel=0.020240 train_acc=0.000000 train_root=0.013501 train_z_l1=0.239925 train_z_vel=0.044795 train_ppl=895.716 | val_loss=0.678048 val_recon=0.081722 val_vq=0.000000 val_vel=0.024573 val_acc=0.000000 val_z_l1=0.266376 val_z_vel=0.045412 val_ppl=669.159 | eval_mpjpe=1.4095 eval_pose_mpjpe=1.2310 eval_jitter=0.4629 eval_fs=0.2135 eval_root_ade=0.4375 eval_cb_usage=94.82% | gate=reject | time=280.6s
+
+[Epoch 5/10] lr=0.00006891
+[train] epoch 5/10 step 500/5165 loss=0.512561 recon=0.051538 vq=0.000937 vel=0.020539 acc=0.000000 root=0.013522 z_l1=0.243972 align=0.000666 talign=0.000000 z_gap=0.003747 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045836 ppl=888.769 dead_reset=0 updates=500 10469.3 samples/s time=24.5s
+[train] epoch 5/10 step 1000/5165 loss=0.526135 recon=0.052524 vq=0.001024 vel=0.021123 acc=0.000000 root=0.013759 z_l1=0.242895 align=0.001223 talign=0.000000 z_gap=0.004095 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045467 ppl=893.092 dead_reset=0 updates=1000 10505.4 samples/s time=48.7s
+[train] epoch 5/10 step 1500/5165 loss=0.498364 recon=0.049940 vq=0.000909 vel=0.020037 acc=0.000000 root=0.013023 z_l1=0.228844 align=0.000652 talign=0.000000 z_gap=0.003637 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044200 ppl=868.043 dead_reset=0 updates=1500 10521.1 samples/s time=73.0s
+[train] epoch 5/10 step 2000/5165 loss=0.500183 recon=0.050625 vq=0.000845 vel=0.019941 acc=0.000000 root=0.013475 z_l1=0.236188 align=0.000609 talign=0.000000 z_gap=0.003381 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043522 ppl=868.775 dead_reset=0 updates=2000 10530.1 samples/s time=97.2s
+[train] epoch 5/10 step 2500/5165 loss=0.513716 recon=0.051837 vq=0.001346 vel=0.020538 acc=0.000000 root=0.013470 z_l1=0.246321 align=0.000712 talign=0.000000 z_gap=0.005383 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044944 ppl=899.298 dead_reset=0 updates=2500 10517.1 samples/s time=121.7s
+[train] epoch 5/10 step 3000/5165 loss=0.503654 recon=0.050459 vq=0.000903 vel=0.020243 acc=0.000000 root=0.013217 z_l1=0.235267 align=0.000647 talign=0.000000 z_gap=0.003613 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044367 ppl=857.112 dead_reset=0 updates=3000 10528.5 samples/s time=145.9s
+[train] epoch 5/10 step 3500/5165 loss=0.506154 recon=0.051071 vq=0.000919 vel=0.020246 acc=0.000000 root=0.013372 z_l1=0.241710 align=0.000642 talign=0.000000 z_gap=0.003676 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045149 ppl=873.530 dead_reset=0 updates=3500 10523.0 samples/s time=170.3s
+[train] epoch 5/10 step 4000/5165 loss=0.499182 recon=0.050424 vq=0.000899 vel=0.020013 acc=0.000000 root=0.012931 z_l1=0.238416 align=0.000643 talign=0.000000 z_gap=0.003594 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043495 ppl=850.837 dead_reset=0 updates=4000 10515.1 samples/s time=194.8s
+[train] epoch 5/10 step 4500/5165 loss=0.509288 recon=0.051504 vq=0.000919 vel=0.020381 acc=0.000000 root=0.013240 z_l1=0.243302 align=0.000693 talign=0.000000 z_gap=0.003678 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045977 ppl=878.398 dead_reset=0 updates=4500 10512.3 samples/s time=219.2s
+[train] epoch 5/10 step 5000/5165 loss=0.515548 recon=0.051374 vq=0.000878 vel=0.020803 acc=0.000000 root=0.013380 z_l1=0.243001 align=0.000657 talign=0.000000 z_gap=0.003510 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046139 ppl=910.197 dead_reset=0 updates=5000 10503.9 samples/s time=243.7s
+[train] epoch 5/10 step 5165/5165 loss=0.505449 recon=0.051033 vq=0.000837 vel=0.020301 acc=0.000000 root=0.012959 z_l1=0.237218 align=0.000664 talign=0.000000 z_gap=0.003348 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044207 ppl=859.249 dead_reset=0 updates=5165 10494.8 samples/s time=252.0s
+[Eval  5/10] MPJPE=1.3185 cm  poseMPJPE=1.1685 cm  Jitter=0.4495 cm  F.S.=0.2058 cm  rootADE=0.4223 cm  codebook_usage=95.26%  clips=90  frames=5,400
+[Gate  5/10] reject, best.pt kept: mpjpe 1.2389->1.3185, jitter 0.4391->0.4495, root_ade 0.3681->0.4223
+[Warn] best.pt has not been replaced for 4 consecutive evaluations (blocked by mpjpe, jitter, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 5] train_loss=0.507423 train_recon=0.051064 train_vq=0.000960 train_vel=0.020333 train_acc=0.000000 train_root=0.013345 train_z_l1=0.239473 train_z_vel=0.044933 train_ppl=872.877 | val_loss=0.677892 val_recon=0.081859 val_vq=0.000000 val_vel=0.024616 val_acc=0.000000 val_z_l1=0.267069 val_z_vel=0.045516 val_ppl=657.265 | eval_mpjpe=1.3185 eval_pose_mpjpe=1.1685 eval_jitter=0.4495 eval_fs=0.2058 eval_root_ade=0.4223 eval_cb_usage=95.26% | gate=reject | time=281.7s
+
+[Epoch 6/10] lr=0.00005500
+[train] epoch 6/10 step 500/5165 loss=0.505272 recon=0.050766 vq=0.000901 vel=0.020323 acc=0.000000 root=0.012989 z_l1=0.243083 align=0.000652 talign=0.000000 z_gap=0.003603 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045215 ppl=867.966 dead_reset=0 updates=500 10411.5 samples/s time=24.6s
+[train] epoch 6/10 step 1000/5165 loss=0.492207 recon=0.049215 vq=0.000764 vel=0.019740 acc=0.000000 root=0.013020 z_l1=0.229588 align=0.001054 talign=0.000000 z_gap=0.003056 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.042307 ppl=828.494 dead_reset=0 updates=1000 10430.1 samples/s time=49.1s
+[train] epoch 6/10 step 1500/5165 loss=0.501148 recon=0.050984 vq=0.000928 vel=0.020061 acc=0.000000 root=0.012766 z_l1=0.235730 align=0.000683 talign=0.000000 z_gap=0.003714 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043393 ppl=824.678 dead_reset=0 updates=1500 10427.3 samples/s time=73.7s
+[train] epoch 6/10 step 2000/5165 loss=0.507635 recon=0.051005 vq=0.000876 vel=0.020391 acc=0.000000 root=0.013232 z_l1=0.238296 align=0.000609 talign=0.000000 z_gap=0.003505 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045772 ppl=851.517 dead_reset=0 updates=2000 10433.5 samples/s time=98.1s
+[train] epoch 6/10 step 2500/5165 loss=0.520269 recon=0.052499 vq=0.000924 vel=0.020936 acc=0.000000 root=0.013085 z_l1=0.248240 align=0.000686 talign=0.000000 z_gap=0.003697 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046972 ppl=884.567 dead_reset=0 updates=2500 10447.3 samples/s time=122.5s
+[train] epoch 6/10 step 3000/5165 loss=0.507874 recon=0.050536 vq=0.001011 vel=0.020487 acc=0.000000 root=0.013204 z_l1=0.242280 align=0.000670 talign=0.000000 z_gap=0.004043 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045786 ppl=860.433 dead_reset=0 updates=3000 10447.4 samples/s time=147.0s
+[train] epoch 6/10 step 3500/5165 loss=0.509467 recon=0.051206 vq=0.000969 vel=0.020552 acc=0.000000 root=0.012734 z_l1=0.244149 align=0.000690 talign=0.000000 z_gap=0.003875 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045814 ppl=845.176 dead_reset=0 updates=3500 10448.8 samples/s time=171.5s
+[train] epoch 6/10 step 4000/5165 loss=0.505891 recon=0.050923 vq=0.001167 vel=0.020313 acc=0.000000 root=0.012772 z_l1=0.241340 align=0.000972 talign=0.000000 z_gap=0.004666 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045855 ppl=858.576 dead_reset=0 updates=4000 10448.9 samples/s time=196.0s
+[train] epoch 6/10 step 4500/5165 loss=0.522050 recon=0.054403 vq=0.000872 vel=0.020650 acc=0.000000 root=0.012891 z_l1=0.239126 align=0.001361 talign=0.000000 z_gap=0.003489 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044325 ppl=841.949 dead_reset=0 updates=4500 10426.6 samples/s time=221.0s
+[train] epoch 6/10 step 5000/5165 loss=0.510135 recon=0.050873 vq=0.000909 vel=0.020552 acc=0.000000 root=0.013259 z_l1=0.246364 align=0.000762 talign=0.000000 z_gap=0.003637 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045677 ppl=848.794 dead_reset=0 updates=5000 10428.2 samples/s time=245.5s
+[train] epoch 6/10 step 5165/5165 loss=0.501845 recon=0.050986 vq=0.000888 vel=0.020012 acc=0.000000 root=0.013084 z_l1=0.237107 align=0.000889 talign=0.000000 z_gap=0.003553 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044116 ppl=811.843 dead_reset=0 updates=5165 10425.7 samples/s time=253.6s
+[Eval  6/10] MPJPE=1.3405 cm  poseMPJPE=1.1963 cm  Jitter=0.4441 cm  F.S.=0.1997 cm  rootADE=0.4170 cm  codebook_usage=95.02%  clips=90  frames=5,400
+[Gate  6/10] reject, best.pt kept: mpjpe 1.2389->1.3405, jitter 0.4391->0.4441, root_ade 0.3681->0.4170
+[Warn] best.pt has not been replaced for 5 consecutive evaluations (blocked by mpjpe, jitter, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 6] train_loss=0.507442 train_recon=0.051127 train_vq=0.000949 train_vel=0.020373 train_acc=0.000000 train_root=0.013034 train_z_l1=0.241233 train_z_vel=0.045117 train_ppl=854.504 | val_loss=0.678012 val_recon=0.082020 val_vq=0.000000 val_vel=0.024646 val_acc=0.000000 val_z_l1=0.267913 val_z_vel=0.045471 val_ppl=640.761 | eval_mpjpe=1.3405 eval_pose_mpjpe=1.1963 eval_jitter=0.4441 eval_fs=0.1997 eval_root_ade=0.4170 eval_cb_usage=95.02% | gate=reject | time=283.3s
+
+[Epoch 7/10] lr=0.00004109
+[train] epoch 7/10 step 500/5165 loss=0.504187 recon=0.050771 vq=0.000995 vel=0.020217 acc=0.000000 root=0.013161 z_l1=0.240114 align=0.000663 talign=0.000000 z_gap=0.003981 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044099 ppl=828.281 dead_reset=0 updates=500 10284.2 samples/s time=24.9s
+[train] epoch 7/10 step 1000/5165 loss=0.512897 recon=0.051205 vq=0.000995 vel=0.020652 acc=0.000000 root=0.013325 z_l1=0.243631 align=0.000684 talign=0.000000 z_gap=0.003982 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.047201 ppl=823.010 dead_reset=0 updates=1000 10327.1 samples/s time=49.6s
+[train] epoch 7/10 step 1500/5165 loss=0.508472 recon=0.051018 vq=0.000907 vel=0.020444 acc=0.000000 root=0.013240 z_l1=0.234825 align=0.000668 talign=0.000000 z_gap=0.003627 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044454 ppl=818.709 dead_reset=0 updates=1500 10372.0 samples/s time=74.0s
+[train] epoch 7/10 step 2000/5165 loss=0.506720 recon=0.050722 vq=0.000894 vel=0.020394 acc=0.000000 root=0.013157 z_l1=0.240506 align=0.000649 talign=0.000000 z_gap=0.003575 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045720 ppl=819.826 dead_reset=0 updates=2000 10536.1 samples/s time=97.2s
+[train] epoch 7/10 step 2500/5165 loss=0.519741 recon=0.052107 vq=0.000913 vel=0.020881 acc=0.000000 root=0.013471 z_l1=0.252517 align=0.000817 talign=0.000000 z_gap=0.003652 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.047194 ppl=863.904 dead_reset=0 updates=2500 10725.8 samples/s time=119.3s
+[train] epoch 7/10 step 3000/5165 loss=0.516101 recon=0.052105 vq=0.001049 vel=0.020627 acc=0.000000 root=0.013633 z_l1=0.247770 align=0.000688 talign=0.000000 z_gap=0.004197 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045841 ppl=837.922 dead_reset=0 updates=3000 10855.5 samples/s time=141.5s
+[train] epoch 7/10 step 3500/5165 loss=0.526400 recon=0.052521 vq=0.000884 vel=0.021264 acc=0.000000 root=0.013451 z_l1=0.246670 align=0.000692 talign=0.000000 z_gap=0.003536 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.047946 ppl=865.253 dead_reset=0 updates=3500 10813.5 samples/s time=165.7s
+[train] epoch 7/10 step 4000/5165 loss=0.507287 recon=0.050658 vq=0.000977 vel=0.020410 acc=0.000000 root=0.013269 z_l1=0.240594 align=0.000733 talign=0.000000 z_gap=0.003910 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044996 ppl=822.461 dead_reset=0 updates=4000 10767.0 samples/s time=190.2s
+[train] epoch 7/10 step 4500/5165 loss=0.503232 recon=0.049870 vq=0.000840 vel=0.020317 acc=0.000000 root=0.013209 z_l1=0.237376 align=0.000697 talign=0.000000 z_gap=0.003358 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046316 ppl=832.645 dead_reset=0 updates=4500 10736.0 samples/s time=214.6s
+[train] epoch 7/10 step 5000/5165 loss=0.514324 recon=0.051767 vq=0.000929 vel=0.020619 acc=0.000000 root=0.013512 z_l1=0.242023 align=0.000663 talign=0.000000 z_gap=0.003717 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045298 ppl=848.289 dead_reset=0 updates=5000 10712.4 samples/s time=239.0s
+[train] epoch 7/10 step 5165/5165 loss=0.516945 recon=0.051662 vq=0.000974 vel=0.020847 acc=0.000000 root=0.013275 z_l1=0.242240 align=0.000677 talign=0.000000 z_gap=0.003897 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046774 ppl=869.707 dead_reset=0 updates=5165 10700.6 samples/s time=247.1s
+[Eval  7/10] MPJPE=1.3116 cm  poseMPJPE=1.1701 cm  Jitter=0.4590 cm  F.S.=0.2200 cm  rootADE=0.4074 cm  codebook_usage=94.63%  clips=90  frames=5,400
+[Gate  7/10] reject, best.pt kept: mpjpe 1.2389->1.3116, jitter 0.4391->0.4590, foot_sliding 0.2087->0.2200, root_ade 0.3681->0.4074
+[Warn] best.pt has not been replaced for 6 consecutive evaluations (blocked by mpjpe, jitter, foot_sliding, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 7] train_loss=0.508328 train_recon=0.050907 train_vq=0.000938 train_vel=0.020431 train_acc=0.000000 train_root=0.013310 train_z_l1=0.239283 train_z_vel=0.045054 train_ppl=822.922 | val_loss=0.679616 val_recon=0.081814 val_vq=0.000000 val_vel=0.024672 val_acc=0.000000 val_z_l1=0.264762 val_z_vel=0.045428 val_ppl=640.677 | eval_mpjpe=1.3116 eval_pose_mpjpe=1.1701 eval_jitter=0.4590 eval_fs=0.2200 eval_root_ade=0.4074 eval_cb_usage=94.63% | gate=reject | time=276.8s
+
+[Epoch 8/10] lr=0.00002855
+[train] epoch 8/10 step 500/5165 loss=0.514140 recon=0.051555 vq=0.000949 vel=0.020733 acc=0.000000 root=0.013023 z_l1=0.241345 align=0.000690 talign=0.000000 z_gap=0.003796 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.046712 ppl=841.044 dead_reset=0 updates=500 10445.8 samples/s time=24.5s
+[train] epoch 8/10 step 1000/5165 loss=0.503102 recon=0.050353 vq=0.000975 vel=0.020188 acc=0.000000 root=0.013355 z_l1=0.239316 align=0.000685 talign=0.000000 z_gap=0.003902 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044209 ppl=841.289 dead_reset=0 updates=1000 10464.1 samples/s time=48.9s
+[train] epoch 8/10 step 1500/5165 loss=0.503411 recon=0.050732 vq=0.000903 vel=0.020193 acc=0.000000 root=0.013061 z_l1=0.241127 align=0.000677 talign=0.000000 z_gap=0.003612 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044731 ppl=824.389 dead_reset=0 updates=1500 10477.6 samples/s time=73.3s
+[train] epoch 8/10 step 2000/5165 loss=0.514998 recon=0.051497 vq=0.000903 vel=0.020785 acc=0.000000 root=0.013192 z_l1=0.236132 align=0.000673 talign=0.000000 z_gap=0.003610 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045484 ppl=815.078 dead_reset=0 updates=2000 10477.3 samples/s time=97.7s
+[train] epoch 8/10 step 2500/5165 loss=0.501771 recon=0.050113 vq=0.000954 vel=0.020165 acc=0.000000 root=0.013284 z_l1=0.234901 align=0.000662 talign=0.000000 z_gap=0.003816 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044724 ppl=805.707 dead_reset=0 updates=2500 10476.1 samples/s time=122.2s
+[train] epoch 8/10 step 3000/5165 loss=0.550463 recon=0.054619 vq=0.001056 vel=0.022381 acc=0.000000 root=0.013562 z_l1=0.259015 align=0.000811 talign=0.000000 z_gap=0.004224 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.049297 ppl=867.692 dead_reset=0 updates=3000 10473.2 samples/s time=146.7s
+[train] epoch 8/10 step 3500/5165 loss=0.490410 recon=0.049572 vq=0.000740 vel=0.019661 acc=0.000000 root=0.012794 z_l1=0.220900 align=0.000624 talign=0.000000 z_gap=0.002962 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.041983 ppl=802.573 dead_reset=0 updates=3500 10473.2 samples/s time=171.1s
+[train] epoch 8/10 step 4000/5165 loss=0.500076 recon=0.050175 vq=0.000848 vel=0.020088 acc=0.000000 root=0.013127 z_l1=0.233170 align=0.000646 talign=0.000000 z_gap=0.003391 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043823 ppl=823.188 dead_reset=0 updates=4000 10471.3 samples/s time=195.6s
+[train] epoch 8/10 step 4500/5165 loss=0.502327 recon=0.049906 vq=0.000891 vel=0.020332 acc=0.000000 root=0.012888 z_l1=0.236432 align=0.000656 talign=0.000000 z_gap=0.003563 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043987 ppl=822.346 dead_reset=0 updates=4500 10470.2 samples/s time=220.1s
+[train] epoch 8/10 step 5000/5165 loss=0.505994 recon=0.050592 vq=0.000829 vel=0.020361 acc=0.000000 root=0.013264 z_l1=0.233664 align=0.000675 talign=0.000000 z_gap=0.003315 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044955 ppl=825.214 dead_reset=0 updates=5000 10469.2 samples/s time=244.5s
+[train] epoch 8/10 step 5165/5165 loss=0.497169 recon=0.048936 vq=0.000804 vel=0.020164 acc=0.000000 root=0.013048 z_l1=0.227161 align=0.000662 talign=0.000000 z_gap=0.003214 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043639 ppl=797.887 dead_reset=0 updates=5165 10466.5 samples/s time=252.7s
+[Eval  8/10] MPJPE=1.3590 cm  poseMPJPE=1.1975 cm  Jitter=0.4522 cm  F.S.=0.2036 cm  rootADE=0.4062 cm  codebook_usage=94.92%  clips=90  frames=5,400
+[Gate  8/10] reject, best.pt kept: mpjpe 1.2389->1.3590, jitter 0.4391->0.4522, root_ade 0.3681->0.4062
+[Warn] best.pt has not been replaced for 7 consecutive evaluations (blocked by mpjpe, jitter, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 8] train_loss=0.506681 train_recon=0.050821 train_vq=0.000912 train_vel=0.020382 train_acc=0.000000 train_root=0.013124 train_z_l1=0.236429 train_z_vel=0.044712 train_ppl=824.681 | val_loss=0.685669 val_recon=0.082303 val_vq=0.000000 val_vel=0.024929 val_acc=0.000000 val_z_l1=0.261617 val_z_vel=0.044991 val_ppl=626.291 | eval_mpjpe=1.3590 eval_pose_mpjpe=1.1975 eval_jitter=0.4522 eval_fs=0.2036 eval_root_ade=0.4062 eval_cb_usage=94.92% | gate=reject | time=282.3s
+
+[Epoch 9/10] lr=0.00001859
+[train] epoch 9/10 step 500/5165 loss=0.500776 recon=0.050498 vq=0.000932 vel=0.020085 acc=0.000000 root=0.013120 z_l1=0.225294 align=0.000646 talign=0.000000 z_gap=0.003726 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.041686 ppl=778.511 dead_reset=0 updates=500 10362.0 samples/s time=24.7s
+[train] epoch 9/10 step 1000/5165 loss=0.501076 recon=0.050205 vq=0.001176 vel=0.020141 acc=0.000000 root=0.013082 z_l1=0.232289 align=0.000639 talign=0.000000 z_gap=0.004702 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043153 ppl=780.609 dead_reset=0 updates=1000 10454.1 samples/s time=49.0s
+[train] epoch 9/10 step 1500/5165 loss=0.492918 recon=0.049379 vq=0.000825 vel=0.019824 acc=0.000000 root=0.012883 z_l1=0.232789 align=0.000598 talign=0.000000 z_gap=0.003299 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044277 ppl=782.450 dead_reset=0 updates=1500 10508.7 samples/s time=73.1s
+[train] epoch 9/10 step 2000/5165 loss=0.505872 recon=0.050131 vq=0.001008 vel=0.020423 acc=0.000000 root=0.013326 z_l1=0.231877 align=0.000662 talign=0.000000 z_gap=0.004030 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045092 ppl=804.371 dead_reset=0 updates=2000 10540.1 samples/s time=97.2s
+[train] epoch 9/10 step 2500/5165 loss=0.514493 recon=0.051094 vq=0.000970 vel=0.020745 acc=0.000000 root=0.013598 z_l1=0.234638 align=0.000716 talign=0.000000 z_gap=0.003879 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044876 ppl=803.473 dead_reset=0 updates=2500 10556.4 samples/s time=121.3s
+[train] epoch 9/10 step 3000/5165 loss=0.503815 recon=0.050465 vq=0.000848 vel=0.020250 acc=0.000000 root=0.013296 z_l1=0.229291 align=0.000663 talign=0.000000 z_gap=0.003392 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043227 ppl=775.468 dead_reset=0 updates=3000 10568.8 samples/s time=145.3s
+[train] epoch 9/10 step 3500/5165 loss=0.516141 recon=0.051321 vq=0.000887 vel=0.020873 acc=0.000000 root=0.013306 z_l1=0.231626 align=0.000705 talign=0.000000 z_gap=0.003547 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045465 ppl=802.929 dead_reset=0 updates=3500 10566.5 samples/s time=169.6s
+[train] epoch 9/10 step 4000/5165 loss=0.517332 recon=0.052313 vq=0.000900 vel=0.020715 acc=0.000000 root=0.013508 z_l1=0.237552 align=0.000681 talign=0.000000 z_gap=0.003601 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045036 ppl=819.567 dead_reset=0 updates=4000 10564.7 samples/s time=193.9s
+[train] epoch 9/10 step 4500/5165 loss=0.506379 recon=0.050996 vq=0.000765 vel=0.020390 acc=0.000000 root=0.012931 z_l1=0.224427 align=0.000762 talign=0.000000 z_gap=0.003062 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.042178 ppl=789.949 dead_reset=0 updates=4500 10570.9 samples/s time=218.0s
+[train] epoch 9/10 step 5000/5165 loss=0.504616 recon=0.050210 vq=0.000872 vel=0.020352 acc=0.000000 root=0.013222 z_l1=0.233490 align=0.000683 talign=0.000000 z_gap=0.003489 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044736 ppl=809.519 dead_reset=0 updates=5000 10576.4 samples/s time=242.0s
+[train] epoch 9/10 step 5165/5165 loss=0.513210 recon=0.051548 vq=0.000873 vel=0.020547 acc=0.000000 root=0.013808 z_l1=0.232585 align=0.000668 talign=0.000000 z_gap=0.003492 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044036 ppl=809.881 dead_reset=0 updates=5165 10574.9 samples/s time=250.1s
+[Eval  9/10] MPJPE=1.3753 cm  poseMPJPE=1.2196 cm  Jitter=0.4550 cm  F.S.=0.2071 cm  rootADE=0.4075 cm  codebook_usage=94.53%  clips=90  frames=5,400
+[Gate  9/10] reject, best.pt kept: mpjpe 1.2389->1.3753, jitter 0.4391->0.4550, root_ade 0.3681->0.4075
+[Warn] best.pt has not been replaced for 8 consecutive evaluations (blocked by mpjpe, jitter, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 9] train_loss=0.509212 train_recon=0.050913 train_vq=0.000900 train_vel=0.020510 train_acc=0.000000 train_root=0.013263 train_z_l1=0.232941 train_z_vel=0.044320 train_ppl=800.076 | val_loss=0.686263 val_recon=0.082319 val_vq=0.000000 val_vel=0.024954 val_acc=0.000000 val_z_l1=0.259636 val_z_vel=0.044755 val_ppl=621.537 | eval_mpjpe=1.3753 eval_pose_mpjpe=1.2196 eval_jitter=0.4550 eval_fs=0.2071 eval_root_ade=0.4075 eval_cb_usage=94.53% | gate=reject | time=279.3s
+
+[Epoch 10/10] lr=0.00001220
+[train] epoch 10/10 step 500/5165 loss=0.515824 recon=0.050900 vq=0.000907 vel=0.020862 acc=0.000000 root=0.013663 z_l1=0.237401 align=0.000710 talign=0.000000 z_gap=0.003627 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045043 ppl=826.117 dead_reset=0 updates=500 10683.1 samples/s time=24.0s
+[train] epoch 10/10 step 1000/5165 loss=0.496065 recon=0.050323 vq=0.000794 vel=0.019817 acc=0.000000 root=0.013121 z_l1=0.222727 align=0.000669 talign=0.000000 z_gap=0.003176 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.041098 ppl=746.890 dead_reset=0 updates=1000 10653.1 samples/s time=48.1s
+[train] epoch 10/10 step 1500/5165 loss=0.498013 recon=0.050206 vq=0.000912 vel=0.019921 acc=0.000000 root=0.013199 z_l1=0.231157 align=0.000680 talign=0.000000 z_gap=0.003648 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043923 ppl=770.770 dead_reset=0 updates=1500 10653.3 samples/s time=72.1s
+[train] epoch 10/10 step 2000/5165 loss=0.513355 recon=0.051232 vq=0.000867 vel=0.020681 acc=0.000000 root=0.013494 z_l1=0.231183 align=0.000663 talign=0.000000 z_gap=0.003468 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044610 ppl=778.766 dead_reset=0 updates=2000 10647.2 samples/s time=96.2s
+[train] epoch 10/10 step 2500/5165 loss=0.509480 recon=0.051073 vq=0.000904 vel=0.020465 acc=0.000000 root=0.013411 z_l1=0.234599 align=0.000648 talign=0.000000 z_gap=0.003618 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045015 ppl=786.754 dead_reset=0 updates=2500 10847.8 samples/s time=118.0s
+[train] epoch 10/10 step 3000/5165 loss=0.514644 recon=0.051660 vq=0.000902 vel=0.020676 acc=0.000000 root=0.013472 z_l1=0.235747 align=0.000682 talign=0.000000 z_gap=0.003607 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044883 ppl=798.186 dead_reset=0 updates=3000 10997.8 samples/s time=139.7s
+[train] epoch 10/10 step 3500/5165 loss=0.500721 recon=0.050338 vq=0.000826 vel=0.020107 acc=0.000000 root=0.013120 z_l1=0.229496 align=0.000650 talign=0.000000 z_gap=0.003304 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043196 ppl=784.844 dead_reset=0 updates=3500 11108.3 samples/s time=161.3s
+[train] epoch 10/10 step 4000/5165 loss=0.517367 recon=0.051710 vq=0.001701 vel=0.020663 acc=0.000000 root=0.014104 z_l1=0.233417 align=0.000736 talign=0.000000 z_gap=0.006803 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044738 ppl=806.301 dead_reset=0 updates=4000 11192.4 samples/s time=183.0s
+[train] epoch 10/10 step 4500/5165 loss=0.518643 recon=0.051972 vq=0.000876 vel=0.020884 acc=0.000000 root=0.013178 z_l1=0.237260 align=0.001093 talign=0.000000 z_gap=0.003503 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.044957 ppl=821.951 dead_reset=0 updates=4500 11259.4 samples/s time=204.6s
+[train] epoch 10/10 step 5000/5165 loss=0.510267 recon=0.051303 vq=0.000798 vel=0.020498 acc=0.000000 root=0.013353 z_l1=0.229161 align=0.000667 talign=0.000000 z_gap=0.003191 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.043990 ppl=812.508 dead_reset=0 updates=5000 11313.2 samples/s time=226.3s
+[train] epoch 10/10 step 5165/5165 loss=0.523351 recon=0.052500 vq=0.000811 vel=0.021095 acc=0.000000 root=0.013085 z_l1=0.238672 align=0.001229 talign=0.000000 z_gap=0.003244 bd=0.000000 margin=0.000000 rt=0.000000 rt_drift=0.000000 z_vel=0.045096 ppl=833.374 dead_reset=0 updates=5165 11325.8 samples/s time=233.5s
+[Eval  10/10] MPJPE=1.3728 cm  poseMPJPE=1.2269 cm  Jitter=0.4479 cm  F.S.=0.1994 cm  rootADE=0.3961 cm  codebook_usage=94.43%  clips=90  frames=5,400
+[Gate  10/10] reject, best.pt kept: mpjpe 1.2389->1.3728, jitter 0.4391->0.4479, root_ade 0.3681->0.3961
+[Warn] best.pt has not been replaced for 9 consecutive evaluations (blocked by mpjpe, jitter, root_ade). Relax the gate with --best-min-delta -0.02, drop noisy metrics from --best-metrics, or fall back to the periodic epoch_*.pt checkpoints (best.pt itself is unchanged)
+[Epoch 10] train_loss=0.508867 train_recon=0.050943 train_vq=0.000886 train_vel=0.020489 train_acc=0.000000 train_root=0.013221 train_z_l1=0.232749 train_z_vel=0.044350 train_ppl=793.519 | val_loss=0.685520 val_recon=0.082577 val_vq=0.000000 val_vel=0.024905 val_acc=0.000000 val_z_l1=0.258506 val_z_vel=0.044701 val_ppl=620.835 | eval_mpjpe=1.3728 eval_pose_mpjpe=1.2269 eval_jitter=0.4479 eval_fs=0.1994 eval_root_ade=0.3961 eval_cb_usage=94.43% | gate=reject | time=259.9s
+
+[Done] Training complete.
+[Done] Best metric (mpjpe): 1.238947
+[Done] Best metrics: mpjpe=1.2389  jitter=0.4391  foot_sliding=0.2087  root_ade=0.3681  (best.pt from epoch 1)
+[Done] Outputs in: /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_temporal_B0_ep90seq8_10ep

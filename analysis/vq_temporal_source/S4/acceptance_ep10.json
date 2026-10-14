@@ -1,0 +1,449 @@
+{
+ "label": "ep10",
+ "b0": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B0_ep10.json",
+ "b1": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_temporal_source/S4/probe_B1_ep10.json",
+ "protocol": "COMMON.md section 7 (pre-registered before B0/B1 started)",
+ "thresholds": {
+  "jitter_drop_required": 0.15,
+  "quality_regression_limit": 0.03,
+  "fs_regression_limit": 0.005,
+  "d2e_limit": 0.005,
+  "activity_drop_limit": 0.05,
+  "style_drop_limit": 0.02
+ },
+ "gates": {
+  "g1_d2r_down": {
+   "name": "d2r mean & p95 both drop (95% CI upper < 0)",
+   "result": "PASS",
+   "detail": {
+    "d2r_local_mean": {
+     "statistic": "mean",
+     "point": -0.04665730282199943,
+     "ci": [
+      -0.06813585057133295,
+      -0.024946956724299203
+     ],
+     "b0_absolute": 0.4170051026436368,
+     "b1_absolute": 0.3703477998216375,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.1118866472525436
+    },
+    "d2r_local_p95": {
+     "statistic": "mean",
+     "point": -0.15876233801033243,
+     "ci": [
+      -0.22068517471050306,
+      -0.0974605036156909
+     ],
+     "b0_absolute": 1.331643508634933,
+     "b1_absolute": 1.1728811706246003,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.11922285279870426
+    }
+   },
+   "note": "CI including 0 counts as not confirmed for the final verdict"
+  },
+  "g2_d2e_not_up": {
+   "name": "||d2 e_q|| mean change <= +0.5%",
+   "result": "PASS",
+   "detail": {
+    "statistic": "mean",
+    "point": -0.04383503435614725,
+    "ci": [
+     -0.06492314010338422,
+     -0.020655537579001345
+    ],
+    "b0_absolute": 0.4250162440390624,
+    "b1_absolute": 0.3811812096829151,
+    "n_sources": 12,
+    "seed": 42,
+    "draws": 1000,
+    "relative_change": -0.10313731526957481
+   },
+   "note": ""
+  },
+  "g3_jitter_drop": {
+   "name": "official quantized jitter drop >= 15%",
+   "result": "FAIL",
+   "detail": {
+    "b0": 0.4382374222093826,
+    "b1": 0.39519848186874035,
+    "relative_change": -0.09820918561372649,
+    "paired": {
+     "statistic": "mean",
+     "point": -0.04303894034064228,
+     "ci": [
+      -0.06455030503615834,
+      -0.019636886126520942
+     ],
+     "b0_absolute": 0.43823742220938255,
+     "b1_absolute": 0.39519848186874035,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000
+    }
+   },
+   "note": ""
+  },
+  "g4_foot_sliding": {
+   "name": "world & local FS change <= +0.5%",
+   "result": "PASS",
+   "detail": {
+    "fs_world_q": {
+     "b0": 0.5124270343089904,
+     "b1": 0.49112263441556686,
+     "relative_change": -0.04157547995521471,
+     "paired": {
+      "statistic": "mean",
+      "point": -0.019526650980415058,
+      "ci": [
+       -0.039526073587122595,
+       0.0014828641152275412
+      ],
+      "b0_absolute": 0.5772081809396111,
+      "b1_absolute": 0.5576815299591961,
+      "n_sources": 12,
+      "seed": 42,
+      "draws": 1000
+     },
+     "within_limit": true
+    },
+    "fs_local_q": {
+     "b0": 0.25627131411369813,
+     "b1": 0.24193820658516377,
+     "relative_change": -0.05592942611663232,
+     "paired": {
+      "statistic": "mean",
+      "point": 0.07959289778897792,
+      "ci": [
+       -0.07562434253717736,
+       0.3387698400508107
+      ],
+      "b0_absolute": 0.4643517052837274,
+      "b1_absolute": 0.5439446030727052,
+      "n_sources": 12,
+      "seed": 42,
+      "draws": 1000
+     },
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "g5_quality": {
+   "name": "MPJPE/local/rootADE regression <= 3%",
+   "result": "FAIL",
+   "detail": {
+    "mpjpe_q": {
+     "b0": 1.5059896351767856,
+     "b1": 1.6551754813986814,
+     "relative_change": 0.09906166864447452,
+     "within_limit": false
+    },
+    "local_mpjpe_q": {
+     "b0": 1.083182747952038,
+     "b1": 1.3128458291488918,
+     "relative_change": 0.21202616237294714,
+     "within_limit": false
+    },
+    "root_ade_q": {
+     "b0": 0.6993857769926718,
+     "b1": 0.687163907305925,
+     "relative_change": -0.017475147606375807,
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "g6_activity": {
+   "name": "activity proxies drop <= 5%",
+   "result": "FAIL",
+   "detail": {
+    "activity_q.moving_frame_fraction": {
+     "b0": 0.4993055555555555,
+     "b1": 0.47152777777777777,
+     "relative_change": -0.05563282336578579,
+     "within_limit": false
+    },
+    "activity_q.strong_moving_frame_fraction": {
+     "b0": 0.07083333333333335,
+     "b1": 0.06666666666666667,
+     "relative_change": -0.05882352941176483,
+     "within_limit": false
+    },
+    "activity_q.pose_step_mean_cm": {
+     "b0": 0.5430168766934974,
+     "b1": 0.527435118061571,
+     "relative_change": -0.02869479624059912,
+     "within_limit": true
+    },
+    "activity_q.leg_travel_cm": {
+     "b0": 166.18776274455817,
+     "b1": 164.90691426902671,
+     "relative_change": -0.00770723700938325,
+     "within_limit": true
+    },
+    "activity_q.toe_height_range_cm": {
+     "b0": 5.170198678970337,
+     "b1": 5.170606727401416,
+     "relative_change": 7.892316261237653e-05,
+     "within_limit": true
+    },
+    "activity_q.foot_lift_fraction": {
+     "b0": 0.13636363636363638,
+     "b1": 0.13946280991735538,
+     "relative_change": 0.022727272727272707,
+     "within_limit": true
+    },
+    "activity_q.toe_speed_mean_cm_per_frame": {
+     "b0": 1.4897606067181102,
+     "b1": 1.4849758056843478,
+     "relative_change": -0.0032117918893714847,
+     "within_limit": true
+    },
+    "contact.pred_contact_coverage": {
+     "b0": 0.12604166666666666,
+     "b1": 0.12916666666666665,
+     "relative_change": 0.024793388429751984,
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "g7_style": {
+   "name": "style proxy accuracy drop <= 2%",
+   "result": "PASS",
+   "detail": {
+    "b0": 0.9333333333333333,
+    "b1": 0.9222222222222223,
+    "change": -0.011111111111111072,
+    "paired": {
+     "statistic": "mean",
+     "point": -0.011111111111111112,
+     "ci": [
+      -0.03333333333333333,
+      0.0
+     ],
+     "b0_absolute": 0.9333333333333333,
+     "b1_absolute": 0.9222222222222223,
+     "n_sources": 90,
+     "seed": 42,
+     "draws": 1000
+    }
+   },
+   "note": ""
+  },
+  "g0_updates": {
+   "name": "B0/B1 actual updates identical",
+   "result": "PASS",
+   "detail": {
+    "same_total_updates": true,
+    "total_updates": 51650.0,
+    "acc_weight": [
+     0.0,
+     4.9842
+    ],
+    "same_dataset_sha": true,
+    "same_init_state": true
+   },
+   "note": ""
+  }
+ },
+ "pairs": {
+  "d2r_local_mean": {
+   "statistic": "mean",
+   "point": -0.04665730282199943,
+   "ci": [
+    -0.06813585057133295,
+    -0.024946956724299203
+   ],
+   "b0_absolute": 0.4170051026436368,
+   "b1_absolute": 0.3703477998216375,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.1118866472525436
+  },
+  "d2r_local_p95": {
+   "statistic": "mean",
+   "point": -0.15876233801033243,
+   "ci": [
+    -0.22068517471050306,
+    -0.0974605036156909
+   ],
+   "b0_absolute": 1.331643508634933,
+   "b1_absolute": 1.1728811706246003,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.11922285279870426
+  },
+  "d2e_local_mean": {
+   "statistic": "mean",
+   "point": -0.04383503435614725,
+   "ci": [
+    -0.06492314010338422,
+    -0.020655537579001345
+   ],
+   "b0_absolute": 0.4250162440390624,
+   "b1_absolute": 0.3811812096829151,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "jitter_quant_local": {
+   "statistic": "mean",
+   "point": -0.04303894034064228,
+   "ci": [
+    -0.06455030503615834,
+    -0.019636886126520942
+   ],
+   "b0_absolute": 0.43823742220938255,
+   "b1_absolute": 0.39519848186874035,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "fs_world_q": {
+   "statistic": "mean",
+   "point": -0.019526650980415058,
+   "ci": [
+    -0.039526073587122595,
+    0.0014828641152275412
+   ],
+   "b0_absolute": 0.5772081809396111,
+   "b1_absolute": 0.5576815299591961,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "fs_local_q": {
+   "statistic": "mean",
+   "point": 0.07959289778897792,
+   "ci": [
+    -0.07562434253717736,
+    0.3387698400508107
+   ],
+   "b0_absolute": 0.4643517052837274,
+   "b1_absolute": 0.5439446030727052,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000
+  },
+  "style_correct": {
+   "statistic": "mean",
+   "point": -0.011111111111111112,
+   "ci": [
+    -0.03333333333333333,
+    0.0
+   ],
+   "b0_absolute": 0.9333333333333333,
+   "b1_absolute": 0.9222222222222223,
+   "n_sources": 90,
+   "seed": 42,
+   "draws": 1000
+  }
+ },
+ "continuous_contrast": {
+  "jitter": {
+   "b0": 0.12513957994213515,
+   "b1": 0.1276746951565355,
+   "relative_change": 0.02025830049591515
+  },
+  "fs_world": {
+   "b0": 0.2093058677783838,
+   "b1": 0.24076959943991103,
+   "relative_change": 0.15032417387763575
+  },
+  "fs_local": {
+   "b0": 0.1278525045577516,
+   "b1": 0.13532862225745587,
+   "relative_change": 0.058474550229301814
+  },
+  "mpjpe": {
+   "b0": 1.4278476459373566,
+   "b1": 1.6408680196854912,
+   "relative_change": 0.14918984833867932
+  },
+  "local_mpjpe": {
+   "b0": 1.042359202409578,
+   "b1": 1.2739089065272673,
+   "relative_change": 0.22214002963894353
+  },
+  "root_ade": {
+   "b0": 0.6713536304547438,
+   "b1": 0.7094263794008365,
+   "relative_change": 0.0567104238645495
+  }
+ },
+ "gt_reference": {
+  "jitter": 0.09173414108354727,
+  "fs_world": 0.09066741367638935
+ },
+ "group_breakdown": {
+  "run": {
+   "n": 4,
+   "d2r_local": {
+    "b0": 0.5267310772286731,
+    "b1": 0.4884792664223003
+   },
+   "jitter_q": {
+    "b0": 0.5617337266938025,
+    "b1": 0.5298288596444438
+   }
+  },
+  "walk": {
+   "n": 5,
+   "d2r_local": {
+    "b0": 0.41033197879813904,
+    "b1": 0.35201017476212104
+   },
+   "jitter_q": {
+    "b0": 0.4297971837660845,
+    "b1": 0.3741749397512911
+   }
+  },
+  "turn": {
+   "n": 2,
+   "d2r_local": {
+    "b0": 0.3797908666269625,
+    "b1": 0.32884425895164426
+   },
+   "jitter_q": {
+    "b0": 0.388578826305913,
+    "b1": 0.34042995249857755
+   }
+  },
+  "idle": {
+   "n": 1,
+   "d2r_local": {
+    "b0": 0.08589529556433016,
+    "b1": 0.07251714045655427
+   },
+   "jitter_q": {
+    "b0": 0.08577058829513251,
+    "b1": 0.07133174009349834
+   }
+  }
+ },
+ "manifest_checks": {
+  "same_total_updates": true,
+  "total_updates": 51650.0,
+  "acc_weight": [
+   0.0,
+   4.9842
+  ],
+  "same_dataset_sha": true,
+  "same_init_state": true
+ },
+ "verdict": "FAIL",
+ "verdict_note": "PASS = every registered gate met and d2r CIs exclude 0 below; FAIL = confirmed reversal or registered veto; INCONCLUSIVE = budget-limited/no separation"
+}

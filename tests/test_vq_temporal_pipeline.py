@@ -329,7 +329,8 @@ def test_common_per_source_metric_schema_is_stable():
         "pred_contact_coverage", "style_correct",
     ):
         values = common.per_source_metric(payload, name)
-        assert values.shape == (12,), f"{name} has shape {values.shape}"
+        expected = 90 if name == "style_correct" else 12  # style proxy spans the full val split
+        assert values.shape == (expected,), f"{name} has shape {values.shape}"
         assert np.isfinite(values).all(), f"{name} has non-finite entries"
     # The registered baseline numbers must be reproducible from the probe itself.
     assert payload["aggregate"]["official_q"]["jitter"] == pytest.approx(0.4116350422386362, rel=1e-6)
