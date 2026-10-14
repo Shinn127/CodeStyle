@@ -294,25 +294,60 @@ def main() -> None:
         result=gates["c2_3_activity"]["result"],
         note="the activity gate is the anti-freeze screen; jitter-only improvements cannot pass")
 
-    # Overall verdict logic.
-    hard_fail = gates["c2_0_contract"]["result"] == "FAIL" or gates["c2_3_activity"]["result"] == "FAIL"
-    main_pass = gates["c2_1_main"]["result"] == "PASS"
-    if hard_fail:
-        verdict = "INVALID_EXPERIMENT" if gates["c2_0_contract"]["result"] == "FAIL" else "FAIL"
+    # Per-arm verdicts: compare each candidate against the control arm. This is the unit the
+    # plan registers ("与同预算对照相比"); the aggregate gates above are informational.
+    per_arm = {}
+    if not args.skip_long and contract["passed"]:
+        ref_long = payloads["arms"][CONTROL]["long_protocol"]
+        for arm in ARMS:
+            if arm == CONTROL:
+                continue
+            long = payloads["arms"][arm]["long_protocol"]
+            improved = list(comparisons[arm]) and [k for k, v in comparisons[arm].items()
+                                                   if v["confirmed_improvement"]]
+            # quality limits: closed-loop MPJPE/rootADE point estimates <= +3%; long-protocol FS <= +0.5%
+            quality_checks = {
+                "closed_local_mpjpe": comparisons[arm]["local_mpjpe"]["relative_change"] <= 0.03,
+                "closed_world_mpjpe": comparisons[arm]["world_mpjpe"]["relative_change"] <= 0.03,
+                "closed_root_ade": comparisons[arm]["root_ade"]["relative_change"] <= 0.03,
+                "long_fs_world": (long["foot_sliding_world_cm"] - ref_long["foot_sliding_world_cm"])
+                                 / ref_long["foot_sliding_world_cm"] <= 0.005,
+                "long_fs_local": (long["foot_sliding_local_cm"] - ref_long["foot_sliding_local_cm"])
+                                 / ref_long["foot_sliding_local_cm"] <= 0.005,
+            }
+            style_checks = {
+                "long_matched": long["matched_accuracy"] >= ref_long["matched_accuracy"] - 0.02,
+                "long_cross": long["cross_accuracy"] >= ref_long["cross_accuracy"] - 0.02,
+            }
+            activity_checks = {k: (v >= -0.05) for k, v in act_gate[arm].items()}
+            veto = (not all(style_checks.values())) or (not all(activity_checks.values()))
+            all_limits = all(quality_checks.values())
+            if veto:
+                verdict_arm = "FAIL"
+            elif improved and all_limits:
+                verdict_arm = "PASS"
+            elif improved:
+                verdict_arm = "INCONCLUSIVE (confirmed gain, quality limits not fully met)"
+            else:
+                verdict_arm = "INCONCLUSIVE (no confirmed gain)"
+            per_arm[arm] = dict(verdict=verdict_arm, confirmed_improvements=improved,
+                                quality_checks=quality_checks, style_checks=style_checks,
+                                activity_checks=activity_checks)
+    payloads["per_arm"] = per_arm
+
+    # Overall verdict: the best per-arm outcome drives the stage verdict.
+    if not contract["passed"]:
+        verdict = "INVALID_EXPERIMENT"
     elif args.skip_long:
         verdict = "PARTIAL (long protocol skipped)"
-    elif main_pass:
-        # style gate evaluation when long protocol exists
-        ref = payloads["arms"][CONTROL]["long_protocol"]
-        style_ok = all(
-            (payloads["arms"][arm]["long_protocol"]["matched_accuracy"] >= ref["matched_accuracy"] - 0.02
-             and payloads["arms"][arm]["long_protocol"]["cross_accuracy"] >= ref["cross_accuracy"] - 0.02)
-            for arm in ARMS)
-        gates["c2_4_style"]["result"] = "PASS" if style_ok else "FAIL"
-        verdict = "PASS" if style_ok else "FAIL"
+    elif any(v["verdict"] == "PASS" for v in per_arm.values()):
+        verdict = "PASS"
+    elif any(v["verdict"].startswith("INCONCLUSIVE") for v in per_arm.values()):
+        verdict = "INCONCLUSIVE"
     else:
         verdict = "FAIL"
     payloads["verdict"] = verdict
+    payloads["gates"] = gates
 
     args.out.write_text(json.dumps(payloads, indent=1, ensure_ascii=False))
     for name, gate in gates.items():

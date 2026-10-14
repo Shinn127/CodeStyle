@@ -1,0 +1,179 @@
+{
+ "stage": "C2a",
+ "arm": "C2-A050",
+ "run_dir": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/c2_obsnoise_A050_10ep",
+ "git": {
+  "commit": "f1f836f34d6c1bbfe394f27b5ba58358d8add2bd",
+  "branch": "recovery/vq-controller-2026-10-15",
+  "dirty": false,
+  "untracked_files": 5
+ },
+ "environment": {
+  "torch": "2.13.0+cu132",
+  "cuda": "13.2",
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "vector_quantize_pytorch": "1.31.4",
+  "fp32": true,
+  "tf32": false,
+  "matmul_precision": "highest"
+ },
+ "contract": {
+  "pinned": {
+   "seq_len": 6,
+   "epochs": 10,
+   "batch_size": 512,
+   "lr": 0.0005,
+   "seed": 42,
+   "feedback_probability": 0.0,
+   "history_conditioning": true,
+   "prediction_mode": "target",
+   "solver_steps": 4,
+   "flow_layers": 2
+  },
+  "observation_noise_std": 0.5,
+  "allowed_config_diff": [
+   "observation_noise_std",
+   "out_dir"
+  ]
+ },
+ "init_controller": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf100/best.pt",
+  "sha256": "adc4deb2d7da200ce6c7494b65e2e377613f32ee140216f40492779a4c2a56a9",
+  "state_sha256": "26dc40eb30bb93708aa81f7e619b7e9f27d230bbac6d6ad2d6945c6a869b9b98"
+ },
+ "vq_state_sha256": "918b5e07046266f7b38d15f3ba9b35cf33987cb4843f3d6f00a5ef6ce90e7f5c",
+ "final_checkpoint": {
+  "path": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/c2_obsnoise_A050_10ep/epoch_0010.pt",
+  "sha256": "a98b1185ce06612d2793cb95d38f39be727a02609179ac07ca3415c75441aff4",
+  "epoch": 10,
+  "state_sha256": "60d669e62b20f1b70bb9a935785f96302daa260871a17be8b87b9fd3ce3be53b"
+ },
+ "epochs": [
+  {
+   "kind": "train",
+   "epoch": 1,
+   "time_sec": 94.02954769134521,
+   "num_batches": 5168.0,
+   "train_loss": 0.13257179614560155,
+   "val_loss": 0.1303783409341943,
+   "noise_coeff": 0.2500035430624758
+  },
+  {
+   "kind": "train",
+   "epoch": 2,
+   "time_sec": 94.16165566444397,
+   "num_batches": 5168.0,
+   "train_loss": 0.13246037864094548,
+   "val_loss": 0.1302604280070038,
+   "noise_coeff": 0.2500627358262384
+  },
+  {
+   "kind": "train",
+   "epoch": 3,
+   "time_sec": 94.26534271240234,
+   "num_batches": 5168.0,
+   "train_loss": 0.13216994199959486,
+   "val_loss": 0.1298936566973763,
+   "noise_coeff": 0.25000647199412246
+  },
+  {
+   "kind": "train",
+   "epoch": 4,
+   "time_sec": 94.10659551620483,
+   "num_batches": 5168.0,
+   "train_loss": 0.13187420257473878,
+   "val_loss": 0.12968635001893836,
+   "noise_coeff": 0.24995401104906395
+  },
+  {
+   "kind": "train",
+   "epoch": 5,
+   "time_sec": 93.60075879096985,
+   "num_batches": 5168.0,
+   "train_loss": 0.13141669872744532,
+   "val_loss": 0.12949569060101518,
+   "noise_coeff": 0.25003597389433774
+  },
+  {
+   "kind": "rollout_val",
+   "epoch": 5,
+   "selection_key": [
+    1,
+    8.285777021172251
+   ],
+   "matched_accuracy": 0.7222222222222222,
+   "cross_accuracy": 0.12222222222222222,
+   "matched_root_ade_cm": 7.5986936179576094,
+   "cross_root_ade_cm": 9.553833440222123,
+   "jitter_cm": 0.5381845297043174,
+   "foot_sliding_local_cm": 0.3073502995975147,
+   "foot_sliding_world_cm": 0.6584446701146613
+  },
+  {
+   "kind": "train",
+   "epoch": 6,
+   "time_sec": 94.50240921974182,
+   "num_batches": 5168.0,
+   "train_loss": 0.13094517616295592,
+   "val_loss": 0.12913644998401014,
+   "noise_coeff": 0.24988733061326915
+  },
+  {
+   "kind": "train",
+   "epoch": 7,
+   "time_sec": 94.3440055847168,
+   "num_batches": 5168.0,
+   "train_loss": 0.13052443749395318,
+   "val_loss": 0.12884716507164826,
+   "noise_coeff": 0.25008307300484955
+  },
+  {
+   "kind": "train",
+   "epoch": 8,
+   "time_sec": 94.66768503189087,
+   "num_batches": 5168.0,
+   "train_loss": 0.13010718283638498,
+   "val_loss": 0.1286582953006777,
+   "noise_coeff": 0.2500802857957019
+  },
+  {
+   "kind": "train",
+   "epoch": 9,
+   "time_sec": 94.57609415054321,
+   "num_batches": 5168.0,
+   "train_loss": 0.12983452055845468,
+   "val_loss": 0.12848959892629688,
+   "noise_coeff": 0.2500325016931115
+  },
+  {
+   "kind": "train",
+   "epoch": 10,
+   "time_sec": 94.56344699859619,
+   "num_batches": 5168.0,
+   "train_loss": 0.1296218423282399,
+   "val_loss": 0.12839874333471685,
+   "noise_coeff": 0.2500319111826988
+  },
+  {
+   "kind": "rollout_val",
+   "epoch": 10,
+   "selection_key": [
+    1,
+    7.0127769759295955
+   ],
+   "matched_accuracy": 0.7666666666666667,
+   "cross_accuracy": 0.16296296296296298,
+   "matched_root_ade_cm": 4.749096168412103,
+   "cross_root_ade_cm": 7.833456300033463,
+   "jitter_cm": 0.48780530596536303,
+   "foot_sliding_local_cm": 0.2730776890668312,
+   "foot_sliding_world_cm": 0.5991843131567742
+  }
+ ],
+ "integrity": {
+  "epochs_recorded": 10,
+  "total_updates": 51680.0,
+  "rollout_validations": 2,
+  "final_epoch": 10
+ }
+}
