@@ -1,0 +1,68 @@
+{
+ "tag": "tf10_l6_film",
+ "checkpoint": "checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/best.pt",
+ "frames": 120,
+ "seed": 1000,
+ "solver_sweep": {
+  "2": {
+   "match": 0.2930338668326537,
+   "match_std": 0.05158990821338787,
+   "wall_sec": 2.818430815001193
+  },
+  "4": {
+   "match": 0.28302952895561856,
+   "match_std": 0.046784595315729496,
+   "wall_sec": 4.702173630001198
+  },
+  "8": {
+   "match": 0.26358508442838985,
+   "match_std": 0.04426787874847852,
+   "wall_sec": 8.917561141999613
+  },
+  "16": {
+   "match": 0.2451389009753863,
+   "match_std": 0.038582311772879026,
+   "wall_sec": 17.210910506997607
+  },
+  "32": {
+   "match": 0.22975261509418488,
+   "match_std": 0.03237680723720748,
+   "wall_sec": 34.729719117996865
+  }
+ },
+ "noise": {
+  "K4_std0": 0.28302952895561856,
+  "K4_std1": 0.23487414171298346,
+  "K16_std0": 0.2451389009753863,
+  "K16_std1": 0.20132379482189813
+ },
+ "spread": {
+  "samples_per_frame": 8,
+  "frames": 720,
+  "pairwise_code_agreement": 0.3950046115451389,
+  "any_sample_matches_gt": 0.5455729166666666,
+  "pairwise_agreement_stable": 0.48410389212270577,
+  "pairwise_agreement_transition": 0.34681886318797445,
+  "any_match_stable": 0.7277209641618861,
+  "any_match_transition": 0.4435411556439716
+ },
+ "gt_motion": {
+  "switch_rate": 0.6290581822395325,
+  "zero_displacement_frac": 0.3709418475627899,
+  "displacement_nonzero_p10_p50_p90": [
+   0.04205894470214844,
+   0.1462956666946411,
+   0.5616034269332886
+  ],
+  "displacement_all_p10_p50_p90": [
+   0.0,
+   0.06882768124341965,
+   0.3942979872226715
+  ],
+  "margin_p10_p50_p90": [
+   0.02595718950033188,
+   0.09726721793413162,
+   0.3874947726726532
+  ]
+ }
+}
