@@ -336,6 +336,47 @@ class StyleCodeSelector(nn.Module):
         }
 
 
+class StyleFiLM(nn.Module):
+    """Per-layer FiLM modulation of the transformer generation query, driven by style.
+
+    Emits one (scale, shift) pair per encoder layer from the style embedding ``e_s``;
+    the generation query token (index 0, the z_t token whose readout predicts the
+    velocity/target) is modulated as ``q * (1 + scale) + shift`` before each layer, so
+    the style condition reaches the prediction through a direct multiplicative path in
+    addition to self-attention over the style token. ``scale = tanh(raw)`` is bounded to
+    (-1, 1); ``shift`` is unbounded. The final projection is zero-initialized, so a fresh
+    run starts exactly at the unmodulated field and only training moves the modulation
+    away from identity. The projection is constant across an Euler solve and is cached
+    once per solve by the controller.
+    """
+
+    def __init__(self, *, style_dim: int, hidden_dim: int, num_layers: int):
+        super().__init__()
+        if style_dim < 1 or hidden_dim < 1 or num_layers < 1:
+            raise ValueError(
+                f"style_dim, hidden_dim and num_layers must be >= 1, got "
+                f"{style_dim}, {hidden_dim}, {num_layers}"
+            )
+        self.style_dim = int(style_dim)
+        self.hidden_dim = int(hidden_dim)
+        self.num_layers = int(num_layers)
+        self.proj = nn.Sequential(
+            nn.Linear(self.style_dim, self.hidden_dim),
+            nn.SiLU(),
+            nn.Linear(self.hidden_dim, 2 * self.hidden_dim * self.num_layers),
+        )
+        nn.init.zeros_(self.proj[-1].weight)
+        nn.init.zeros_(self.proj[-1].bias)
+
+    def forward(self, style: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        if style.dim() != 2 or style.size(-1) != self.style_dim:
+            raise ValueError(f"style must have shape [B,{self.style_dim}], got {tuple(style.shape)}")
+        raw = self.proj(style).reshape(style.size(0), self.num_layers, 2, self.hidden_dim)
+        scale = torch.tanh(raw[:, :, 0])
+        shift = raw[:, :, 1]
+        return scale, shift
+
+
 class ConditionalVelocityField(nn.Module):
     num_tokens = 6
 
@@ -353,6 +394,7 @@ class ConditionalVelocityField(nn.Module):
         num_layers: int = 3,
         dropout: float = 0.0,
         use_motion_token: bool = True,
+        use_style_film: bool = False,
     ):
         super().__init__()
         if hidden_dim < 1:
@@ -371,6 +413,9 @@ class ConditionalVelocityField(nn.Module):
         self.hidden_dim = int(hidden_dim)
         self.time_embed_dim = int(time_embed_dim)
         self.fp32_math_attention = False
+        # Per-layer FiLM modulation of the generation query (see StyleFiLM). Disabled
+        # models keep the original encoder call path bit-for-bit unchanged.
+        self.use_style_film = bool(use_style_film)
         # `use_motion_token=False` drops the direct 291-dim previous-motion path. At inference the
         # fed motion is exactly decoder(z_prev), so the quantized latent token already carries it;
         # the ablation removes the redundant raw path and leaves 5 tokens.
@@ -395,6 +440,13 @@ class ConditionalVelocityField(nn.Module):
         self.output_norm = nn.LayerNorm(hidden_dim)
         self.out = nn.Linear(hidden_dim, latent_dim)
         nn.init.trunc_normal_(self.position_embeddings, mean=0.0, std=0.02, a=-0.04, b=0.04)
+        # Construct the FiLM module only after every shared parameter has been initialized:
+        # the extra parameter draws then leave the same-seed values of all legacy weights
+        # (including position_embeddings) bit-identical between film and non-film fields.
+        self.style_film = (
+            StyleFiLM(style_dim=style_dim, hidden_dim=hidden_dim, num_layers=num_layers)
+            if self.use_style_film else None
+        )
 
     def prepare_conditions(self, z_prev, content, traj, style):
         # These tokens are constant throughout an Euler solve; keep their gradients.
@@ -406,6 +458,34 @@ class ConditionalVelocityField(nn.Module):
         return torch.stack((self.latent_proj(z_prev), self.motion_proj(content),
                             self.traj_proj(traj), self.style_proj(style)), dim=1)
 
+    def prepare_film(self, style: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor] | None:
+        """Style FiLM coefficients for one batch; cached across an Euler solve."""
+        if self.style_film is None:
+            return None
+        return self.style_film(style)
+
+    def _encode_modulated(
+        self,
+        tokens: torch.Tensor,
+        film: tuple[torch.Tensor, torch.Tensor],
+    ) -> torch.Tensor:
+        """Run the encoder layer by layer, FiLM-modulating the generation query token."""
+        scale, shift = film
+        if scale.size(0) != tokens.size(0) or scale.size(1) != len(self.encoder.layers):
+            raise ValueError(
+                f"film coefficients must have shape [B,{len(self.encoder.layers)},{self.hidden_dim}], "
+                f"got {tuple(scale.shape)} for a batch of {tokens.size(0)}"
+            )
+        for index, layer in enumerate(self.encoder.layers):
+            # [B,1,H]-shaped coefficients: the unsqueeze keeps the batch dim aligned instead
+            # of broadcasting [B,H] against [B,1,H] into [B,B,H].
+            scale_layer = scale[:, index].unsqueeze(1)
+            shift_layer = shift[:, index].unsqueeze(1)
+            first = tokens[:, :1] * (1.0 + scale_layer) + shift_layer
+            tokens = torch.cat((first, tokens[:, 1:]), dim=1)
+            tokens = layer(tokens)
+        return tokens
+
     def forward(
         self,
         *,
@@ -416,6 +496,7 @@ class ConditionalVelocityField(nn.Module):
         traj: torch.Tensor,
         style: torch.Tensor,
         condition_tokens: torch.Tensor | None = None,
+        film: tuple[torch.Tensor, torch.Tensor] | None = None,
     ) -> torch.Tensor:
         time_emb = _timestep_embedding(t.to(dtype=z_t.dtype), self.time_embed_dim)
         if condition_tokens is None:
@@ -426,8 +507,18 @@ class ConditionalVelocityField(nn.Module):
         if positions.device != tokens.device or positions.dtype != tokens.dtype:
             positions = positions.to(device=tokens.device, dtype=tokens.dtype)
         tokens = tokens + positions
-        if self.fp32_math_attention and self.training and tokens.is_cuda and tokens.dtype == torch.float32:
-            # Six-token FP32 attention wastes work in a 64x64 memory-efficient tile.
+        if film is not None and self.style_film is None:
+            raise ValueError("film coefficients supplied to a field without StyleFiLM")
+        if self.style_film is not None:
+            if film is None:
+                film = self.prepare_film(style)
+            if self.fp32_math_attention and self.training and tokens.is_cuda and tokens.dtype == torch.float32:
+                # Six-token FP32 attention wastes work in a 64x64 memory-efficient tile.
+                with sdpa_kernel(SDPBackend.MATH):
+                    encoded = self._encode_modulated(tokens, film)
+            else:
+                encoded = self._encode_modulated(tokens, film)
+        elif self.fp32_math_attention and self.training and tokens.is_cuda and tokens.dtype == torch.float32:
             with sdpa_kernel(SDPBackend.MATH):
                 encoded = self.encoder(tokens)
         else:
@@ -462,9 +553,12 @@ class ConditionalSkipCatMLPField(nn.Module):
         num_layers: int = 3,
         dropout: float = 0.0,
         use_motion_token: bool = True,
+        use_style_film: bool = False,
     ):
         super().__init__()
         del num_heads, ff_hidden_dim  # attention-only knobs, accepted for a shared interface
+        if use_style_film:
+            raise ValueError("Style FiLM modulation is only implemented for the transformer field")
         if hidden_dim < 1:
             raise ValueError(f"hidden_dim must be >= 1, got {hidden_dim}")
         if time_embed_dim < 1:
@@ -546,6 +640,7 @@ class FlowMatchVQVAEController(nn.Module):
         use_motion_token: bool = True,
         field_arch: str = "transformer",
         history_conditioning: bool = False,
+        use_style_film: bool = False,
     ):
         super().__init__()
         self.vqvae = vqvae
@@ -568,6 +663,11 @@ class FlowMatchVQVAEController(nn.Module):
         self.history_conditioning = bool(history_conditioning)
         if self.history_conditioning and field_arch != "transformer":
             raise ValueError("History conditioning currently requires the transformer field")
+        # Per-layer style FiLM on the transformer generation query. Off by default so existing
+        # runs are unchanged; the style token and all style losses stay in place either way.
+        self.use_style_film = bool(use_style_film)
+        if self.use_style_film and field_arch != "transformer":
+            raise ValueError("Style FiLM modulation requires the transformer field")
         self.prediction_mode = resolve_flowmatch_prediction_mode(prediction_mode)
         self.target_time_eps = float(target_time_eps)
         if flow_loss_space is None:
@@ -651,6 +751,7 @@ class FlowMatchVQVAEController(nn.Module):
             num_layers=flow_layers,
             dropout=dropout,
             use_motion_token=self.use_motion_token,
+            use_style_film=self.use_style_film,
         )
 
         self.history_delta_proj = nn.Linear(self.latent_dim, self.hidden_dim) if self.history_conditioning else None
@@ -1043,6 +1144,12 @@ class FlowMatchVQVAEController(nn.Module):
             tokens = torch.cat((previous, tokens[:, 1:]), dim=1)
         return tokens
 
+    def prepare_style_film(self, e_s: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor] | None:
+        """Style FiLM coefficients for one batch; computed once and reused within an Euler solve."""
+        if not self.use_style_film:
+            return None
+        return self.field.prepare_film(e_s)
+
     def _predict_velocity(
         self,
         *,
@@ -1054,18 +1161,16 @@ class FlowMatchVQVAEController(nn.Module):
         e_s: torch.Tensor,
         condition_tokens: torch.Tensor | None = None,
         history_delta: torch.Tensor | None = None,
+        film: tuple[torch.Tensor, torch.Tensor] | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         if condition_tokens is None and self.history_conditioning:
             condition_tokens = self.prepare_history_conditions(z_prev, e_c, e_traj, e_s, history_delta)
-        field_out = self.field(
-            z_t=z_t,
-            z_prev=z_prev,
-            t=t,
-            content=e_c,
-            traj=e_traj,
-            style=e_s,
-            condition_tokens=condition_tokens,
-        )
+        # Pass `film` only when present: subclass fields (clip_recipe v2) do not take it.
+        field_kwargs = dict(z_t=z_t, z_prev=z_prev, t=t, content=e_c, traj=e_traj,
+                            style=e_s, condition_tokens=condition_tokens)
+        if film is not None:
+            field_kwargs['film'] = film
+        field_out = self.field(**field_kwargs)
         if self.prediction_mode == "velocity":
             velocity = self.transport_denormalize_latent(field_out)
             remaining = (1.0 - t).clamp_min(self.target_time_eps)
@@ -1088,6 +1193,7 @@ class FlowMatchVQVAEController(nn.Module):
         z0: torch.Tensor | None = None,
         history_delta: torch.Tensor | None = None,
         condition_tokens: torch.Tensor | None = None,
+        film: tuple[torch.Tensor, torch.Tensor] | None = None,
     ) -> torch.Tensor:
         if num_steps < 1:
             raise ValueError(f"num_steps must be >= 1, got {num_steps}")
@@ -1102,6 +1208,9 @@ class FlowMatchVQVAEController(nn.Module):
         dt = 1.0 / float(num_steps)
         if condition_tokens is None:
             condition_tokens = self.prepare_history_conditions(z_prev, e_c, e_traj, e_s, history_delta)
+        if film is None:
+            # Style FiLM is constant across the solve; project once, not per step.
+            film = self.prepare_style_film(e_s)
         for step in range(num_steps):
             t = z.new_full((n, 1), step / float(num_steps))
             velocity, _, _ = self._predict_velocity(
@@ -1112,6 +1221,7 @@ class FlowMatchVQVAEController(nn.Module):
                 e_traj=e_traj,
                 e_s=e_s,
                 condition_tokens=condition_tokens,
+                film=film,
             )
             z = z + dt * velocity
         return z
@@ -1208,6 +1318,9 @@ class FlowMatchVQVAEController(nn.Module):
         z_t = (1.0 - t) * z0 + t * z1
         velocity_target = z1 - z0
         conditions = self.prepare_history_conditions(z_prev, e_c, e_traj, e_s, delta_history)
+        # The FiLM coefficients ride through the same cached-condition path as an explicit
+        # argument so a single field call still resolves them when history conditioning is off.
+        film = self.prepare_style_film(e_s)
         velocity_pred, field_out, target_pred = self._predict_velocity(
             z_t=z_t,
             z_prev=z_prev,
@@ -1217,6 +1330,7 @@ class FlowMatchVQVAEController(nn.Module):
             e_s=e_s,
             history_delta=delta_history,
             condition_tokens=conditions,
+            film=film,
         )
 
         if self.prediction_mode == "velocity":
@@ -1295,6 +1409,7 @@ class FlowMatchVQVAEController(nn.Module):
                         z0=z0,
                         history_delta=delta_history,
                         condition_tokens=conditions.detach() if skip_graph else conditions,
+                        film=film,
                     )
                 )
                 if recon_inference_path:
@@ -1525,6 +1640,7 @@ def build_flowmatch_controller(
     use_motion_token: bool = True,
     field_arch: str = "transformer",
     history_conditioning: bool = False,
+    use_style_film: bool = False,
 ) -> FlowMatchVQVAEController:
     return FlowMatchVQVAEController(
         vqvae=vqvae,
@@ -1553,6 +1669,7 @@ def build_flowmatch_controller(
         use_motion_token=use_motion_token,
         field_arch=field_arch,
         history_conditioning=history_conditioning,
+        use_style_film=use_style_film,
     )
 
 
@@ -1596,6 +1713,7 @@ def build_flowmatch_controller_from_config(
         use_motion_token=bool(config.get("use_motion_token", True)),
         field_arch=str(config.get("field_arch", "transformer")),
         history_conditioning=bool(config.get("history_conditioning", False)),
+        use_style_film=bool(config.get("use_style_film", False)),
     )
     model.field.fp32_math_attention = bool(config.get('fp32_math_attention', False))
     return model
@@ -1607,6 +1725,7 @@ __all__ = [
     "FlowMatchVQVAEController",
     "StyleCodeSelector",
     "StyleEncoder",
+    "StyleFiLM",
     "build_flowmatch_controller",
     "build_flowmatch_controller_from_config",
     "resolve_flowmatch_prediction_mode",

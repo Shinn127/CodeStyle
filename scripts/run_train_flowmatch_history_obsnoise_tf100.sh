@@ -27,6 +27,9 @@ export LR="${LR:-1e-3}"
 export BATCH_SIZE="${BATCH_SIZE:-2048}"
 export FLOW_LAYERS="${FLOW_LAYERS:-6}"
 export EPOCHS="${EPOCHS:-100}"
+# STYLE_FILM=1 enables the per-layer style FiLM on the transformer generation query
+# (zero-initialized, so the run starts at the unmodulated field and trains the modulation).
+export STYLE_FILM="${STYLE_FILM:-0}"
 # Pure teacher forcing: p=0 means no feedback window ever (no epoch enters the ramp).
 export FEEDBACK_START_EPOCH=1
 export FEEDBACK_RAMP_EPOCHS=0
@@ -36,6 +39,9 @@ export PYTORCH_ALLOC_CONF="${PYTORCH_ALLOC_CONF:-expandable_segments:True}"
 extra=()
 if [[ -n "${INIT_CKPT:-}" ]]; then
   extra+=(--init-ckpt "${INIT_CKPT}")
+fi
+if [[ "${STYLE_FILM}" == "1" ]]; then
+  extra+=(--use-style-film)
 fi
 bash "${ROOT_DIR}/scripts/run_train_flowmatch_6tok_curriculum100.sh" \
   --epochs "${EPOCHS}" --lr-schedule-epochs "${EPOCHS}" --seq-len 6 --history-conditioning \

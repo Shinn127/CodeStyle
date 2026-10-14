@@ -1222,6 +1222,11 @@ def parse_args() -> argparse.Namespace:
         help=("Target per-window share of model-feedback history during unroll training; 0 keeps "
               "pure GT history. Only meaningful with --unroll-steps > 1."))
     parser.add_argument("--history-conditioning", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--use-style-film", action=argparse.BooleanOptionalAction, default=False,
+        help=("Per-layer style FiLM on the transformer generation query: q*(1+tanh(scale))+shift "
+              "before every encoder layer, coefficients from e_s; last projection zero-initialized "
+              "so a fresh run starts at the unmodulated field. The style token and style losses "
+              "stay in place. Transformer field only. Off keeps existing runs bit-identical."))
     parser.add_argument("--feedback-batch-schedule", choices=("window", "batch"), default="window")
     parser.add_argument("--observation-noise-std", type=float, default=0.0,
         help=("Plan-A observation noise: on the teacher-forced branch, replace the rolled GT "
@@ -1650,6 +1655,10 @@ def main() -> None:
         allowed = {k for k in model.state_dict() if k.startswith('histogram_selector.')} if prior_args.get('conditioning_mode') != 'clip_recipe' else set()
         if args.history_conditioning and not prior_args.get("history_conditioning", False):
             allowed.update(k for k in model.state_dict() if k.startswith("history_delta_proj."))
+        if args.use_style_film and not prior_args.get("use_style_film", False):
+            # The zero-initialized FiLM projection keeps the field at identity, so a film run
+            # may start from a non-film checkpoint without pretending to inherit modulation.
+            allowed.update(k for k in model.state_dict() if k.startswith("field.style_film."))
         if set(missing) - allowed or unexpected:
             raise ValueError(f'Incompatible initialization weights: missing={missing}, unexpected={unexpected}')
         # Data/normalization buffers belong to this run, not the initialization run.
@@ -1719,9 +1728,10 @@ def main() -> None:
         legacy_defaults['shared_style_table'] = True
         legacy_defaults['observation_noise_std'] = 0.0
         resume_fields += ("history_conditioning", "feedback_batch_schedule", "motion_quality_selection",
-                          "quality_max_jitter", "quality_max_local_fs", "quality_max_world_fs", "gpu_data_cache_gb", "cache_teacher_motion")
+                          "quality_max_jitter", "quality_max_local_fs", "quality_max_world_fs", "gpu_data_cache_gb", "cache_teacher_motion", "use_style_film")
         legacy_defaults.update(history_conditioning=False, feedback_batch_schedule="window",
                                motion_quality_selection=False,quality_max_jitter=.5,quality_max_local_fs=.8,quality_max_world_fs=1.,gpu_data_cache_gb=0.,cache_teacher_motion=False)
+        legacy_defaults['use_style_film'] = False
         legacy_defaults.update(feedback_start_epoch=1, feedback_ramp_epochs=0, feedback_probability=1.0)
         for name in resume_fields:
             if prior_args.get(name, legacy_defaults.get(name)) != getattr(args, name):

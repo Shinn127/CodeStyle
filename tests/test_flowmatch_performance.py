@@ -63,12 +63,15 @@ def test_teacher_forced_without_motion_losses_skips_solver_decoder_and_cached_en
 
 
 def uncached_euler(self, *, z_prev, e_c, e_traj, e_s, num_steps, noise_std, z0=None,
-                   history_delta=None, condition_tokens=None):
+                   history_delta=None, condition_tokens=None, film=None):
+    if film is None:
+        film = self.prepare_style_film(e_s)
     z = self.sample_transport_noise_like(z_prev, noise_std) if z0 is None else z0
     for step in range(num_steps):
         t = z.new_full((z.size(0), 1), step / num_steps)
         velocity, _, _ = self._predict_velocity(z_t=z, z_prev=z_prev, t=t,
-                                               e_c=e_c, e_traj=e_traj, e_s=e_s,history_delta=history_delta)
+                                               e_c=e_c, e_traj=e_traj, e_s=e_s,history_delta=history_delta,
+                                               film=film)
         z = z + velocity / num_steps
     return z
 
