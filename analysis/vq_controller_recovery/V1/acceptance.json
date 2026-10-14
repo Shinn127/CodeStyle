@@ -1,0 +1,310 @@
+{
+ "label": "V1",
+ "b0": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_controller_recovery/V1/probe_B0_ep5.json",
+ "b1": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/vq_controller_recovery/V1/probe_B1_ep5.json",
+ "b0_manifest": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_posacc_V1-B0_ep90seq8_5ep/manifest.json",
+ "b1_manifest": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vq_posacc_V1-B1_ep90seq8_5ep/manifest.json",
+ "protocol": "V1/PROTOCOL.md section 4 (frozen before training)",
+ "gates": {
+  "v1_0_contract": {
+   "name": "V1-0 contract: single variable, frozen E/Q/EMA, identical updates",
+   "result": "PASS",
+   "detail": {
+    "passed": true,
+    "checks": {
+     "same_init_state_sha": {
+      "ok": true,
+      "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+     },
+     "same_init_file_sha": {
+      "ok": true,
+      "detail": "825be6785b3e7fc2…"
+     },
+     "same_total_updates": {
+      "ok": true,
+      "detail": "25825.0 vs 25825.0"
+     },
+     "same_dataset_sha": {
+      "ok": true,
+      "detail": "6d308e18f05285e6… vs 6d308e18f05285e6…"
+     },
+     "same_split_sha": {
+      "ok": true,
+      "detail": "c3987af0f1c91568… vs c3987af0f1c91568…"
+     },
+     "same_vq_state_sha": {
+      "ok": true,
+      "detail": "918b5e07046266f7… vs 918b5e07046266f7…"
+     },
+     "same_norm_sha": {
+      "ok": true,
+      "detail": "bfbe62d548b525de…"
+     },
+     "same_pinned_protocol": {
+      "ok": true,
+      "detail": "pinned dicts equal"
+     },
+     "posacc_is_single_variable": {
+      "ok": true,
+      "detail": "B0=0.0 B1=1.6295 (control must be 0, candidate > 0)"
+     },
+     "encoder_quantizer_bitwise_unchanged": {
+      "ok": true,
+      "detail": {
+       "B0": {
+        "encoder.": true,
+        "quantizer.": true
+       },
+       "B1": {
+        "encoder.": true,
+        "quantizer.": true
+       }
+      }
+     },
+     "decoder_actually_updated": {
+      "ok": true,
+      "detail": {
+       "B0": 24,
+       "B1": 24
+      }
+     }
+    }
+   },
+   "note": "mandatory; failure -> INVALID_EXPERIMENT"
+  },
+  "v1_1_d2r": {
+   "name": "V1-1 ||d2r|| mean & p95 drop (CI upper < 0)",
+   "result": "PASS",
+   "detail": {
+    "d2r_local_mean": {
+     "statistic": "mean",
+     "point": -0.10105240844226941,
+     "ci": [
+      -0.12257729806054736,
+      -0.07740864687399085
+     ],
+     "b0_absolute": 0.39386607267207197,
+     "b1_absolute": 0.29281366422980254,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.2565654049781648
+    },
+    "d2r_local_p95": {
+     "statistic": "mean",
+     "point": -0.4195434513081267,
+     "ci": [
+      -0.5155169193133439,
+      -0.3115574278405202
+     ],
+     "b0_absolute": 1.258321739565841,
+     "b1_absolute": 0.8387782882577143,
+     "n_sources": 12,
+     "seed": 42,
+     "draws": 1000,
+     "confirmed_drop": true,
+     "relative_change": -0.3334150862345284
+    }
+   },
+   "note": ""
+  },
+  "v1_2_jitter": {
+   "name": "V1-2 quantized jitter drop >= 15%",
+   "result": "PASS",
+   "detail": {
+    "b0": 0.41532873194647324,
+    "b1": 0.31651495284393055,
+    "relative_change": -0.23791703174361079
+   },
+   "note": ""
+  },
+  "v1_3_quality": {
+   "name": "V1-3 pose/root regression <= 3%",
+   "result": "FAIL",
+   "detail": {
+    "mpjpe_q": {
+     "b0": 1.5972748082969253,
+     "b1": 2.237590807309602,
+     "relative_change": 0.4008802966694289,
+     "within_limit": false
+    },
+    "local_mpjpe_q": {
+     "b0": 1.043482682271512,
+     "b1": 1.7259704686175061,
+     "relative_change": 0.6540480239310884,
+     "within_limit": false
+    },
+    "root_ade_q": {
+     "b0": 0.8616527236854407,
+     "b1": 0.8855215445694516,
+     "relative_change": 0.027701207491017676,
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "v1_4_foot_sliding": {
+   "name": "V1-4 FS regression <= 0.5%",
+   "result": "PASS",
+   "detail": {
+    "fs_world_q": {
+     "b0": 0.48966066989559653,
+     "b1": 0.3919961061659732,
+     "relative_change": -0.19945355985083912,
+     "within_limit": true,
+     "contact_count_b0": NaN,
+     "contact_count_b1": NaN
+    },
+    "fs_local_q": {
+     "b0": 0.24965606344507096,
+     "b1": 0.19648688270690592,
+     "relative_change": -0.21296971523330643,
+     "within_limit": true,
+     "contact_count_b0": NaN,
+     "contact_count_b1": NaN
+    }
+   },
+   "note": ""
+  },
+  "v1_5_activity": {
+   "name": "V1-5 activity drop <= 5%",
+   "result": "FAIL",
+   "detail": {
+    "activity_q.moving_frame_fraction": {
+     "b0": 0.4923611111111112,
+     "b1": 0.41458333333333336,
+     "relative_change": -0.15796897038081814,
+     "within_limit": false
+    },
+    "activity_q.strong_moving_frame_fraction": {
+     "b0": 0.06527777777777778,
+     "b1": 0.0375,
+     "relative_change": -0.4255319148936171,
+     "within_limit": false
+    },
+    "activity_q.pose_step_mean_cm": {
+     "b0": 0.5362257345563473,
+     "b1": 0.471175899610549,
+     "relative_change": -0.12131054284371112,
+     "within_limit": false
+    },
+    "activity_q.leg_travel_cm": {
+     "b0": 165.15667540942874,
+     "b1": 141.90891150996214,
+     "relative_change": -0.1407618786333319,
+     "within_limit": false
+    },
+    "activity_q.toe_height_range_cm": {
+     "b0": 5.236808866262436,
+     "b1": 4.998118882377942,
+     "relative_change": -0.04557928119588772,
+     "within_limit": true
+    },
+    "activity_q.foot_lift_fraction": {
+     "b0": 0.14049586776859505,
+     "b1": 0.13739669421487602,
+     "relative_change": -0.02205882352941191,
+     "within_limit": true
+    },
+    "activity_q.toe_speed_mean_cm_per_frame": {
+     "b0": 1.4854575720975822,
+     "b1": 1.2650832022329273,
+     "relative_change": -0.14835453667886933,
+     "within_limit": false
+    },
+    "contact.pred_contact_coverage": {
+     "b0": 0.12152777777777779,
+     "b1": 0.13472222222222222,
+     "relative_change": 0.10857142857142832,
+     "within_limit": true
+    }
+   },
+   "note": ""
+  },
+  "v1_6_style": {
+   "name": "V1-6 style proxy drop <= 2pp",
+   "result": "FAIL",
+   "detail": {
+    "b0": 0.9555555555555556,
+    "b1": 0.9333333333333333,
+    "change": -0.022222222222222254
+   },
+   "note": ""
+  }
+ },
+ "pairs": {
+  "d2r_local_mean": {
+   "statistic": "mean",
+   "point": -0.10105240844226941,
+   "ci": [
+    -0.12257729806054736,
+    -0.07740864687399085
+   ],
+   "b0_absolute": 0.39386607267207197,
+   "b1_absolute": 0.29281366422980254,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.2565654049781648
+  },
+  "d2r_local_p95": {
+   "statistic": "mean",
+   "point": -0.4195434513081267,
+   "ci": [
+    -0.5155169193133439,
+    -0.3115574278405202
+   ],
+   "b0_absolute": 1.258321739565841,
+   "b1_absolute": 0.8387782882577143,
+   "n_sources": 12,
+   "seed": 42,
+   "draws": 1000,
+   "confirmed_drop": true,
+   "relative_change": -0.3334150862345284
+  }
+ },
+ "continuous_contrast": {
+  "jitter": {
+   "b0": 0.12136947518748507,
+   "b1": 0.1100143417924726,
+   "relative_change": -0.0935583957784416
+  },
+  "fs_world": {
+   "b0": 0.20269912555862837,
+   "b1": 0.26606919343256497,
+   "relative_change": 0.3126311852569268
+  },
+  "fs_local": {
+   "b0": 0.12591625274495877,
+   "b1": 0.12040442069794269,
+   "relative_change": -0.04377379350845356
+  },
+  "mpjpe": {
+   "b0": 1.5476245932670993,
+   "b1": 2.2278229054012244,
+   "relative_change": 0.4395111806140264
+  },
+  "local_mpjpe": {
+   "b0": 0.9935108150670912,
+   "b1": 1.6994361716294604,
+   "relative_change": 0.7105361570872266
+  },
+  "root_ade": {
+   "b0": 0.8426735696713786,
+   "b1": 0.8788137567273184,
+   "relative_change": 0.04288752888029168
+  }
+ },
+ "codec_contrast": {
+  "b0": 0.6056947062412897,
+  "b1": 0.706633061170578
+ },
+ "gt_reference": {
+  "jitter": 0.09173414108354727,
+  "fs_world": 0.09066741367638935
+ },
+ "verdict": "FAIL",
+ "verdict_note": "PASS = all registered V1 gates met; V1 PASS is only a representation-val candidate and must NOT be injected into the live controller. FAIL = veto rule. INCONCLUSIVE = no separation."
+}

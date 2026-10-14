@@ -73,8 +73,10 @@ def main() -> None:
     decoder_changed = sum(
         not torch.equal(final_state[k], init_state[k]) for k in final_state if k.startswith("decoder."))
 
+    from Utils.reproducibility import artifact_fingerprints
     manifest = dict(
         stage="V1", arm=args.arm, run_dir=str(run_dir),
+        dataset=artifact_fingerprints(lib.vt.DB, init_ckpt, Path(str(config["norm_stats"]))),
         git=lib.vt.git_commit(), environment=lib.vt.environment_report(),
         contract=dict(pinned=PINNED, posacc_weight=float(args.posacc_weight),
                       posacc_beta_cm=0.5),

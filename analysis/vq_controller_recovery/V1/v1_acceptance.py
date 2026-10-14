@@ -27,6 +27,54 @@ import s4_acceptance as s4  # noqa: E402  (verified gate + bootstrap implementat
 import loop_lib as lib  # noqa: E402
 
 
+def v1_contract(m0: dict, m1: dict) -> dict:
+    """Fail-closed V1 contract gate (V1/PROTOCOL.md V1-0)."""
+    checks: dict[str, dict] = {}
+
+    def add(name, ok, detail):
+        checks[name] = {"ok": bool(ok), "detail": detail}
+
+    def short(v):
+        return f"{str(v)[:16]}…"
+
+    add("same_init_state_sha",
+        m0["init_checkpoint"]["state_sha256"] == m1["init_checkpoint"]["state_sha256"],
+        f"{short(m0['init_checkpoint']['state_sha256'])} vs {short(m1['init_checkpoint']['state_sha256'])}")
+    add("same_init_file_sha",
+        m0["init_checkpoint"]["sha256"] == m1["init_checkpoint"]["sha256"],
+        f"{short(m0['init_checkpoint']['sha256'])}")
+    add("same_total_updates",
+        int(m0["integrity"]["total_updates"]) == int(m1["integrity"]["total_updates"]),
+        f"{m0['integrity']['total_updates']} vs {m1['integrity']['total_updates']}")
+    for key, name in (("db_sha256", "same_dataset_sha"), ("split_sha256", "same_split_sha"),
+                      ("vq_state_sha256", "same_vq_state_sha")):
+        add(name, m0["dataset"].get(key) == m1["dataset"].get(key),
+            f"{short(m0['dataset'].get(key))} vs {short(m1['dataset'].get(key))}")
+    add("same_norm_sha", m0["norm_stats"]["sha256"] == m1["norm_stats"]["sha256"],
+        short(m0["norm_stats"]["sha256"]))
+
+    pinned_diff = {k: (m0["contract"]["pinned"].get(k), m1["contract"]["pinned"].get(k))
+                   for k in set(m0["contract"]["pinned"]) | set(m1["contract"]["pinned"])
+                   if m0["contract"]["pinned"].get(k) != m1["contract"]["pinned"].get(k)}
+    # posacc_weight is intentionally NOT in the pinned dict (it is the variable).
+    add("same_pinned_protocol", not pinned_diff, pinned_diff or "pinned dicts equal")
+
+    w0 = float(m0["contract"]["posacc_weight"])
+    w1 = float(m1["contract"]["posacc_weight"])
+    add("posacc_is_single_variable", w0 == 0.0 and w1 > 0.0,
+        f"B0={w0} B1={w1} (control must be 0, candidate > 0)")
+
+    frozen_detail = {arm: {k: v["unchanged"] for k, v in m["frozen_groups"].items()}
+                     for arm, m in (("B0", m0), ("B1", m1))}
+    add("encoder_quantizer_bitwise_unchanged",
+        all(flag for arm in frozen_detail.values() for flag in arm.values()),
+        frozen_detail)
+    add("decoder_actually_updated",
+        int(m0["decoder_tensors_changed"]) > 0 and int(m1["decoder_tensors_changed"]) > 0,
+        {"B0": m0["decoder_tensors_changed"], "B1": m1["decoder_tensors_changed"]})
+    return dict(passed=all(item["ok"] for item in checks.values()), checks=checks)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--b0", type=Path, required=True)
@@ -45,21 +93,10 @@ def main() -> None:
     m0 = s4.load_manifest(args.b0_manifest)
     m1 = s4.load_manifest(args.b1_manifest)
 
-    # V1-0: contract (S4's mandatory gate, plus the frozen-representation invariant).
-    contract = s4.contract_gate(b0, b1, m0, m1)
-    frozen_ok = all(
-        all(group["unchanged"] for group in manifest["frozen_groups"].values())
-        for manifest in (m0, m1)
-    )
-    contract_checks = dict(contract["checks"])
-    contract_checks["v1_encoder_quantizer_bitwise_unchanged"] = dict(
-        ok=bool(frozen_ok),
-        detail={arm: {k: v["unchanged"] for k, v in manifest["frozen_groups"].items()}
-                for arm, manifest in (("B0", m0), ("B1", m1))},
-    )
-    contract_v1 = dict(contract)
-    contract_v1["checks"] = contract_checks
-    contract_v1["passed"] = all(item["ok"] for item in contract_checks.values())
+    # V1-0: contract, adapted from S4's fail-closed gate to the V1 manifest schema:
+    #   same init state/file sha; same updates; identical pinned protocol (excluding the
+    #   single variable); encoder+quantizer bitwise unchanged per arm; only posacc differs.
+    contract_v1 = v1_contract(m0, m1)
 
     def series(payload, key):
         return s4.per_source_metric(payload, key).astype(np.float64)
@@ -119,7 +156,10 @@ def main() -> None:
                 "activity_q.pose_step_mean_cm", "activity_q.leg_travel_cm",
                 "activity_q.toe_height_range_cm", "activity_q.foot_lift_fraction",
                 "activity_q.toe_speed_mean_cm_per_frame", "contact.pred_contact_coverage"):
-        v0, v1 = float(b0["aggregate"][key]["mean"]), float(b1["aggregate"][key]["mean"])
+        raw0, raw1 = b0["aggregate"][key], b1["aggregate"][key]
+        # activity_* entries are stat blocks; contact.* entries are plain floats.
+        v0 = float(raw0["mean"]) if isinstance(raw0, dict) else float(raw0)
+        v1 = float(raw1["mean"]) if isinstance(raw1, dict) else float(raw1)
         rel = s4.ratio_change(v0, v1)
         g5[key] = dict(b0=v0, b1=v1, relative_change=rel, within_limit=rel >= -0.05)
         ok5 &= rel >= -0.05
