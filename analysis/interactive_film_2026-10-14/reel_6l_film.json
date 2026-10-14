@@ -1,0 +1,50 @@
+{
+  "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/best.pt",
+  "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+  "source_entry_id": 412,
+  "initial_frame": 2007765,
+  "source_style": "Neutral",
+  "steps": 4,
+  "noise_std": 1.0,
+  "seed": 42,
+  "fps": 60,
+  "fp32": true,
+  "tf32": false,
+  "feedback": "clip_quantize_decode",
+  "root": "predicted_velocity_integrated",
+  "styles": 90,
+  "history_conditioning": true,
+  "trajectory_policy": "legacy",
+  "frames": 720,
+  "final_style": "Neutral",
+  "vq_unchanged": true,
+  "inference_ms_mean": 5.205602979088288,
+  "inference_ms_p95": 5.767888551054057,
+  "root_position": [
+    2.6532845497131348,
+    6.388152122497559
+  ],
+  "root_yaw_degrees": 50.105957076946986,
+  "render": {
+    "postprocess": true,
+    "foot_ik": true,
+    "foot_ik_active": true,
+    "smoothing_active": true,
+    "smooth_cutoff": 6.0,
+    "postprocess_ms_mean": 2.235535159777808,
+    "contacts": 1,
+    "fully_locked": 1,
+    "candidates": 0,
+    "pelvis_offset": 0.0010549712983277332,
+    "release_reasons": [
+      "reach",
+      "none"
+    ],
+    "recording": {
+      "path": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/interactive_film_2026-10-14/reel_6l_film.mp4",
+      "fps": 60,
+      "frames": 720,
+      "hidden": true
+    }
+  }
+}

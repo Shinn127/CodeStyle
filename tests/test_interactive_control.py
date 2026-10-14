@@ -1,4 +1,6 @@
 """Keyboard trajectory layout, coordinate signs, and autonomous feedback."""
+import json
+
 import numpy as np
 import pytest
 import torch
@@ -133,3 +135,55 @@ def test_ui_reports_effective_processing_state(master,ik,cutoff):
     assert status['foot_ik']==bool(master and ik)
     assert status['bone_fk']==master
     assert status['contacts']==(2 if master and ik else 0)
+
+
+def test_reel_schedule_is_bounded_and_swaps_styles_in_order():
+    from Visualization.cli.interactive_label_control import REEL_PHASES,REEL_STYLES,reel_controls
+    class Session:
+        def __init__(self):self.frames=0;self.names=['Neutral','Robot','Old','HighKnees','ArmsAboveHead'];self.style=0;self.swaps=[]
+        def set_style(self,style):self.style=int(style);self.swaps.append(style)
+    session=Session()
+    total=sum(length for length,_ in REEL_PHASES)
+    seen=[]
+    for frame in range(max(at for at,_ in REEL_STYLES)+30):
+        session.frames=frame
+        forward,side,turn,speed=reel_controls(session)
+        assert -1<=forward<=1 and -1<=side<=1 and -1<=turn<=1 and 0<=speed<=3
+        seen.append(session.style)
+    assert [name for _,name in REEL_STYLES]==['Robot','Old','HighKnees','ArmsAboveHead','Neutral']
+    assert session.swaps==[1,2,3,4,0]
+    assert seen[-1]==0 and len(set(seen))==len(REEL_STYLES)
+    assert total==sum(length for length,_ in REEL_PHASES)==720
+
+
+def test_frame_recorder_encodes_and_counts_frames(tmp_path):
+    import shutil,subprocess
+    if shutil.which('ffmpeg') is None:pytest.skip('ffmpeg unavailable')
+    from Visualization.cli.interactive_label_control import FrameRecorder
+    path=tmp_path/'clip.mp4'
+    recorder=FrameRecorder(path,fps=30)
+    width,height=64,48
+    checker=np.zeros((height,width,4),np.uint8)
+    checker[...,3]=255
+    for frame in range(30):
+        checker[...,0]=(frame*8)%256
+        recorder.write(checker.tobytes(),width,height)
+    frames=recorder.close()
+    assert frames==30 and path.stat().st_size>0
+    probe=subprocess.run(['ffprobe','-v','error','-select_streams','v:0','-show_entries','stream=width,height,nb_frames',
+        '-of','json',str(path)],capture_output=True,text=True)
+    if probe.returncode==0:
+        info=json.loads(probe.stdout)['streams'][0]
+        assert (info['width'],info['height'])==(64,48)
+
+
+def test_parse_args_rejects_record_in_headless_mode():
+    from Visualization.cli.interactive_label_control import parse_args
+    with pytest.raises(SystemExit):
+        parse_args(['--headless','--max-frames','10','--record','/tmp/x.mp4'])
+
+
+def test_hidden_and_reel_flags_reach_the_args():
+    from Visualization.cli.interactive_label_control import parse_args
+    args=parse_args(['--hidden','--reel','--max-frames','30'])
+    assert args.hidden and args.reel and not args.headless

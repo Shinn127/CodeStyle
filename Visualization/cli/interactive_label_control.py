@@ -2,6 +2,8 @@
 import argparse
 import json
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 import time
 
@@ -47,6 +49,9 @@ def parse_args(argv=None):
     p.add_argument('--smooth-cutoff',type=float,default=6.,help='Causal render smoothing cutoff Hz; 0 disables filtering')
     p.add_argument('--headless',action='store_true')
     p.add_argument('--demo',action='store_true',help='Scripted control/style changes for bounded checks')
+    p.add_argument('--reel',action='store_true',help='Scripted walk/turn/strafe sequence with style swaps, for recordings')
+    p.add_argument('--hidden',action='store_true',help='Render into a hidden window (offscreen); still needs a display server')
+    p.add_argument('--record',type=Path,default=None,help='Record every rendered frame to this mp4 (H.264 via the ffmpeg binary)')
     p.add_argument('--max-frames',type=int,default=0,help='0 keeps the interactive window open')
     p.add_argument('--screenshot',type=Path,default=None)
     p.add_argument('--report-json',type=Path,default=None)
@@ -55,6 +60,8 @@ def parse_args(argv=None):
     if not 0<=args.speed<=3 or args.turn_speed<=0 or args.style_blend<0 or args.smooth_cutoff<0:p.error('Invalid speed/transition settings')
     if args.headless and not 1<=args.max_frames<=600:p.error('Headless checks require --max-frames in 1..600')
     if args.headless and args.screenshot:p.error('Screenshots require the GUI')
+    if args.headless and args.record:p.error('Recording requires the rendered viewer, not --headless')
+    if args.record is not None and shutil.which('ffmpeg') is None:p.error('--record needs the ffmpeg binary on PATH')
     return args
 
 
@@ -143,11 +150,60 @@ def demo_controls(session):
     return ((1.,0.,0.) if frame<30 else (1.,0.,1.) if frame<60 else (0.,1.,0.) if frame<90 else (-1.,0.,-1.))
 
 
+# Walk/turn/strafe phases (frames, (forward, side, turn, speed)) and style-swap frames.
+REEL_PHASES=((90,(1.,0.,0.,1.2)),(90,(1.,0.,.6,1.2)),(90,(0.,1.,0.,1.2)),(90,(1.,0.,-.6,1.8)),
+             (90,(1.,0.,0.,1.2)),(90,(-1.,0.,.4,1.0)),(90,(0.,-1.,0.,1.2)),(90,(1.,0.,0.,1.2)))
+REEL_STYLES=((120,'Robot'),(240,'Old'),(360,'HighKnees'),(480,'ArmsAboveHead'),(600,'Neutral'))
+
+
+def reel_controls(session):
+    frame=int(session.frames)
+    for at,name in REEL_STYLES:
+        if frame==at and name in session.names:session.set_style(session.names.index(name))
+    elapsed=0
+    for length,controls in REEL_PHASES:
+        if frame<elapsed+length:return controls
+        elapsed+=length
+    return (1.,0.,0.,1.2)
+
+
+class FrameRecorder:
+    """Pipe rendered RGBA frames into ffmpeg (H.264 mp4); lazily sized on the first frame."""
+
+    def __init__(self,path,fps=60):
+        self.path=Path(path);self.fps=int(fps);self.proc=None;self.size=None;self.frames=0
+
+    def write(self,data,width,height):
+        if self.proc is None:
+            self.path.parent.mkdir(parents=True,exist_ok=True);self.size=(int(width),int(height))
+            self.proc=subprocess.Popen(['ffmpeg','-hide_banner','-loglevel','error','-y',
+                '-f','rawvideo','-pixel_format','rgba','-video_size',f'{self.size[0]}x{self.size[1]}',
+                '-framerate',str(self.fps),'-i','-','-an','-c:v','libx264','-preset','veryfast',
+                '-crf','18','-pix_fmt','yuv420p',str(self.path)],stdin=subprocess.PIPE)
+        if (int(width),int(height))!=self.size:raise ValueError('Recording frame size changed mid-run')
+        self.proc.stdin.write(data);self.frames+=1
+
+    def close(self):
+        if self.proc is None:return 0
+        try:self.proc.stdin.close()
+        except BrokenPipeError:pass
+        code=self.proc.wait()
+        if code!=0:raise RuntimeError(f'ffmpeg exited with status {code}')
+        self.proc=None
+        return self.frames
+
+
 def run_headless(session,args):
     latencies=[]
     for frame in range(args.max_frames):
-        control=demo_controls(session) if args.demo else (0.,0.,0.)
-        started=time.perf_counter();session.step(*control,speed=args.speed);latencies.append((time.perf_counter()-started)*1000)
+        if args.reel:
+            forward,side,turn,speed=reel_controls(session)
+            control=(forward,side,turn)
+        elif args.demo:
+            control,speed=demo_controls(session),args.speed
+        else:
+            control,speed=(0.,0.,0.),args.speed
+        started=time.perf_counter();session.step(*control,speed=speed);latencies.append((time.perf_counter()-started)*1000)
         if frame%20==0:
             with torch.no_grad():torch.testing.assert_close(session.motion,session.model.vqvae.decode(session.latent),atol=0,rtol=0)
     return latencies
@@ -162,7 +218,9 @@ def run_viewer(session,args):
     parents=np.asarray(template['parents'],np.int32);local_pos,local_rot=_template_local_transforms(template,0)
     processor=PosePostprocessor(template['names'],parents,local_pos,cutoff=args.smooth_cutoff,foot_ik=args.foot_ik)
     postprocess=args.postprocess;pose_frame=None;pose_cost=[];camera_target=None
-    gv.SetConfigFlags(gv.FLAG_MSAA_4X_HINT|gv.FLAG_VSYNC_HINT)
+    recorder=FrameRecorder(args.record,fps=60) if args.record is not None else None
+    flags=gv.FLAG_MSAA_4X_HINT|gv.FLAG_VSYNC_HINT|(gv.FLAG_WINDOW_HIDDEN if args.hidden else 0)
+    gv.SetConfigFlags(flags)
     gv.InitWindow(1280,800,b'Live label flow controller | WASD + QE')
     model=None;shader=None;latencies=[]
     try:
@@ -212,11 +270,17 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
                 if gv.IsKeyPressed(gv.KEY_I) and postprocess:processor.foot_ik=not processor.foot_ik;processor.reset();pose_frame=None
             forward,side,turn,sprint=keyboard_controls(gv,enabled)
             factor=-1 if session.coordinate_convert else 1
-            accumulator=0. if paused else min(accumulator+(session.planner.dt if args.demo else wall_dt),3*session.planner.dt)
+            scripted=args.demo or args.reel
+            accumulator=0. if paused else min(accumulator+(session.planner.dt if scripted else wall_dt),3*session.planner.dt)
             for _ in range(2):
                 if accumulator<session.planner.dt:break
-                controls=demo_controls(session) if args.demo else (forward,side*factor,turn*factor)
-                started=time.perf_counter();session.step(*controls,speed=min(3.,float(speed[0])*(1.7 if sprint else 1.)))
+                if args.reel:
+                    step_forward,step_side,step_turn,step_speed=reel_controls(session)
+                else:
+                    controls=demo_controls(session) if args.demo else (forward,side*factor,turn*factor)
+                    step_forward,step_side,step_turn=controls
+                    step_speed=min(3.,float(speed[0])*(1.7 if sprint else 1.))
+                started=time.perf_counter();session.step(step_forward,step_side,step_turn,speed=step_speed)
                 infer_ms=(time.perf_counter()-started)*1000;latencies.append(infer_ms);accumulator-=session.planner.dt
             if pose_frame!=session.frames:
                 selected_pos,selected_rot=session.selected_pose()
@@ -296,6 +360,13 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
             gv.GuiSlider(gv.Rectangle(994,596,258,18),b'',b'',speed,0.,3.)
             for i,line in enumerate(['W/S forward/back | A/D left/right','Q turn left | E turn right','Shift sprint | -/+ speed | [/] style','Space pause | R reset','P processing | I foot IK (or click)','Right-drag orbit | Wheel zoom','T path | F1 bones | FP32',f'ESC close | Euler{session.steps} | {"RQ" if session.requantize else "AE"} feedback']):text(line,632+i*20,13)
             render_frames+=1
+            if recorder is not None:
+                gv.rlDrawRenderBatchActive()
+                image=gv.LoadImageFromScreen()
+                try:
+                    buffer=gv.ffi.buffer(image.data,image.width*image.height*4)
+                    recorder.write(bytes(buffer),image.width,image.height)
+                finally:gv.UnloadImage(image)
             if args.screenshot and args.max_frames and render_frames==args.max_frames:
                 args.screenshot.parent.mkdir(parents=True,exist_ok=True)
                 gv.rlDrawRenderBatchActive()
@@ -305,6 +376,9 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
                 finally:gv.UnloadImage(image)
             gv.EndDrawing()
     finally:
+        if recorder is not None:
+            try:session.recorded_frames=recorder.close()
+            except Exception as exc:print(f'[Warn] recording close failed: {exc}',file=sys.stderr)
         if model is not None:gv.UnloadModel(model)
         if shader is not None:gv.UnloadShader(shader)
         gv.CloseWindow()
@@ -312,6 +386,9 @@ finalColor=vec4(colDiffuse.rgb*fragColor.rgb*light+vec3(0.05,0.08,0.12)*rim,1.0)
     session.render_diagnostics=dict(postprocess=postprocess,foot_ik=processor.foot_ik,foot_ik_active=effective['foot_ik'],
         smoothing_active=effective['smoothing'],smooth_cutoff=args.smooth_cutoff,
         postprocess_ms_mean=float(np.mean(pose_cost)) if pose_cost else 0.,**processor.diagnostics)
+    if args.record is not None:
+        session.render_diagnostics['recording']=dict(path=str(args.record),fps=60,
+            frames=int(getattr(session,'recorded_frames',0)),hidden=bool(args.hidden))
     return latencies
 
 
@@ -321,7 +398,7 @@ def planar_facing(yaw,factor=1):
 
 def main(argv=None):
     args=parse_args(argv)
-    for name in ('db','flow_ckpt','vqvae_ckpt','norm_stats'):
+    for name in ('db','flow_ckpt','vqvae_ckpt','norm_stats','record'):
         value=getattr(args,name)
         if value is not None:setattr(args,name,value.expanduser().resolve())
     session,info=load_session(args)
