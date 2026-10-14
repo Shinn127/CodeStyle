@@ -1,0 +1,41 @@
+[Tests] suite=cpu; FP32/highest/noTF32; disposable fixtures only
+................................................................... [ 26%]
+........................................................................ [ 54%]
+........................................................................ [ 82%]
+..............................................                           [100%]
+=============================== warnings summary ===============================
+tests/test_acc_loss.py::AccelerationLossTests::test_vanishes_when_prediction_matches_target
+  /home/shinn/桌面/multimedia/revision/NewCode/tests/test_acc_loss.py:56: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /home/conda/feedstock_root/build_artifacts/libtorch_1786372153234/work/torch/csrc/autograd/generated/python_variable_methods.cpp:822.)
+    self.assertGreater(float(out["loss"]), 0.0)  # other terms still active
+
+tests/test_generate_database_parallel.py::GenerateDatabaseParallelTests::test_bounded_parallel_map_preserves_input_order
+tests/test_generate_database_parallel.py::GenerateDatabaseParallelTests::test_bounded_parallel_map_preserves_input_order
+tests/test_training_pipeline.py::test_worker_batches_preserve_all_rows_and_cache_indices[2-2]
+tests/test_training_pipeline.py::test_worker_batches_preserve_all_rows_and_cache_indices[2-2]
+tests/test_training_pipeline.py::test_worker_batches_preserve_all_rows_and_cache_indices[4-2]
+tests/test_training_pipeline.py::test_worker_batches_preserve_all_rows_and_cache_indices[4-2]
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=32071) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/test_legacy_quantizer_loading.py::LegacyQuantizerLoadingTests::test_legacy_keys_load_with_the_flag_and_keep_the_autoencoder
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/mpmath/rational.py:4: DeprecationWarning: the rational private module is deprecated
+    warnings.warn("the rational private module is deprecated",
+
+tests/test_legacy_quantizer_loading.py::LegacyQuantizerLoadingTests::test_legacy_keys_load_with_the_flag_and_keep_the_autoencoder
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/mpmath/math2.py:4: DeprecationWarning: the math2 module is deprecated, use libfp instead
+    warnings.warn("the math2 module is deprecated, use libfp instead",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+4.10s call     tests/test_clip_recipe_v2.py::test_v2_rollout_validation_uses_temporal_refs_and_excludes_gt_initial_frame
+2.42s call     tests/test_fid_recon_extractor.py::ReconTrainerTests::test_two_epoch_run_saves_a_loadable_checkpoint
+2.05s call     tests/test_fid_joint_sets.py::CamdmTrainerTests::test_dataset_and_short_training_run
+1.77s call     tests/test_clip_recipe_v2.py::test_real_metric_and_controller_entry_exact_resume
+1.74s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-rollout]
+1.42s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-reconstruct]
+1.19s call     tests/test_fid_recon_extractor.py::ReconExtractorModuleTests::test_reconstruction_error_decreases
+1.02s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-reconstruct]
+0.94s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-rollout]
+0.62s call     tests/test_style_classifier_240.py::test_real_240_frame_classifier_training_save_load_and_output_guard
+257 passed, 16 deselected, 9 warnings, 5 subtests passed in 25.19s

@@ -1,0 +1,14 @@
+[Tests] suite=gpu; FP32/highest/noTF32; disposable fixtures only
+................                                                         [100%]
+============================= slowest 10 durations =============================
+0.88s call     tests/test_clip_recipe_v2.py::test_real_cuda_metric_controller_exact_resume
+0.52s call     tests/test_fp32_pipeline_efficiency.py::test_actual_cuda_entry_epoch_resume_matches_continuous
+0.44s call     tests/test_clip_recipe_v2.py::test_temporal_reference_export_manual_condition_and_cfg[cuda]
+0.38s call     tests/test_clip_recipe_v2.py::test_quantized_window_objective_gradients_no_ode_frozen_vq_and_metric[cuda]
+0.28s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-3-cuda]
+0.12s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-1-cuda]
+0.09s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[2-1-cuda]
+0.08s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-target]
+0.05s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-velocity]
+0.03s call     tests/test_fp32_pipeline_efficiency.py::test_six_token_fp32_math_attention_loss_gradient_and_rng
+16 passed, 257 deselected in 4.27s

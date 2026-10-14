@@ -1,0 +1,1138 @@
+{
+  "config": {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap",
+    "flow_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_recipe_tf150/epoch_0150.pt",
+    "flow_vqvae_ckpt": null,
+    "classifier_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_mirror_60fps_240f/100style_position_classifier.pth",
+    "classifier_joint_set": "ybot15",
+    "flow_model_name": "flowmatch_target",
+    "norm_stats": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "horizons": [
+      240
+    ],
+    "stride": 30,
+    "num_sources": 270,
+    "targets_per_source": 5,
+    "classifier_window": 240,
+    "classifier_fps": 60.0,
+    "classifier_window_seconds": 4.0,
+    "include_gt_context": false,
+    "unmirrored_sources": true,
+    "source_split": "val",
+    "conditioning_mode": "recipe",
+    "recipe_only": true,
+    "flow_microbatch_size": 512,
+    "protocol_version": 3,
+    "classifier_stride": 10,
+    "seed": 42,
+    "dt": 0.016666666666666666,
+    "flow_eval_mode": "reconstruct",
+    "flow_solver": "euler",
+    "flow_ode_steps": 8,
+    "flow_noise_std": -1.0,
+    "flow_requantize_z": true,
+    "effective_flow_requantize_z": true,
+    "flow_latent_clip": true,
+    "use_target_style_recipe": true,
+    "recipe_source_db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap",
+    "recipe_exemplars_per_style": 1,
+    "recipe_window": 240,
+    "recipe_stride": 30,
+    "recipe_strength": 1.0,
+    "recipe_seed": 42,
+    "recipe_profile": "canonical",
+    "recipe_pure_conditioning": true,
+    "recipe_meta": {
+      "recipe_profile": "canonical",
+      "representation": "topk_sparse",
+      "sampling": "independent_unmirrored_train_clips",
+      "topk": 4,
+      "recipe_db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap",
+      "selected_style_slots": [
+        4,
+        9,
+        10,
+        17,
+        18,
+        20,
+        23,
+        24
+      ],
+      "seq_len": 240,
+      "seed": 42,
+      "exemplars_per_style": 1,
+      "chosen_clips": [
+        {
+          "target_label": 0,
+          "clips": [
+            {
+              "segment_id": 0,
+              "source_entry_id": 0,
+              "frame_start": 3803,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 1,
+          "clips": [
+            {
+              "segment_id": 24,
+              "source_entry_id": 12,
+              "frame_start": 121766,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 2,
+          "clips": [
+            {
+              "segment_id": 40,
+              "source_entry_id": 20,
+              "frame_start": 173140,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 3,
+          "clips": [
+            {
+              "segment_id": 48,
+              "source_entry_id": 24,
+              "frame_start": 199705,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 4,
+          "clips": [
+            {
+              "segment_id": 66,
+              "source_entry_id": 33,
+              "frame_start": 269330,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 5,
+          "clips": [
+            {
+              "segment_id": 90,
+              "source_entry_id": 45,
+              "frame_start": 371882,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 6,
+          "clips": [
+            {
+              "segment_id": 108,
+              "source_entry_id": 54,
+              "frame_start": 447764,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 7,
+          "clips": [
+            {
+              "segment_id": 124,
+              "source_entry_id": 62,
+              "frame_start": 538587,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 8,
+          "clips": [
+            {
+              "segment_id": 138,
+              "source_entry_id": 69,
+              "frame_start": 606892,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 9,
+          "clips": [
+            {
+              "segment_id": 158,
+              "source_entry_id": 79,
+              "frame_start": 689520,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 10,
+          "clips": [
+            {
+              "segment_id": 168,
+              "source_entry_id": 84,
+              "frame_start": 747163,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 11,
+          "clips": [
+            {
+              "segment_id": 182,
+              "source_entry_id": 91,
+              "frame_start": 803206,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 12,
+          "clips": [
+            {
+              "segment_id": 204,
+              "source_entry_id": 102,
+              "frame_start": 883414,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 13,
+          "clips": [
+            {
+              "segment_id": 216,
+              "source_entry_id": 108,
+              "frame_start": 938219,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 14,
+          "clips": [
+            {
+              "segment_id": 238,
+              "source_entry_id": 119,
+              "frame_start": 1026465,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 15,
+          "clips": [
+            {
+              "segment_id": 252,
+              "source_entry_id": 126,
+              "frame_start": 1109327,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 16,
+          "clips": [
+            {
+              "segment_id": 262,
+              "source_entry_id": 131,
+              "frame_start": 1154173,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 17,
+          "clips": [
+            {
+              "segment_id": 290,
+              "source_entry_id": 145,
+              "frame_start": 1292772,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 18,
+          "clips": [
+            {
+              "segment_id": 306,
+              "source_entry_id": 153,
+              "frame_start": 1382205,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 19,
+          "clips": [
+            {
+              "segment_id": 314,
+              "source_entry_id": 157,
+              "frame_start": 1435499,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 20,
+          "clips": [
+            {
+              "segment_id": 324,
+              "source_entry_id": 162,
+              "frame_start": 1488325,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 21,
+          "clips": [
+            {
+              "segment_id": 350,
+              "source_entry_id": 175,
+              "frame_start": 1628066,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 22,
+          "clips": [
+            {
+              "segment_id": 358,
+              "source_entry_id": 179,
+              "frame_start": 1680876,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 23,
+          "clips": [
+            {
+              "segment_id": 380,
+              "source_entry_id": 190,
+              "frame_start": 1797432,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 24,
+          "clips": [
+            {
+              "segment_id": 400,
+              "source_entry_id": 200,
+              "frame_start": 1916077,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 25,
+          "clips": [
+            {
+              "segment_id": 412,
+              "source_entry_id": 206,
+              "frame_start": 1971548,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 26,
+          "clips": [
+            {
+              "segment_id": 426,
+              "source_entry_id": 213,
+              "frame_start": 2052587,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 27,
+          "clips": [
+            {
+              "segment_id": 442,
+              "source_entry_id": 221,
+              "frame_start": 2142682,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 28,
+          "clips": [
+            {
+              "segment_id": 462,
+              "source_entry_id": 231,
+              "frame_start": 2242739,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 29,
+          "clips": [
+            {
+              "segment_id": 480,
+              "source_entry_id": 240,
+              "frame_start": 2326298,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 30,
+          "clips": [
+            {
+              "segment_id": 498,
+              "source_entry_id": 249,
+              "frame_start": 2406862,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 31,
+          "clips": [
+            {
+              "segment_id": 508,
+              "source_entry_id": 254,
+              "frame_start": 2458246,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 32,
+          "clips": [
+            {
+              "segment_id": 524,
+              "source_entry_id": 262,
+              "frame_start": 2514161,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 33,
+          "clips": [
+            {
+              "segment_id": 548,
+              "source_entry_id": 274,
+              "frame_start": 2611998,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 34,
+          "clips": [
+            {
+              "segment_id": 552,
+              "source_entry_id": 276,
+              "frame_start": 2637876,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 35,
+          "clips": [
+            {
+              "segment_id": 578,
+              "source_entry_id": 289,
+              "frame_start": 2786732,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 36,
+          "clips": [
+            {
+              "segment_id": 590,
+              "source_entry_id": 295,
+              "frame_start": 2865714,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 37,
+          "clips": [
+            {
+              "segment_id": 610,
+              "source_entry_id": 305,
+              "frame_start": 2972057,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 38,
+          "clips": [
+            {
+              "segment_id": 620,
+              "source_entry_id": 310,
+              "frame_start": 3034095,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 39,
+          "clips": [
+            {
+              "segment_id": 640,
+              "source_entry_id": 320,
+              "frame_start": 3130494,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 40,
+          "clips": [
+            {
+              "segment_id": 660,
+              "source_entry_id": 330,
+              "frame_start": 3226769,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 41,
+          "clips": [
+            {
+              "segment_id": 662,
+              "source_entry_id": 331,
+              "frame_start": 3243031,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 42,
+          "clips": [
+            {
+              "segment_id": 686,
+              "source_entry_id": 343,
+              "frame_start": 3348336,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 43,
+          "clips": [
+            {
+              "segment_id": 698,
+              "source_entry_id": 349,
+              "frame_start": 3373605,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 44,
+          "clips": [
+            {
+              "segment_id": 722,
+              "source_entry_id": 361,
+              "frame_start": 3506185,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 45,
+          "clips": [
+            {
+              "segment_id": 734,
+              "source_entry_id": 367,
+              "frame_start": 3586872,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 46,
+          "clips": [
+            {
+              "segment_id": 758,
+              "source_entry_id": 379,
+              "frame_start": 3697794,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 47,
+          "clips": [
+            {
+              "segment_id": 774,
+              "source_entry_id": 387,
+              "frame_start": 3772023,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 48,
+          "clips": [
+            {
+              "segment_id": 782,
+              "source_entry_id": 391,
+              "frame_start": 3823181,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 49,
+          "clips": [
+            {
+              "segment_id": 802,
+              "source_entry_id": 401,
+              "frame_start": 3915588,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 50,
+          "clips": [
+            {
+              "segment_id": 820,
+              "source_entry_id": 410,
+              "frame_start": 3987626,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 51,
+          "clips": [
+            {
+              "segment_id": 836,
+              "source_entry_id": 418,
+              "frame_start": 4069218,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 52,
+          "clips": [
+            {
+              "segment_id": 852,
+              "source_entry_id": 426,
+              "frame_start": 4199413,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 53,
+          "clips": [
+            {
+              "segment_id": 864,
+              "source_entry_id": 432,
+              "frame_start": 4274076,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 54,
+          "clips": [
+            {
+              "segment_id": 880,
+              "source_entry_id": 440,
+              "frame_start": 4338662,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 55,
+          "clips": [
+            {
+              "segment_id": 894,
+              "source_entry_id": 447,
+              "frame_start": 4399300,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 56,
+          "clips": [
+            {
+              "segment_id": 914,
+              "source_entry_id": 457,
+              "frame_start": 4484225,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 57,
+          "clips": [
+            {
+              "segment_id": 928,
+              "source_entry_id": 464,
+              "frame_start": 4556470,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 58,
+          "clips": [
+            {
+              "segment_id": 938,
+              "source_entry_id": 469,
+              "frame_start": 4592011,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 59,
+          "clips": [
+            {
+              "segment_id": 956,
+              "source_entry_id": 478,
+              "frame_start": 4703308,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 60,
+          "clips": [
+            {
+              "segment_id": 976,
+              "source_entry_id": 488,
+              "frame_start": 4866583,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 61,
+          "clips": [
+            {
+              "segment_id": 994,
+              "source_entry_id": 497,
+              "frame_start": 4942153,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 62,
+          "clips": [
+            {
+              "segment_id": 1014,
+              "source_entry_id": 507,
+              "frame_start": 5027677,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 63,
+          "clips": [
+            {
+              "segment_id": 1016,
+              "source_entry_id": 508,
+              "frame_start": 5041753,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 64,
+          "clips": [
+            {
+              "segment_id": 1042,
+              "source_entry_id": 521,
+              "frame_start": 5161097,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 65,
+          "clips": [
+            {
+              "segment_id": 1056,
+              "source_entry_id": 528,
+              "frame_start": 5220534,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 66,
+          "clips": [
+            {
+              "segment_id": 1064,
+              "source_entry_id": 532,
+              "frame_start": 5247510,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 67,
+          "clips": [
+            {
+              "segment_id": 1094,
+              "source_entry_id": 547,
+              "frame_start": 5319608,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 68,
+          "clips": [
+            {
+              "segment_id": 1108,
+              "source_entry_id": 554,
+              "frame_start": 5412477,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 69,
+          "clips": [
+            {
+              "segment_id": 1122,
+              "source_entry_id": 561,
+              "frame_start": 5484941,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 70,
+          "clips": [
+            {
+              "segment_id": 1144,
+              "source_entry_id": 572,
+              "frame_start": 5540661,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 71,
+          "clips": [
+            {
+              "segment_id": 1150,
+              "source_entry_id": 575,
+              "frame_start": 5572762,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 72,
+          "clips": [
+            {
+              "segment_id": 1176,
+              "source_entry_id": 588,
+              "frame_start": 5671161,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 73,
+          "clips": [
+            {
+              "segment_id": 1180,
+              "source_entry_id": 590,
+              "frame_start": 5686888,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 74,
+          "clips": [
+            {
+              "segment_id": 1206,
+              "source_entry_id": 603,
+              "frame_start": 5803046,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 75,
+          "clips": [
+            {
+              "segment_id": 1226,
+              "source_entry_id": 613,
+              "frame_start": 5877705,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 76,
+          "clips": [
+            {
+              "segment_id": 1248,
+              "source_entry_id": 624,
+              "frame_start": 5942284,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 77,
+          "clips": [
+            {
+              "segment_id": 1258,
+              "source_entry_id": 629,
+              "frame_start": 5991576,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 78,
+          "clips": [
+            {
+              "segment_id": 1268,
+              "source_entry_id": 634,
+              "frame_start": 6045809,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 79,
+          "clips": [
+            {
+              "segment_id": 1292,
+              "source_entry_id": 646,
+              "frame_start": 6241401,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 80,
+          "clips": [
+            {
+              "segment_id": 1312,
+              "source_entry_id": 656,
+              "frame_start": 6345829,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 81,
+          "clips": [
+            {
+              "segment_id": 1322,
+              "source_entry_id": 661,
+              "frame_start": 6394017,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 82,
+          "clips": [
+            {
+              "segment_id": 1336,
+              "source_entry_id": 668,
+              "frame_start": 6449912,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 83,
+          "clips": [
+            {
+              "segment_id": 1352,
+              "source_entry_id": 676,
+              "frame_start": 6515830,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 84,
+          "clips": [
+            {
+              "segment_id": 1368,
+              "source_entry_id": 684,
+              "frame_start": 6594350,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 85,
+          "clips": [
+            {
+              "segment_id": 1380,
+              "source_entry_id": 690,
+              "frame_start": 6643144,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 86,
+          "clips": [
+            {
+              "segment_id": 1406,
+              "source_entry_id": 703,
+              "frame_start": 6784763,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 87,
+          "clips": [
+            {
+              "segment_id": 1422,
+              "source_entry_id": 711,
+              "frame_start": 6852811,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 88,
+          "clips": [
+            {
+              "segment_id": 1438,
+              "source_entry_id": 719,
+              "frame_start": 6925229,
+              "frames": 240
+            }
+          ]
+        },
+        {
+          "target_label": 89,
+          "clips": [
+            {
+              "segment_id": 1456,
+              "source_entry_id": 728,
+              "frame_start": 7048413,
+              "frames": 240
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "summaries": [
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "real_motion_upper_bound_h240",
+      "num_pairs": 270,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": NaN,
+      "root_ade_cm_ci95": NaN,
+      "root_ade_cm_ci95_bounds": [
+        NaN,
+        NaN
+      ],
+      "target_style_acc_pct": 99.62962962962963,
+      "target_style_acc_pct_ci95": 0.5682358278603528,
+      "target_style_acc_pct_ci95_bounds": [
+        98.86352834427929,
+        100.0
+      ],
+      "target_conf_pct": 99.59412529512687,
+      "target_conf_pct_ci95": 0.6170815344177516,
+      "pred_conf_pct": 99.73904157126391,
+      "root_ade_cm_text": "-",
+      "target_style_acc_pct_text": "99.63 +/- 0.57",
+      "target_conf_pct_text": "99.59 +/- 0.62"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "matched_style_recipe_teacher_forced_h240",
+      "num_pairs": 270,
+      "uses_recipe": true,
+      "recipe_strength": 1.0,
+      "root_ade_cm": 3.896466384331385,
+      "root_ade_cm_ci95": 0.5068631217861801,
+      "root_ade_cm_ci95_bounds": [
+        3.4528736391007526,
+        4.466599882673113
+      ],
+      "target_style_acc_pct": 91.48148148148148,
+      "target_style_acc_pct_ci95": 5.565961756646848,
+      "target_style_acc_pct_ci95_bounds": [
+        85.487087517934,
+        96.6190110312277
+      ],
+      "target_conf_pct": 91.62571376605052,
+      "target_conf_pct_ci95": 5.467605787769364,
+      "pred_conf_pct": 98.25288145630448,
+      "root_ade_cm_text": "3.896 +/- 0.507",
+      "target_style_acc_pct_text": "91.48 +/- 5.57",
+      "target_conf_pct_text": "91.63 +/- 5.47"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "cross_style_transfer_recipe_teacher_forced_h240",
+      "num_pairs": 1350,
+      "uses_recipe": true,
+      "recipe_strength": 1.0,
+      "root_ade_cm": 7.908158789762744,
+      "root_ade_cm_ci95": 1.2079724464107136,
+      "root_ade_cm_ci95_bounds": [
+        6.809355435941649,
+        9.225300328763076
+      ],
+      "target_style_acc_pct": 46.14814814814815,
+      "target_style_acc_pct_ci95": 2.831276052948062,
+      "target_style_acc_pct_ci95_bounds": [
+        43.34541511771995,
+        49.00796722361608
+      ],
+      "target_conf_pct": 45.67736797159726,
+      "target_conf_pct_ci95": 2.713751040714782,
+      "pred_conf_pct": 88.9341609455921,
+      "root_ade_cm_text": "7.908 +/- 1.208",
+      "target_style_acc_pct_text": "46.15 +/- 2.83",
+      "target_conf_pct_text": "45.68 +/- 2.71"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+........s....................s.s.......................................s [ 56%]
+s.......................................................                 [100%]
+=============================== warnings summary ===============================
+tests/test_fp32_pipeline_efficiency.py: 3 warnings
+tests/test_clip_recipe_revision.py: 12 warnings
+tests/test_practical_style_training.py: 2 warnings
+tests/test_controller_repair.py: 28 warnings
+tests/test_flowmatch_performance.py: 9 warnings
+tests/test_recipe_training.py: 10 warnings
+tests/test_style_code_prior.py: 2 warnings
+tests/test_unrolled_training.py: 7 warnings
+  /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:406: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+    self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+
+tests/test_clip_recipe_revision.py: 3 warnings
+tests/test_practical_style_training.py: 1 warning
+tests/test_controller_repair.py: 7 warnings
+tests/test_recipe_training.py: 2 warnings
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+tests/test_unrolled_training.py::UnrolledFlowLossTests::test_one_step_equals_the_single_step_objective
+  /home/shinn/桌面/multimedia/revision/NewCode/tests/test_unrolled_training.py:117: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /home/conda/feedstock_root/build_artifacts/libtorch_1786372153234/work/torch/csrc/autograd/generated/python_variable_methods.cpp:822.)
+    self.assertAlmostEqual(float(unrolled["flow_loss"]), float(direct["flow_loss"]), places=5)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+123 passed, 5 skipped, 87 warnings in 16.77s

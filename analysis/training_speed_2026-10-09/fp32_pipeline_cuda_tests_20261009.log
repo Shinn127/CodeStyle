@@ -1,0 +1,11 @@
+...............................................                          [100%]
+=============================== warnings summary ===============================
+tests/test_fp32_pipeline_efficiency.py: 4 warnings
+tests/test_practical_style_training.py: 3 warnings
+tests/test_clip_recipe_revision.py: 12 warnings
+tests/test_flowmatch_performance.py: 11 warnings
+  /home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:406: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+    self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+47 passed, 30 warnings in 17.93s

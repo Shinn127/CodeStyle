@@ -1,0 +1,115 @@
+{
+  "config": {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap",
+    "flow_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_vqvae_controller_prior_90st/epoch_0010.pt",
+    "flow_vqvae_ckpt": null,
+    "classifier_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_mirror/100style_position_classifier.pth",
+    "classifier_joint_set": "ybot15",
+    "flow_model_name": "flowmatch_velocity",
+    "norm_stats": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep/norm_stats.npz",
+    "horizons": [
+      60
+    ],
+    "stride": 30,
+    "num_sources": 1000,
+    "targets_per_source": 5,
+    "classifier_window": 60,
+    "classifier_stride": 10,
+    "seed": 42,
+    "dt": 0.016666666666666666,
+    "flow_eval_mode": "rollout",
+    "flow_solver": "euler",
+    "flow_ode_steps": 0,
+    "flow_noise_std": -1.0,
+    "flow_requantize_z": null,
+    "flow_latent_clip": null,
+    "use_target_style_recipe": false,
+    "recipe_source_db": null,
+    "recipe_exemplars_per_style": 5,
+    "recipe_window": 60,
+    "recipe_stride": 30,
+    "recipe_strength": 1.0,
+    "recipe_seed": 42,
+    "recipe_meta": null
+  },
+  "summaries": [
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "real_motion_upper_bound_h60",
+      "num_pairs": 1000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": NaN,
+      "root_ade_cm_ci95": NaN,
+      "root_ade_cm_ci95_bounds": [
+        NaN,
+        NaN
+      ],
+      "target_style_acc_pct": 96.39999999999999,
+      "target_style_acc_pct_ci95": 2.256957273691629,
+      "target_style_acc_pct_ci95_bounds": [
+        93.98464825524808,
+        98.49856280263133
+      ],
+      "target_conf_pct": 96.04074196355906,
+      "target_conf_pct_ci95": 2.186648126050544,
+      "pred_conf_pct": 98.7061064362526,
+      "root_ade_cm_text": "-",
+      "target_style_acc_pct_text": "96.40 +/- 2.26",
+      "target_conf_pct_text": "96.04 +/- 2.19"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "matched_style_rollout_h60",
+      "num_pairs": 1000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": 2.4457783270180227,
+      "root_ade_cm_ci95": 0.18484929548827256,
+      "root_ade_cm_ci95_bounds": [
+        2.267826404909535,
+        2.6375249958860802
+      ],
+      "target_style_acc_pct": 46.9,
+      "target_style_acc_pct_ci95": 6.5237110053452145,
+      "target_style_acc_pct_ci95_bounds": [
+        40.33806649703569,
+        53.38548850772612
+      ],
+      "target_conf_pct": 46.90398648696289,
+      "target_conf_pct_ci95": 6.294448470084299,
+      "pred_conf_pct": 92.13700692355633,
+      "root_ade_cm_text": "2.446 +/- 0.185",
+      "target_style_acc_pct_text": "46.90 +/- 6.52",
+      "target_conf_pct_text": "46.90 +/- 6.29"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "cross_style_transfer_h60",
+      "num_pairs": 5000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": 2.7244730484575035,
+      "root_ade_cm_ci95": 0.18009889438492555,
+      "root_ade_cm_ci95_bounds": [
+        2.5567406854471804,
+        2.9169384742170315
+      ],
+      "target_style_acc_pct": 5.42,
+      "target_style_acc_pct_ci95": 0.7942712052725849,
+      "target_style_acc_pct_ci95_bounds": [
+        4.641941854538057,
+        6.230484265083227
+      ],
+      "target_conf_pct": 5.306592088739086,
+      "target_conf_pct_ci95": 0.7684948844805954,
+      "pred_conf_pct": 88.31980115294456,
+      "root_ade_cm_text": "2.724 +/- 0.180",
+      "target_style_acc_pct_text": "5.42 +/- 0.79",
+      "target_conf_pct_text": "5.31 +/- 0.77"
+    }
+  ]
+}

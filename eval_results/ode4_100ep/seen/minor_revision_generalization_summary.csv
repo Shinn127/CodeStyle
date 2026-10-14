@@ -1,0 +1,4 @@
+setting,num_pairs,uses_recipe,recipe_strength,root_ade_cm,root_ade_cm_ci95,target_style_acc_pct,target_style_acc_pct_ci95,target_conf_pct,target_conf_pct_ci95,pred_conf_pct,root_ade_cm_text,target_style_acc_pct_text,target_conf_pct_text
+real_motion_upper_bound_h240,1000,False,0.0,nan,nan,99.8,0.31582285523533704,99.65901150791906,0.39399988328688296,99.85204259753228,-,99.80 +/- 0.32,99.66 +/- 0.39
+matched_style_rollout_h240,1000,False,0.0,3.947719405680895,0.4887342512135595,66.5,7.649081893107018,65.92531075321831,7.586904417568147,91.86716006100177,3.948 +/- 0.489,66.50 +/- 7.65,65.93 +/- 7.59
+cross_style_transfer_h240,5000,False,0.0,5.584545375907421,0.6123757660238414,2.16,0.5631042791369412,2.174296520383297,0.5226524692515923,89.04647243350745,5.585 +/- 0.612,2.16 +/- 0.56,2.17 +/- 0.52

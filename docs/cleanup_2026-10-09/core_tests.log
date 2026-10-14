@@ -1,0 +1,23 @@
+[Tests] suite=core; FP32/highest/noTF32; disposable fixtures only
+........................................................................ [ 71%]
+.............................                                            [100%]
+=============================== warnings summary ===============================
+tests/test_controller_repair.py: 7 warnings
+tests/test_recipe_training.py: 2 warnings
+tests/test_clip_recipe_revision.py: 3 warnings
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+1.91s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-rollout]
+1.58s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-reconstruct]
+1.54s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-rollout]
+1.28s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-reconstruct]
+0.30s call     tests/test_unseen_recipe_eval.py::test_actual_small_entry_exports_pure_recipes_and_excludes_gt_context
+0.16s call     tests/test_controller_repair.py::test_actual_cli_resume_matches_continuous_epoch_training
+0.15s call     tests/test_recipe_training.py::test_pure_actual_train_val_and_resume_with_cross_targets
+0.15s call     tests/test_clip_recipe_revision.py::test_legacy_weight_initialization_and_tf_best_checkpoint_entry
+0.15s call     tests/test_clip_recipe_revision.py::test_new_actual_train_validation_and_epoch_resume
+0.11s call     tests/test_controller_repair.py::test_protocol_bvh_and_plot_export_uses_existing_exporter
+101 passed, 2 deselected, 12 warnings in 10.35s

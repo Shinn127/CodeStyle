@@ -1,0 +1,48 @@
+[Tests] suite=cpu; FP32/highest/noTF32; disposable fixtures only
+................................................................... [ 28%]
+........................................................................ [ 58%]
+........................................................................ [ 89%]
+.........................                                                [100%]
+=============================== warnings summary ===============================
+tests/test_acc_loss.py::AccelerationLossTests::test_vanishes_when_prediction_matches_target
+  /home/shinn/桌面/multimedia/revision/NewCode/tests/test_acc_loss.py:56: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+  Consider using tensor.detach() first. (Triggered internally at /home/conda/feedstock_root/build_artifacts/libtorch_1786372153234/work/torch/csrc/autograd/generated/python_variable_methods.cpp:822.)
+    self.assertGreater(float(out["loss"]), 0.0)  # other terms still active
+
+tests/test_clip_recipe_revision.py: 3 warnings
+tests/test_controller_repair.py: 7 warnings
+tests/test_feedback_training.py: 2 warnings
+tests/test_practical_style_training.py: 1 warning
+tests/test_recipe_training.py: 2 warnings
+tests/test_staged_history_noise.py: 1 warning
+tests/test_style_classifier_240.py: 2 warnings
+tests/test_style_refinement.py: 1 warning
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+tests/test_generate_database_parallel.py::GenerateDatabaseParallelTests::test_bounded_parallel_map_preserves_input_order
+tests/test_generate_database_parallel.py::GenerateDatabaseParallelTests::test_bounded_parallel_map_preserves_input_order
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/multiprocessing/popen_fork.py:73: DeprecationWarning: This process (pid=59) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+tests/test_legacy_quantizer_loading.py::LegacyQuantizerLoadingTests::test_legacy_keys_load_with_the_flag_and_keep_the_autoencoder
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/mpmath/rational.py:4: DeprecationWarning: the rational private module is deprecated
+    warnings.warn("the rational private module is deprecated",
+
+tests/test_legacy_quantizer_loading.py::LegacyQuantizerLoadingTests::test_legacy_keys_load_with_the_flag_and_keep_the_autoencoder
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/mpmath/math2.py:4: DeprecationWarning: the math2 module is deprecated, use libfp instead
+    warnings.warn("the math2 module is deprecated, use libfp instead",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+2.15s call     tests/test_fid_recon_extractor.py::ReconTrainerTests::test_two_epoch_run_saves_a_loadable_checkpoint
+1.85s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-rollout]
+1.79s call     tests/test_fid_joint_sets.py::CamdmTrainerTests::test_dataset_and_short_training_run
+1.77s call     tests/test_style_refinement.py::test_prior_initialization_supports_actual_90style_8slot_2048code_shape
+1.54s call     tests/test_fid_recon_extractor.py::ReconExtractorModuleTests::test_reconstruction_error_decreases
+1.51s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[clip_recipe-reconstruct]
+1.15s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-reconstruct]
+1.04s call     tests/test_clip_recipe_revision.py::test_real_tf_validator_only_uses_train_exemplars_val_sources_and_240_generated_frames[label-rollout]
+0.99s call     tests/test_style_classifier_240.py::test_real_240_frame_classifier_training_save_load_and_output_guard
+0.31s call     tests/test_unseen_recipe_eval.py::test_actual_small_entry_exports_pure_recipes_and_excludes_gt_context
+236 passed, 6 deselected, 24 warnings, 5 subtests passed in 21.35s

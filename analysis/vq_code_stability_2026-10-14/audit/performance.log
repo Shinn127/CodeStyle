@@ -1,0 +1,46 @@
+{
+  "device": "NVIDIA GeForce RTX 5070 Ti",
+  "torch": "2.13.0+cu132",
+  "batch": 512,
+  "seq_len": 2,
+  "seed": 42,
+  "fp32": true,
+  "tf32": false,
+  "measured_iterations": 10,
+  "results": [
+    {
+      "mode": "baseline",
+      "mean_ms": 23.29734209779417,
+      "p95_ms": 24.66840544657316,
+      "allocated_peak_gb": 1.6242446899414062
+    },
+    {
+      "mode": "legacy_margin_rt",
+      "mean_ms": 27.6290859997971,
+      "p95_ms": 27.719441446242854,
+      "allocated_peak_gb": 1.624767780303955
+    },
+    {
+      "mode": "exact_margin_rt",
+      "mean_ms": 34.30950629845029,
+      "p95_ms": 35.541371497674845,
+      "allocated_peak_gb": 1.624767780303955
+    }
+  ],
+  "gradient_norms_batch32": {
+    "baseline": {
+      "encoder_l2": 7.115177154541016,
+      "decoder_l2": 3.468679666519165
+    },
+    "margin": {
+      "encoder_l2": 0.47809216380119324,
+      "decoder_l2": 0.0
+    },
+    "roundtrip": {
+      "encoder_l2": 0.19480761885643005,
+      "decoder_l2": 0.26974207162857056
+    }
+  },
+  "state_unchanged": true,
+  "protocol": "training_graph_frozen_ema_fwd_backward_no_optimizer_not_epoch_timing"
+}

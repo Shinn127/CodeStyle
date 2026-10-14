@@ -1,0 +1,7 @@
+{
+  "cross_source_retention_pct": 4.6,
+  "cross_macro_target_accuracy_pct": 2.6991900164031772,
+  "cross_target_styles": 90,
+  "source_clusters": 90,
+  "note": "Derived from completed rollout per-sample CSV; pose MPJPE was not computed by this entry."
+}

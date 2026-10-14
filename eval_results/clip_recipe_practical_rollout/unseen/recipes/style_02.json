@@ -1,0 +1,202 @@
+{
+  "strength": 1.0,
+  "slots": [
+    {
+      "slot": 4,
+      "codes": [
+        320,
+        820,
+        1583,
+        1828
+      ],
+      "weights": [
+        0.32764723896980286,
+        0.3056212365627289,
+        0.21012365818023682,
+        0.15660788118839264
+      ]
+    },
+    {
+      "slot": 9,
+      "codes": [
+        1403,
+        104,
+        97,
+        1667
+      ],
+      "weights": [
+        0.4004286229610443,
+        0.26514413952827454,
+        0.20996150374412537,
+        0.12446571886539459
+      ]
+    },
+    {
+      "slot": 10,
+      "codes": [
+        1583,
+        1457,
+        543,
+        1322
+      ],
+      "weights": [
+        0.33732667565345764,
+        0.25590696930885315,
+        0.207818865776062,
+        0.1989475041627884
+      ]
+    },
+    {
+      "slot": 17,
+      "codes": [
+        1052,
+        994,
+        1224,
+        762
+      ],
+      "weights": [
+        0.5407391786575317,
+        0.30040547251701355,
+        0.10102289915084839,
+        0.057832375168800354
+      ]
+    },
+    {
+      "slot": 18,
+      "codes": [
+        1789,
+        1528,
+        881,
+        473
+      ],
+      "weights": [
+        0.7135053277015686,
+        0.14335530996322632,
+        0.08753468096256256,
+        0.055604733526706696
+      ]
+    },
+    {
+      "slot": 20,
+      "codes": [
+        2002,
+        905,
+        681,
+        830
+      ],
+      "weights": [
+        0.44060027599334717,
+        0.20203572511672974,
+        0.17873862385749817,
+        0.17862540483474731
+      ]
+    },
+    {
+      "slot": 23,
+      "codes": [
+        1306,
+        1330,
+        1088,
+        389
+      ],
+      "weights": [
+        0.315274178981781,
+        0.29483267664909363,
+        0.20860064029693604,
+        0.18129251897335052
+      ]
+    },
+    {
+      "slot": 24,
+      "codes": [
+        2038,
+        1163,
+        669,
+        1008
+      ],
+      "weights": [
+        0.2851376235485077,
+        0.2725684642791748,
+        0.22385255992412567,
+        0.21844129264354706
+      ]
+    }
+  ],
+  "metadata": {
+    "protocol_version": 1,
+    "fps": 60.0,
+    "generated_frames": 240,
+    "include_gt_context": false,
+    "seed": 42,
+    "exemplars_per_style": 5,
+    "source_identity": {
+      "meta.json": "882b9a898b51b36053e3c12910266badf62ef92a22ba18c1b50345cd24e7f016",
+      "StyleNames.json": "1b39935d78b91a8d4311b6b63cc4ee8e62dc7f75a317ec87960d519524f33357",
+      "segments.json": "6d1113e8fa97d779de8aec68f00e928b533faf8daf22dc44959c3a279f063286"
+    },
+    "recipe_identity": {
+      "meta.json": "ad6b29066de63731da7bf4e4e5c5f093d733116f42c496392dbedf27fab648f5",
+      "StyleNames.json": "10fff6ac38eb293dedce3a6cfb94deaee46371e1213cce65da36b024742ff2be",
+      "segments.json": "ac74224a2697c74e645b1d1b5608ef9a2a14378c459c57512004a643adbb8921"
+    },
+    "used_window_sha256": "39de132bb7ee72ee966a5d2fc9ae366fc8d2f7d9e7c9d94c6eaf528b78e0ceed",
+    "vq_state_sha256": "402c1c5c1d14ce4390e592e9a64d94bad84ffa1b9bc0e345597fd25e6cdd7bd8",
+    "norm_fingerprint": "0fce5deec5a68e50",
+    "selected_slots": [
+      4,
+      9,
+      10,
+      17,
+      18,
+      20,
+      23,
+      24
+    ],
+    "topk": 4,
+    "classifier_sha256": "bea49853cc29f93e92a2b89faccbdcb2e9583517548077bf399dfcbdc4cc86d6",
+    "sources": null,
+    "recipes": null,
+    "conditioning_mode": "clip_recipe",
+    "probability_space": "control",
+    "recipe_source": "learned_histogram_selector",
+    "selector_sha256": "e8d8a0d39db2e869cd3b901d1834b77ad275ebdd5f2aeaea72601f6d930f8903",
+    "style_name": "WalkingStickRight",
+    "exemplars": [
+      {
+        "segment_id": 16,
+        "source_entry_id": 745,
+        "start": 71744,
+        "frames": 240,
+        "role": "exemplar"
+      },
+      {
+        "segment_id": 17,
+        "source_entry_id": 746,
+        "start": 76163,
+        "frames": 240,
+        "role": "exemplar"
+      },
+      {
+        "segment_id": 18,
+        "source_entry_id": 747,
+        "start": 85676,
+        "frames": 240,
+        "role": "exemplar"
+      },
+      {
+        "segment_id": 21,
+        "source_entry_id": 750,
+        "start": 94873,
+        "frames": 240,
+        "role": "exemplar"
+      },
+      {
+        "segment_id": 22,
+        "source_entry_id": 751,
+        "start": 100880,
+        "frames": 240,
+        "role": "exemplar"
+      }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+[Clip] ShieldedLeft     BR   switch(a/h)=1.00 jump sw/st=0.603/nancm mpjpe q=3.227 ae=3.331
+[Clip] OnPhoneRight     BR   switch(a/h)=1.00 jump sw/st=1.108/nancm mpjpe q=5.196 ae=5.986
+[Clip] TogetherStep     FR   switch(a/h)=1.00 jump sw/st=0.720/nancm mpjpe q=1.620 ae=1.286
+[Clip] Angry            FW   switch(a/h)=1.00 jump sw/st=1.144/nancm mpjpe q=3.907 ae=4.751
+[Clip] Flapping         ID   switch(a/h)=1.00 jump sw/st=0.319/nancm mpjpe q=3.059 ae=2.760
+[Clip] Old              SR   switch(a/h)=1.00 jump sw/st=0.410/nancm mpjpe q=1.413 ae=1.091
+[Clip] ArmsBehindBack   SR   switch(a/h)=1.00 jump sw/st=1.078/nancm mpjpe q=1.662 ae=1.816
+[Clip] Swimming         SR   switch(a/h)=1.00 jump sw/st=1.329/nancm mpjpe q=1.844 ae=2.021
+[Clip] SpinClock        TR1  switch(a/h)=1.00 jump sw/st=0.448/nancm mpjpe q=0.812 ae=2.068
+[Clip] CrowdAvoidance   FW   switch(a/h)=1.00 jump sw/st=0.546/nancm mpjpe q=1.279 ae=1.204
+[Clip] Heavyset         FR   switch(a/h)=1.00 jump sw/st=1.112/nancm mpjpe q=1.733 ae=1.262
+[Clip] LawnMower        TR1  switch(a/h)=1.00 jump sw/st=1.144/nancm mpjpe q=1.928 ae=2.179
+[Clip] SlideFeet        FW   switch(a/h)=1.00 jump sw/st=0.347/nancm mpjpe q=0.771 ae=0.898
+[Clip] LeftHop          TR1  switch(a/h)=1.00 jump sw/st=1.318/nancm mpjpe q=2.015 ae=2.147
+[Clip] Followed         SW   switch(a/h)=1.00 jump sw/st=0.685/nancm mpjpe q=2.242 ae=1.672
+[Clip] LeanLeft         BW   switch(a/h)=1.00 jump sw/st=0.528/nancm mpjpe q=1.162 ae=1.318
+[Clip] Balance          BR   switch(a/h)=1.00 jump sw/st=0.744/nancm mpjpe q=2.974 ae=3.012
+[Clip] Quail            BR   switch(a/h)=1.00 jump sw/st=0.512/nancm mpjpe q=2.468 ae=2.529
+[Clip] PigeonToed       SR   switch(a/h)=1.00 jump sw/st=0.930/nancm mpjpe q=2.716 ae=2.072
+[Clip] Stiff            BR   switch(a/h)=1.00 jump sw/st=0.729/nancm mpjpe q=3.890 ae=4.002
+[Clip] Aeroplane        BW   switch(a/h)=1.00 jump sw/st=0.507/nancm mpjpe q=3.334 ae=5.306
+[Clip] Morris           FW   switch(a/h)=1.00 jump sw/st=1.272/nancm mpjpe q=5.941 ae=4.875
+[Clip] DuckFoot         BW   switch(a/h)=1.00 jump sw/st=0.308/nancm mpjpe q=1.591 ae=1.566
+[Clip] Elated           FR   switch(a/h)=1.00 jump sw/st=1.710/nancm mpjpe q=3.762 ae=5.341
+[Clip] SwingArmsRound   SW   switch(a/h)=1.00 jump sw/st=0.610/nancm mpjpe q=1.260 ae=1.118
+[Clip] FlickLegs        SR   switch(a/h)=1.00 jump sw/st=1.583/nancm mpjpe q=2.344 ae=2.191
+[Clip] DragLeftLeg      SW   switch(a/h)=1.00 jump sw/st=0.447/nancm mpjpe q=1.218 ae=1.001
+[Clip] Roadrunner       ID   switch(a/h)=0.69 jump sw/st=0.035/0.000cm mpjpe q=2.688 ae=2.292
+[Clip] Rocket           SW   switch(a/h)=1.00 jump sw/st=0.472/nancm mpjpe q=1.611 ae=1.657
+[Clip] Kick             SW   switch(a/h)=1.00 jump sw/st=0.654/nancm mpjpe q=1.135 ae=1.095
+{
+  "split": "test",
+  "clips": 30,
+  "frames": 240,
+  "checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/best.pt",
+  "code_switch": {
+    "per_head_rate": 0.6193165969316596,
+    "any_head_rate": 0.9896792189679219,
+    "all_head_rate": 0.0,
+    "unchanged_run_frames_mean": 1.0103845074375526,
+    "unchanged_run_frames_p50": 1.0,
+    "unchanged_run_frames_p95": 1.0,
+    "fraction_runs_len1": 0.9939657591916924
+  },
+  "latent_gap": 0.008262556081172079,
+  "decode": {
+    "jump_at_switch_cm": 0.7783061909178893,
+    "jump_steady_cm": 0.0,
+    "quantized_vs_continuous_diff_cm": 0.3214446365833282
+  },
+  "metrics": {
+    "mpjpe_quantized": 2.3600542902063437,
+    "mpjpe_continuous": 2.4615163704201026,
+    "jitter_quantized": 0.45642659768782184,
+    "jitter_continuous": 0.17721623333673625,
+    "foot_sliding_quantized": 0.31311243313310294,
+    "foot_sliding_continuous": 0.18150288801245246
+  }
+}
+[Done] wrote analysis/vq_reconstruction_check/diagnose_test.json

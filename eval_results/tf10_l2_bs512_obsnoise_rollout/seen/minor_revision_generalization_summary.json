@@ -1,0 +1,126 @@
+{
+  "config": {
+    "db": "/home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror",
+    "flow_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l2_bs512/best.pt",
+    "flow_vqvae_ckpt": null,
+    "classifier_ckpt": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_60fps_240f_nomirror/100style_position_classifier.pth",
+    "classifier_joint_set": "ybot15",
+    "flow_model_name": "flowmatch_target",
+    "norm_stats": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz",
+    "horizons": [
+      240
+    ],
+    "stride": 30,
+    "num_sources": 1000,
+    "targets_per_source": 5,
+    "classifier_window": 240,
+    "classifier_fps": 60.0,
+    "classifier_window_seconds": 4.0,
+    "include_gt_context": false,
+    "source_split": "test",
+    "conditioning_mode": "label",
+    "recipe_only": false,
+    "flow_microbatch_size": 512,
+    "protocol_version": 3,
+    "classifier_stride": 10,
+    "seed": 42,
+    "dt": 0.016666666666666666,
+    "flow_eval_mode": "rollout",
+    "flow_solver": "euler",
+    "flow_ode_steps": 0,
+    "flow_noise_std": 1.0,
+    "flow_requantize_z": true,
+    "effective_flow_requantize_z": true,
+    "flow_latent_clip": true,
+    "use_target_style_recipe": false,
+    "recipe_source_db": null,
+    "recipe_exemplars_per_style": 5,
+    "recipe_window": 240,
+    "recipe_stride": 30,
+    "recipe_strength": 1.0,
+    "recipe_seed": 42,
+    "recipe_profile": "canonical",
+    "recipe_pure_conditioning": false,
+    "recipe_meta": null
+  },
+  "summaries": [
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "real_motion_upper_bound_h240",
+      "num_pairs": 1000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": NaN,
+      "root_ade_cm_ci95": NaN,
+      "root_ade_cm_ci95_bounds": [
+        NaN,
+        NaN
+      ],
+      "target_style_acc_pct": 99.8,
+      "target_style_acc_pct_ci95": 0.31582285523533704,
+      "target_style_acc_pct_ci95_bounds": [
+        99.36835428952932,
+        100.0
+      ],
+      "target_conf_pct": 99.65901150791906,
+      "target_conf_pct_ci95": 0.39399988328688296,
+      "pred_conf_pct": 99.85204259753228,
+      "root_ade_cm_text": "-",
+      "target_style_acc_pct_text": "99.80 +/- 0.32",
+      "target_conf_pct_text": "99.66 +/- 0.39"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "matched_style_rollout_h240",
+      "num_pairs": 1000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": 6.707159691154957,
+      "root_ade_cm_ci95": 0.6001861613276502,
+      "root_ade_cm_ci95_bounds": [
+        6.133374136259666,
+        7.333746458914966
+      ],
+      "target_style_acc_pct": 82.3,
+      "target_style_acc_pct_ci95": 5.413743643192509,
+      "target_style_acc_pct_ci95_bounds": [
+        76.83496965965402,
+        87.66245694603903
+      ],
+      "target_conf_pct": 81.72526720212998,
+      "target_conf_pct_ci95": 5.304675918742873,
+      "pred_conf_pct": 95.58181852698327,
+      "root_ade_cm_text": "6.707 +/- 0.600",
+      "target_style_acc_pct_text": "82.30 +/- 5.41",
+      "target_conf_pct_text": "81.73 +/- 5.30"
+    },
+    {
+      "ci_unit": "source_entry_id",
+      "bootstrap_samples": 1000,
+      "setting": "cross_style_transfer_h240",
+      "num_pairs": 5000,
+      "uses_recipe": false,
+      "recipe_strength": 0.0,
+      "root_ade_cm": 8.14233910639882,
+      "root_ade_cm_ci95": 0.5801954065302128,
+      "root_ade_cm_ci95_bounds": [
+        7.57741450679659,
+        8.737805319857015
+      ],
+      "target_style_acc_pct": 21.18,
+      "target_style_acc_pct_ci95": 2.431752185753497,
+      "target_style_acc_pct_ci95_bounds": [
+        18.598675474704553,
+        23.462179846211548
+      ],
+      "target_conf_pct": 20.759683144104628,
+      "target_conf_pct_ci95": 2.3434854745166906,
+      "pred_conf_pct": 88.79167459845543,
+      "root_ade_cm_text": "8.142 +/- 0.580",
+      "target_style_acc_pct_text": "21.18 +/- 2.43",
+      "target_conf_pct_text": "20.76 +/- 2.34"
+    }
+  ]
+}

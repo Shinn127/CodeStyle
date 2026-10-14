@@ -1,0 +1,12 @@
+[Tests] suite=gpu; FP32/highest/noTF32; disposable fixtures only
+......                                                                   [100%]
+============================= slowest 10 durations =============================
+1.73s call     tests/test_fp32_pipeline_efficiency.py::test_actual_cuda_entry_epoch_resume_matches_continuous
+0.62s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-target]
+0.21s call     tests/test_fp32_pipeline_efficiency.py::test_six_token_fp32_math_attention_loss_gradient_and_rng
+0.14s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-velocity]
+0.09s call     tests/test_practical_style_training.py::test_joint_history_mask_keeps_commands_and_root_and_vq_frozen[cuda]
+0.06s call     tests/test_practical_style_training.py::test_history_replacement_changes_only_observations_and_preserves_root[cuda]
+
+(4 durations < 0.005s hidden.  Use -vv to show these durations.)
+6 passed, 236 deselected in 4.06s

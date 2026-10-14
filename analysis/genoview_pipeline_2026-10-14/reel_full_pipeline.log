@@ -1,0 +1,124 @@
+[Run] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/Visualization/cli/interactive_label_control.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --flow-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/best.pt --device cuda --seed 42 --hidden --reel --max-frames 720 --record /home/shinn/桌面/multimedia/revision/NewCode/analysis/genoview_pipeline_2026-10-14/reel_full_pipeline.mp4 --report-json /home/shinn/桌面/multimedia/revision/NewCode/analysis/genoview_pipeline_2026-10-14/reel_full_pipeline.json
+/home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:442: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+[Live] {"checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/best.pt", "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz", "source_entry_id": 412, "initial_frame": 2007765, "source_style": "Neutral", "steps": 4, "noise_std": 1.0, "seed": 42, "fps": 60, "fp32": true, "tf32": false, "feedback": "clip_quantize_decode", "root": "predicted_velocity_integrated", "styles": 90, "history_conditioning": true, "trajectory_policy": "legacy"}
+RAYLIB STATIC 5.5.0.4 LOADED
+INFO: Initializing raylib 5.5
+INFO: Platform backend: DESKTOP (GLFW)
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Trying to enable MSAA x4
+INFO: DISPLAY: Trying to enable VSYNC
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 2560 x 1440
+INFO:     > Screen size:  1280 x 800
+INFO:     > Render size:  1280 x 800
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 401
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   NVIDIA Corporation
+INFO:     > Renderer: NVIDIA GeForce RTX 5070 Ti/PCIe/SSE2
+INFO:     > Version:  3.3.0 NVIDIA 595.91.07
+INFO:     > GLSL:     3.30 NVIDIA via Cg compiler
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: PLATFORM: DESKTOP (GLFW - X11): Initialized successfully
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: SYSTEM: Working Directory: /home/shinn/桌面/multimedia/revision/NewCode
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+INFO: VAO: [ID 2] Mesh uploaded successfully to VRAM (GPU)
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/shadow.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/shadow.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 6] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/skinnedShadow.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/shadow.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 7] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/skinnedBasic.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/basic.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 8] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/basic.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/basic.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 9] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/post.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/lighting.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 10] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/post.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/ssao.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 11] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/post.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/blur.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 12] Program shader loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/post.vs] Text file loaded successfully
+INFO: FILEIO: [/home/shinn/桌面/multimedia/revision/GenoViewPython-main/resources/fxaa.fs] Text file loaded successfully
+INFO: SHADER: [ID 4] Vertex shader compiled successfully
+INFO: SHADER: [ID 5] Fragment shader compiled successfully
+INFO: SHADER: [ID 13] Program shader loaded successfully
+INFO: VAO: [ID 3] Mesh uploaded successfully to VRAM (GPU)
+INFO: TEXTURE: Depth texture loaded successfully
+INFO: TEXTURE: [ID 4] Texture loaded successfully (1280x800 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 5] Texture loaded successfully (1280x800 | R16G16B16A16 | 1 mipmaps)
+INFO: TEXTURE: Depth texture loaded successfully
+INFO: TEXTURE: [ID 7] Texture loaded successfully (1280x800 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Depth renderbuffer loaded successfully (32 bits)
+INFO: FBO: [ID 3] Framebuffer object created successfully
+INFO: TEXTURE: [ID 8] Texture loaded successfully (1280x800 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 2] Depth renderbuffer loaded successfully (32 bits)
+INFO: FBO: [ID 4] Framebuffer object created successfully
+INFO: TEXTURE: [ID 9] Texture loaded successfully (1280x800 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 3] Depth renderbuffer loaded successfully (32 bits)
+INFO: FBO: [ID 5] Framebuffer object created successfully
+INFO: FBO: [ID 3] Unloaded framebuffer from VRAM (GPU)
+INFO: FBO: [ID 5] Unloaded framebuffer from VRAM (GPU)
+INFO: FBO: [ID 4] Unloaded framebuffer from VRAM (GPU)
+INFO: FBO: [ID 2] Unloaded framebuffer from VRAM (GPU)
+INFO: FBO: [ID 1] Unloaded framebuffer from VRAM (GPU)
+INFO: VAO: [ID 3] Unloaded vertex array data from VRAM (GPU)
+INFO: MODEL: Unloaded model (and meshes) from RAM and VRAM
+INFO: SHADER: [ID 13] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 12] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 11] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 10] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 9] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 8] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 7] Unloaded shader program data from VRAM (GPU)
+INFO: SHADER: [ID 6] Unloaded shader program data from VRAM (GPU)
+INFO: VAO: [ID 2] Unloaded vertex array data from VRAM (GPU)
+INFO: MODEL: Unloaded model (and meshes) from RAM and VRAM
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+[Completed] {"checkpoint": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l6_film/best.pt", "normalization": "/home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz", "source_entry_id": 412, "initial_frame": 2007765, "source_style": "Neutral", "steps": 4, "noise_std": 1.0, "seed": 42, "fps": 60, "fp32": true, "tf32": false, "feedback": "clip_quantize_decode", "root": "predicted_velocity_integrated", "styles": 90, "history_conditioning": true, "trajectory_policy": "legacy", "frames": 720, "final_style": "Neutral", "vq_unchanged": true, "inference_ms_mean": 5.732952980189355, "inference_ms_p95": 6.5452940041723195, "root_position": [2.6532845497131348, 6.388152122497559], "root_yaw_degrees": 50.105957076946986, "render": {"postprocess": true, "foot_ik": true, "foot_ik_active": true, "smoothing_active": true, "smooth_cutoff": 6.0, "postprocess_ms_mean": 2.3230533972714005, "full_pipeline": true, "contacts": 1, "fully_locked": 1, "candidates": 0, "pelvis_offset": 0.0010549712983277332, "release_reasons": ["reach", "none"], "recording": {"path": "/home/shinn/桌面/multimedia/revision/NewCode/analysis/genoview_pipeline_2026-10-14/reel_full_pipeline.mp4", "fps": 60, "frames": 720, "hidden": true}}}

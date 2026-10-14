@@ -1,0 +1,29 @@
+[Seen rollout] /home/shinn/miniforge3/envs/mcc/bin/python /home/shinn/桌面/multimedia/revision/NewCode/evaluate_minor_revision_generalization.py --db /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror --flow-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_6tok_curriculum100/best.pt --classifier-ckpt /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_60fps_240f_nomirror/100style_position_classifier.pth --flow-eval-mode rollout --horizons 240 --source-split test --num-sources 1000 --targets-per-source 5 --seed 42 --flow-ode-steps 8 --flow-noise-std 1 --flow-requantize-z --flow-latent-clip --out-dir /home/shinn/桌面/multimedia/revision/NewCode/eval_results/6tok_rollout/seen --device cuda
+/home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:394: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+[Info] classifier joints  : ybot15 (45-dim input)
+[Info] db                 : /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror
+[Info] flow ckpt          : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_6tok_curriculum100/best.pt
+[Info] flow model         : flowmatch_target
+[Info] classifier ckpt    : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_60fps_240f_nomirror/100style_position_classifier.pth
+[Info] classifier window  : 240
+[Info] classifier span    : 4 s @ 60 fps
+[Info] GT context in acc  : False
+[Info] styles             : 90
+[Info] device             : cuda
+[Info] horizons           : [240]
+[Info] num sources        : 1000
+[Info] targets/source     : 5
+[Info] norm stats         : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz
+[Info] target recipe      : False
+[Info] flow eval          : mode=rollout ode_steps=8 noise_std=1.0 requantize_z=True latent_clip=True
+[Info] split_mode=precomputed using /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror/segments.json (strategy=suffix_balanced_rotation_per_style); val_ratio/test_ratio/seed are ignored
+[Info] normalization stats supplied by the caller
+[Info] normalization over 84165 train windows: fingerprint=a7e1628d637acc71
+[Info] horizon=240 test windows=14127 sampled sources=1000
+horizon 240:   0%|          | 0/16 [00:00<?, ?it/s]horizon 240:   6%|▋         | 1/16 [00:10<02:30, 10.01s/it]horizon 240:  12%|█▎        | 2/16 [00:19<02:16,  9.77s/it]horizon 240:  19%|█▉        | 3/16 [00:28<02:03,  9.54s/it]horizon 240:  25%|██▌       | 4/16 [00:38<01:54,  9.53s/it]horizon 240:  31%|███▏      | 5/16 [00:47<01:44,  9.45s/it]horizon 240:  38%|███▊      | 6/16 [00:56<01:33,  9.39s/it]horizon 240:  44%|████▍     | 7/16 [01:06<01:24,  9.37s/it]horizon 240:  50%|█████     | 8/16 [01:15<01:14,  9.36s/it]horizon 240:  56%|█████▋    | 9/16 [01:24<01:05,  9.32s/it]horizon 240:  62%|██████▎   | 10/16 [01:34<00:55,  9.32s/it]horizon 240:  69%|██████▉   | 11/16 [01:43<00:46,  9.34s/it]horizon 240:  75%|███████▌  | 12/16 [01:52<00:37,  9.32s/it]horizon 240:  81%|████████▏ | 13/16 [02:02<00:27,  9.31s/it]horizon 240:  88%|████████▊ | 14/16 [02:11<00:18,  9.31s/it]horizon 240:  94%|█████████▍| 15/16 [02:20<00:09,  9.33s/it]horizon 240: 100%|██████████| 16/16 [02:27<00:00,  8.43s/it]                                                            [real_motion_upper_bound_h240] N=1000 RootADE=- cm | TargetAcc=99.80 +/- 0.32% | TargetConf=99.66 +/- 0.39%
+[matched_style_rollout_h240] N=1000 RootADE=7.959 +/- 1.361 cm | TargetAcc=96.40 +/- 1.77% | TargetConf=96.21 +/- 1.81%
+[cross_style_transfer_h240] N=5000 RootADE=9.934 +/- 1.274 cm | TargetAcc=91.42 +/- 1.07% | TargetConf=90.98 +/- 1.04%
+[Done] summary json : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/6tok_rollout/seen/minor_revision_generalization_summary.json
+[Done] summary csv  : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/6tok_rollout/seen/minor_revision_generalization_summary.csv
+[Done] details csv  : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/6tok_rollout/seen/minor_revision_generalization_per_sample.csv

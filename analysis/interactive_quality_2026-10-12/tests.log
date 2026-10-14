@@ -1,0 +1,9 @@
+................................                                         [100%]
+=============================== warnings summary ===============================
+tests/test_feedback_training.py::test_real_cli_four_step_entry_and_slow_cosine_prefix
+tests/test_feedback_training.py::test_short_schedule_resume_is_numerically_identical
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/utils/data/dataloader.py:759: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+32 passed, 2 warnings in 2.43s

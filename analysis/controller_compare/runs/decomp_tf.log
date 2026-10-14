@@ -1,0 +1,95 @@
+/home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:406: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+[Info] seed=42 split=any frames=240 mode=reconstruct requantize=True noise_std=1.0 target_style=matched(source)
+[Clip] SlideFeet     TR1  -> SlideFeet      ADE=2.11cm jit=0.82 pred=SlideFeet (1.00) MATCH 5.7ms/frame
+[Clip] LimpLeft      BW   -> LimpLeft       ADE=1.87cm jit=0.79 pred=LimpLeft (1.00) MATCH 4.5ms/frame
+[Clip] OnPhoneLeft   SR   -> OnPhoneLeft    ADE=3.24cm jit=1.15 pred=OnPhoneLeft (1.00) MATCH 4.5ms/frame
+[Clip] OnPhoneRight  BW   -> OnPhoneRight   ADE=0.56cm jit=0.58 pred=OnPhoneRight (1.00) MATCH 4.5ms/frame
+[Clip] Robot         FR   -> Robot          ADE=3.35cm jit=0.97 pred=Robot (1.00) MATCH 4.5ms/frame
+[Clip] Star          FR   -> Star           ADE=1.38cm jit=1.10 pred=Star (1.00) MATCH 4.6ms/frame
+[Clip] SpinClock     ID   -> SpinClock      ADE=0.86cm jit=0.70 pred=SpinClock (1.00) MATCH 4.5ms/frame
+[Clip] March         SW   -> March          ADE=1.63cm jit=1.10 pred=March (1.00) MATCH 4.6ms/frame
+[Clip] ShieldedLeft  SW   -> ShieldedLeft   ADE=1.72cm jit=0.64 pred=ShieldedLeft (1.00) MATCH 4.5ms/frame
+[Clip] Monk          FW   -> Monk           ADE=3.26cm jit=0.51 pred=Monk (1.00) MATCH 4.5ms/frame
+[Clip] Crouched      ID   -> Crouched       ADE=1.41cm jit=0.35 pred=Crouched (1.00) MATCH 4.5ms/frame
+[Clip] ShieldedRight FW   -> ShieldedRight  ADE=2.08cm jit=0.76 pred=ShieldedRight (1.00) MATCH 4.5ms/frame
+[Clip] LookUp        SR   -> LookUp         ADE=5.46cm jit=1.27 pred=LookUp (1.00) MATCH 4.5ms/frame
+[Clip] Old           FW   -> Old            ADE=1.59cm jit=0.45 pred=Old (1.00) MATCH 4.4ms/frame
+[Clip] Followed      FR   -> Followed       ADE=6.06cm jit=1.51 pred=Followed (1.00) MATCH 4.5ms/frame
+[Clip] Neutral       SR   -> Neutral        ADE=3.98cm jit=1.19 pred=Neutral (1.00) MATCH 4.7ms/frame
+[Clip] SwingArmsRoundID   -> SwingArmsRound ADE=0.56cm jit=0.54 pred=SwingArmsRound (1.00) MATCH 4.8ms/frame
+[Clip] Swat          BR   -> Swat           ADE=4.47cm jit=1.05 pred=Swat (1.00) MATCH 4.5ms/frame
+[Clip] ArmsAboveHead SW   -> ArmsAboveHead  ADE=2.86cm jit=0.72 pred=ArmsAboveHead (1.00) MATCH 4.6ms/frame
+[Clip] SpinAntiClock TR1  -> SpinAntiClock  ADE=8.37cm jit=1.03 pred=SpinAntiClock (1.00) MATCH 4.8ms/frame
+[Clip] Rushed        FW   -> Rushed         ADE=9.22cm jit=1.42 pred=Rushed (1.00) MATCH 4.6ms/frame
+[Clip] CrowdAvoidanceSW   -> CrowdAvoidance ADE=1.00cm jit=1.06 pred=CrowdAvoidance (1.00) MATCH 4.5ms/frame
+[Clip] Proud         SW   -> Proud          ADE=2.38cm jit=0.78 pred=Proud (1.00) MATCH 4.7ms/frame
+[Clip] OnToesBentForwardID   -> OnToesBentForward ADE=1.60cm jit=0.48 pred=OnToesBentForward (1.00) MATCH 4.7ms/frame
+[Clip] Skip          BR   -> Skip           ADE=4.78cm jit=1.47 pred=Skip (1.00) MATCH 4.5ms/frame
+[Clip] Penguin       ID   -> Penguin        ADE=5.10cm jit=0.67 pred=Penguin (1.00) MATCH 4.5ms/frame
+[Clip] Teapot        SR   -> Teapot         ADE=2.85cm jit=0.92 pred=Teapot (1.00) MATCH 4.6ms/frame
+[Clip] Swimming      ID   -> Swimming       ADE=2.25cm jit=6.85 pred=InTheDark (0.97) miss 4.5ms/frame
+[Clip] PigeonToed    BW   -> PigeonToed     ADE=1.90cm jit=0.56 pred=PigeonToed (1.00) MATCH 4.5ms/frame
+[Clip] Balance       SR   -> Balance        ADE=1.30cm jit=1.10 pred=Balance (1.00) MATCH 5.0ms/frame
+[Clip] Cat           FR   -> Cat            ADE=3.59cm jit=0.94 pred=Cat (1.00) MATCH 4.9ms/frame
+[Clip] GracefulArms  BW   -> GracefulArms   ADE=1.04cm jit=0.76 pred=GracefulArms (1.00) MATCH 4.5ms/frame
+[Clip] LeanLeft      SR   -> LeanLeft       ADE=1.28cm jit=0.89 pred=LeanLeft (1.00) MATCH 4.7ms/frame
+[Clip] ArmsFolded    FW   -> ArmsFolded     ADE=3.90cm jit=0.56 pred=ArmsFolded (1.00) MATCH 4.5ms/frame
+[Clip] LegsApart     FW   -> LegsApart      ADE=4.06cm jit=0.94 pred=LegsApart (1.00) MATCH 4.6ms/frame
+[Clip] BeatChest     TR1  -> BeatChest      ADE=2.55cm jit=0.80 pred=BeatChest (1.00) MATCH 4.6ms/frame
+[Clip] StartStop     FW   -> StartStop      ADE=2.75cm jit=0.59 pred=StartStop (1.00) MATCH 4.6ms/frame
+[Clip] BentKnees     FW   -> BentKnees      ADE=2.34cm jit=0.69 pred=BentKnees (1.00) MATCH 4.5ms/frame
+[Clip] BouncyLeft    BR   -> BouncyLeft     ADE=1.69cm jit=1.62 pred=BouncyLeft (1.00) MATCH 4.5ms/frame
+[Clip] Flapping      TR1  -> Flapping       ADE=3.07cm jit=1.34 pred=Flapping (1.00) MATCH 4.5ms/frame
+[Clip] KarateChop    TR1  -> KarateChop     ADE=0.97cm jit=0.93 pred=KarateChop (1.00) MATCH 4.5ms/frame
+[Clip] Drunk         TR1  -> Drunk          ADE=17.53cm jit=2.20 pred=Drunk (1.00) MATCH 4.5ms/frame
+[Clip] FlickLegs     BR   -> FlickLegs      ADE=3.52cm jit=1.20 pred=FlickLegs (1.00) MATCH 4.8ms/frame
+[Clip] DragRightLeg  FR   -> DragRightLeg   ADE=0.72cm jit=1.25 pred=DragRightLeg (1.00) MATCH 4.6ms/frame
+[Clip] DragLeftLeg   FW   -> DragLeftLeg    ADE=1.15cm jit=0.82 pred=DragLeftLeg (1.00) MATCH 4.5ms/frame
+[Clip] HandsBetweenLegsSW   -> HandsBetweenLegs ADE=2.00cm jit=0.75 pred=HandsBetweenLegs (1.00) MATCH 4.5ms/frame
+[Clip] Stiff         ID   -> Stiff          ADE=0.17cm jit=0.23 pred=Stiff (1.00) MATCH 4.5ms/frame
+[Clip] BouncyRight   FR   -> BouncyRight    ADE=1.74cm jit=1.26 pred=BouncyRight (1.00) MATCH 4.5ms/frame
+[Clip] PendulumHands BW   -> PendulumHands  ADE=1.17cm jit=0.74 pred=PendulumHands (1.00) MATCH 4.5ms/frame
+[Clip] Strutting     TR1  -> Strutting      ADE=2.22cm jit=1.08 pred=Strutting (1.00) MATCH 4.5ms/frame
+[Clip] Quail         TR1  -> Quail          ADE=3.49cm jit=0.47 pred=Quail (1.00) MATCH 4.5ms/frame
+[Clip] Sweep         FW   -> Sweep          ADE=4.19cm jit=0.92 pred=Sweep (1.00) MATCH 4.5ms/frame
+[Clip] LawnMower     FW   -> LawnMower      ADE=1.61cm jit=1.33 pred=LawnMower (1.00) MATCH 4.5ms/frame
+[Clip] LeftHop       ID   -> LeftHop        ADE=2.76cm jit=0.63 pred=LeftHop (1.00) MATCH 4.5ms/frame
+[Clip] DuckFoot      SR   -> DuckFoot       ADE=7.13cm jit=0.90 pred=DuckFoot (1.00) MATCH 4.5ms/frame
+[Clip] ArmsBehindBackID   -> ArmsBehindBack ADE=1.38cm jit=0.31 pred=ArmsBehindBack (1.00) MATCH 4.8ms/frame
+[Clip] OnToesCrouchedSW   -> OnToesCrouched ADE=1.99cm jit=0.92 pred=OnToesCrouched (1.00) MATCH 4.7ms/frame
+[Clip] BigSteps      FW   -> BigSteps       ADE=1.30cm jit=1.89 pred=BigSteps (1.00) MATCH 4.4ms/frame
+[Clip] Dinosaur      FR   -> Dinosaur       ADE=3.09cm jit=0.92 pred=Dinosaur (1.00) MATCH 4.4ms/frame
+[Clip] HighKnees     FW   -> HighKnees      ADE=2.70cm jit=1.90 pred=HighKnees (1.00) MATCH 4.6ms/frame
+[Clip] BentForward   SR   -> BentForward    ADE=4.48cm jit=1.03 pred=BentForward (1.00) MATCH 4.5ms/frame
+[Clip] CrossOver     BW   -> CrossOver      ADE=2.62cm jit=1.03 pred=CrossOver (1.00) MATCH 4.5ms/frame
+[Clip] Rocket        SR   -> Rocket         ADE=3.31cm jit=1.19 pred=Rocket (1.00) MATCH 4.5ms/frame
+[Clip] Elated        FR   -> Elated         ADE=11.00cm jit=1.58 pred=Elated (1.00) MATCH 4.5ms/frame
+[Clip] Aeroplane     SW   -> Aeroplane      ADE=1.61cm jit=0.72 pred=Aeroplane (1.00) MATCH 4.5ms/frame
+[Clip] Roadrunner    BR   -> Roadrunner     ADE=7.07cm jit=1.27 pred=Roadrunner (1.00) MATCH 4.6ms/frame
+[Clip] OnHeels       FR   -> OnHeels        ADE=2.56cm jit=1.26 pred=OnHeels (1.00) MATCH 4.7ms/frame
+[Clip] Lunge         BR   -> Lunge          ADE=10.11cm jit=1.89 pred=Lunge (1.00) MATCH 4.5ms/frame
+[Clip] Akimbo        SW   -> Akimbo         ADE=1.63cm jit=0.52 pred=Akimbo (1.00) MATCH 4.6ms/frame
+[Clip] Superman      ID   -> Superman       ADE=0.83cm jit=0.22 pred=Superman (1.00) MATCH 4.6ms/frame
+[Clip] TogetherStep  FW   -> TogetherStep   ADE=0.82cm jit=0.79 pred=TogetherStep (0.99) MATCH 4.5ms/frame
+[Clip] LimpRight     BW   -> LimpRight      ADE=1.02cm jit=0.74 pred=LimpLeft (0.75) miss 4.5ms/frame
+[Clip] RaisedLeftArm BW   -> RaisedLeftArm  ADE=3.17cm jit=0.88 pred=RaisedLeftArm (1.00) MATCH 4.6ms/frame
+[Clip] Chicken       SW   -> Chicken        ADE=1.97cm jit=0.94 pred=Chicken (1.00) MATCH 4.5ms/frame
+[Clip] LeanRight     TR1  -> LeanRight      ADE=6.70cm jit=0.84 pred=LeanRight (1.00) MATCH 4.5ms/frame
+[Clip] LeanBack      SW   -> LeanBack       ADE=0.75cm jit=0.85 pred=LeanBack (1.00) MATCH 4.5ms/frame
+[Clip] Angry         ID   -> Angry          ADE=0.50cm jit=0.50 pred=Angry (1.00) MATCH 4.4ms/frame
+[Clip] RaisedRightArmSW   -> RaisedRightArm ADE=1.78cm jit=0.76 pred=RaisedRightArm (1.00) MATCH 4.5ms/frame
+[Clip] Kick          FW   -> Kick           ADE=2.21cm jit=0.89 pred=Kick (1.00) MATCH 4.6ms/frame
+[Clip] Morris        SR   -> Morris         ADE=3.39cm jit=1.42 pred=Morris (1.00) MATCH 4.5ms/frame
+[Clip] Depressed     BR   -> Depressed      ADE=4.86cm jit=1.21 pred=Depressed (1.00) MATCH 4.5ms/frame
+[Clip] RightHop      TR1  -> RightHop       ADE=7.34cm jit=1.72 pred=RightHop (1.00) MATCH 4.6ms/frame
+[Clip] ArmsBySide    ID   -> ArmsBySide     ADE=0.40cm jit=0.22 pred=ArmsBySide (1.00) MATCH 4.5ms/frame
+[Clip] HandsInPocketsBW   -> HandsInPockets ADE=1.88cm jit=0.63 pred=HandsInPockets (1.00) MATCH 4.7ms/frame
+[Clip] Punch         BW   -> Punch          ADE=2.42cm jit=0.88 pred=Punch (1.00) MATCH 4.5ms/frame
+[Clip] Heavyset      ID   -> Heavyset       ADE=0.52cm jit=0.26 pred=Heavyset (1.00) MATCH 4.5ms/frame
+[Clip] SwingShouldersBR   -> SwingShoulders ADE=1.13cm jit=1.27 pred=SwingShoulders (1.00) MATCH 4.5ms/frame
+[Clip] Tiptoe        FR   -> Tiptoe         ADE=6.54cm jit=0.98 pred=Tiptoe (1.00) MATCH 4.5ms/frame
+[Clip] FairySteps    BW   -> FairySteps     ADE=3.89cm jit=0.62 pred=FairySteps (1.00) MATCH 4.5ms/frame
+[Clip] InTheDark     SW   -> InTheDark      ADE=7.19cm jit=1.04 pred=InTheDark (1.00) MATCH 4.5ms/frame
+[Summary] mode=reconstruct clips=90 mean RootADE=3.11cm jitter=1.005cm F.S.=0.864cm style hits=88/90 (97.8%)
+[Done] summary -> /home/shinn/桌面/multimedia/revision/NewCode/analysis/controller_compare/runs/summary_s42_reconstruct.json

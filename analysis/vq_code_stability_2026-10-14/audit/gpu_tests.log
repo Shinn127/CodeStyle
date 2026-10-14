@@ -1,0 +1,20 @@
+[Tests] suite=gpu; FP32/highest/noTF32; disposable fixtures only
+.....................                                                    [100%]
+=============================== warnings summary ===============================
+tests/test_clip_recipe_v2.py::test_real_cuda_metric_controller_exact_resume
+  /home/shinn/miniforge3/envs/mcc/lib/python3.13/site-packages/torch/autograd/graph.py:979: UserWarning: The AccumulateGrad node's stream does not match the stream of the node that produced the incoming gradient. This may incur unnecessary synchronization and break CUDA graph capture if the AccumulateGrad node's stream is the default stream. This mismatch is caused by an AccumulateGrad node created prior to the current iteration being kept alive. This can happen if the autograd graph is still being kept alive by tensors such as the loss, or if you are using DDP, which will stash a reference to the node. To resolve the mismatch, delete all references to the autograd graph or ensure that DDP initialization is performed under the same stream as subsequent forwards. If the mismatch is intentional, you can use torch.autograd.graph.set_warn_on_accumulate_grad_stream_mismatch(False) to suppress this warning. (Triggered internally at /home/conda/feedstock_root/build_artifacts/libtorch_1786372153234/work/torch/csrc/autograd/input_buffer.cpp:310.)
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 10 durations =============================
+2.20s call     tests/test_clip_recipe_v2.py::test_real_cuda_metric_controller_exact_resume
+0.70s call     tests/test_fp32_pipeline_efficiency.py::test_actual_cuda_entry_epoch_resume_matches_continuous
+0.62s call     tests/test_clip_recipe_v2.py::test_temporal_reference_export_manual_condition_and_cfg[cuda]
+0.53s call     tests/test_clip_recipe_v2.py::test_quantized_window_objective_gradients_no_ode_frozen_vq_and_metric[cuda]
+0.37s call     tests/test_clip_recipe_v2_efficiency.py::test_combined_backward_and_device_cache_preserve_loss_gradients_rng[cuda]
+0.37s call     tests/test_clip_recipe_v2_efficiency.py::test_field_cuda_graph_matches_eager_gradients_and_parameters[64]
+0.34s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-3-cuda]
+0.33s call     tests/test_clip_recipe_v2_efficiency.py::test_field_cuda_graph_matches_eager_gradients_and_parameters[128]
+0.33s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-1-cuda]
+0.29s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[2-1-cuda]
+21 passed, 396 deselected, 1 warning in 8.23s

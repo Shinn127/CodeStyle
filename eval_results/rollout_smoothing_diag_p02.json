@@ -1,0 +1,58 @@
+[
+  {
+    "variant": "raw, 8 steps",
+    "ode_steps": 8,
+    "matched_acc": 0.6083333492279053,
+    "matched_conf": 0.6301509737968445,
+    "cross_acc": 0.5833333730697632,
+    "cross_conf": 0.5789155960083008
+  },
+  {
+    "variant": "raw, 16 steps",
+    "ode_steps": 16,
+    "matched_acc": 0.6250000596046448,
+    "matched_conf": 0.6374238133430481,
+    "cross_acc": 0.5666666626930237,
+    "cross_conf": 0.5668290257453918
+  },
+  {
+    "variant": "raw, 32 steps",
+    "ode_steps": 32,
+    "matched_acc": 0.6500000357627869,
+    "matched_conf": 0.6458464860916138,
+    "cross_acc": 0.5800000429153442,
+    "cross_conf": 0.5760513544082642
+  },
+  {
+    "variant": "causal EMA a=0.5, 8",
+    "ode_steps": 8,
+    "matched_acc": 0.6500000357627869,
+    "matched_conf": 0.6617980003356934,
+    "cross_acc": 0.5733333230018616,
+    "cross_conf": 0.5598688125610352
+  },
+  {
+    "variant": "causal EMA a=0.3, 8",
+    "ode_steps": 8,
+    "matched_acc": 0.6666666865348816,
+    "matched_conf": 0.660231351852417,
+    "cross_acc": 0.5649999976158142,
+    "cross_conf": 0.5622866749763489
+  },
+  {
+    "variant": "3-tap binomial, 8",
+    "ode_steps": 8,
+    "matched_acc": 0.6333333849906921,
+    "matched_conf": 0.6439265608787537,
+    "cross_acc": 0.5699999928474426,
+    "cross_conf": 0.5722528100013733
+  },
+  {
+    "variant": "5-tap binomial, 8",
+    "ode_steps": 8,
+    "matched_acc": 0.6333333849906921,
+    "matched_conf": 0.625934362411499,
+    "cross_acc": 0.5600000023841858,
+    "cross_conf": 0.5566003322601318
+  }
+]

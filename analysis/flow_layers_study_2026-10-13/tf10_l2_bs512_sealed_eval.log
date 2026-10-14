@@ -1,0 +1,49 @@
+/home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:394: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+[Info] classifier joints  : ybot15 (45-dim input)
+[Info] db                 : /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror
+[Info] flow ckpt          : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/flowmatch_label_history_obsnoise_tf10_l2_bs512/best.pt
+[Info] flow model         : flowmatch_target
+[Info] classifier ckpt    : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/fid_feature_extractor_camdm100_60fps_240f_nomirror/100style_position_classifier.pth
+[Info] classifier window  : 240
+[Info] classifier span    : 4 s @ 60 fps
+[Info] GT context in acc  : False
+[Info] styles             : 90
+[Info] device             : cuda
+[Info] horizons           : [240]
+[Info] num sources        : 1000
+[Info] targets/source     : 5
+[Info] norm stats         : /home/shinn/桌面/multimedia/revision/NewCode/checkpoints/vqvae_traj_motion_skip_cat_mlp_375to291_32_4_2048_150ep_nomirror/norm_stats.npz
+[Info] target recipe      : False
+[Info] flow eval          : mode=rollout ode_steps=ckpt noise_std=1.0 requantize_z=True latent_clip=True
+[Info] split_mode=precomputed using /home/shinn/桌面/multimedia/revision/NewCode/database_100sty_375_memmap_nomirror/segments.json (strategy=suffix_balanced_rotation_per_style); val_ratio/test_ratio/seed are ignored
+[Info] normalization stats supplied by the caller
+[Info] normalization over 84165 train windows: fingerprint=a7e1628d637acc71
+[Info] horizon=240 test windows=14127 sampled sources=1000
+horizon 240:   0%|          | 0/16 [00:00<?, ?it/s]horizon 240:   6%|▋         | 1/16 [00:02<00:42,  2.83s/it]horizon 240:  12%|█▎        | 2/16 [00:05<00:34,  2.48s/it]horizon 240:  19%|█▉        | 3/16 [00:07<00:30,  2.37s/it]horizon 240:  25%|██▌       | 4/16 [00:09<00:27,  2.32s/it]horizon 240:  31%|███▏      | 5/16 [00:11<00:25,  2.29s/it]horizon 240:  38%|███▊      | 6/16 [00:14<00:22,  2.27s/it]horizon 240:  44%|████▍     | 7/16 [00:16<00:20,  2.26s/it]horizon 240:  50%|█████     | 8/16 [00:18<00:18,  2.26s/it]horizon 240:  56%|█████▋    | 9/16 [00:20<00:15,  2.25s/it]horizon 240:  62%|██████▎   | 10/16 [00:22<00:13,  2.25s/it]horizon 240:  69%|██████▉   | 11/16 [00:25<00:11,  2.25s/it]horizon 240:  75%|███████▌  | 12/16 [00:27<00:08,  2.25s/it]horizon 240:  81%|████████▏ | 13/16 [00:29<00:06,  2.24s/it]horizon 240:  88%|████████▊ | 14/16 [00:31<00:04,  2.24s/it]horizon 240:  94%|█████████▍| 15/16 [00:34<00:02,  2.24s/it]horizon 240: 100%|██████████| 16/16 [00:35<00:00,  2.09s/it]                                                            [real_motion_upper_bound_h240] N=1000 RootADE=- cm | TargetAcc=99.80 +/- 0.32% | TargetConf=99.66 +/- 0.39%
+[matched_style_rollout_h240] N=1000 RootADE=6.707 +/- 0.600 cm | TargetAcc=82.30 +/- 5.41% | TargetConf=81.73 +/- 5.30%
+[cross_style_transfer_h240] N=5000 RootADE=8.142 +/- 0.580 cm | TargetAcc=21.18 +/- 2.43% | TargetConf=20.76 +/- 2.34%
+[Done] summary json : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/tf10_l2_bs512_obsnoise_rollout/seen/minor_revision_generalization_summary.json
+[Done] summary csv  : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/tf10_l2_bs512_obsnoise_rollout/seen/minor_revision_generalization_summary.csv
+[Done] details csv  : /home/shinn/桌面/multimedia/revision/NewCode/eval_results/tf10_l2_bs512_obsnoise_rollout/seen/minor_revision_generalization_per_sample.csv
+/home/shinn/桌面/multimedia/revision/NewCode/arch/flowmatch_vqvae_controller.py:394: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+[Info] manifest sources: 1000 (horizon=240, split=test, noise_std=1.0)
+  batch 1/16: mpjpe=8.93cm
+  batch 2/16: mpjpe=9.35cm
+  batch 3/16: mpjpe=8.93cm
+  batch 4/16: mpjpe=9.45cm
+  batch 5/16: mpjpe=9.26cm
+  batch 6/16: mpjpe=8.89cm
+  batch 7/16: mpjpe=8.32cm
+  batch 8/16: mpjpe=8.53cm
+  batch 9/16: mpjpe=8.40cm
+  batch 10/16: mpjpe=9.65cm
+  batch 11/16: mpjpe=8.63cm
+  batch 12/16: mpjpe=8.24cm
+  batch 13/16: mpjpe=8.66cm
+  batch 14/16: mpjpe=9.20cm
+  batch 15/16: mpjpe=8.36cm
+  batch 16/16: mpjpe=9.43cm
+[Summary] tf10_l2_bs512_obsnoise (std=1.0): MPJPE=8.88cm CI[8.25,9.62] local=4.26cm RootADE=6.71cm jitter=0.585 F.S.=0.662 (18s, n=1000)
+[Done] /home/shinn/桌面/multimedia/revision/NewCode/analysis/motion_quality_diagnosis/probes/mpjpe_tf10_l2_bs512_obsnoise_ns1.0.json

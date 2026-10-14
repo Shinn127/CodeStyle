@@ -1,0 +1,14 @@
+[Tests] suite=gpu; FP32/highest/noTF32; disposable fixtures only
+.............                                                            [100%]
+============================= slowest 10 durations =============================
+0.46s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-target]
+0.42s call     tests/test_fp32_pipeline_efficiency.py::test_actual_cuda_entry_epoch_resume_matches_continuous
+0.15s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-3-cuda]
+0.12s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[2-1-cuda]
+0.11s call     tests/test_training_pipeline.py::test_cached_worker_epoch_preserves_metrics_gradients_weights_and_rng[4-1-cuda]
+0.04s call     tests/test_flowmatch_performance.py::test_cached_euler_preserves_loss_and_all_controller_gradients[cuda-velocity]
+0.02s call     tests/test_fp32_pipeline_efficiency.py::test_six_token_fp32_math_attention_loss_gradient_and_rng
+0.02s call     tests/test_practical_style_training.py::test_history_replacement_changes_only_observations_and_preserves_root[cuda]
+0.02s call     tests/test_training_pipeline.py::test_sparse_recipe_bank_matches_dense_reference_and_rng[cuda]
+0.01s call     tests/test_practical_style_training.py::test_joint_history_mask_keeps_commands_and_root_and_vq_frozen[cuda]
+13 passed, 249 deselected in 2.74s

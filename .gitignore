@@ -1,6 +1,10 @@
-# NewCode standalone repository. Generated assets (data, checkpoints, caches,
-# eval payloads, videos, logs) stay on disk but are not versioned; code, docs,
-# tests and analysis reports are.
+# NewCode standalone repository.
+#
+# Versioned: code, tests, docs, and the full text evidence trail (analysis reports,
+# training/eval logs, diagnostic/eval JSON, per-sample eval CSVs, validation records).
+# NOT versioned: large generated payloads that stay on disk - model weights, datasets,
+# caches, derived numeric blobs (*.npz/*.npy/*.f32), profiler traces and media
+# (videos/gifs). They are regeneratable or too large for git.
 
 # -----------------------------------------------------------------------------
 # OS / editor
@@ -23,12 +27,12 @@ __pycache__/
 venv/
 
 # -----------------------------------------------------------------------------
-# Model weights, datasets, derived numeric payloads
+# Model weights, datasets, derived numeric payloads (large binaries stay local)
 # -----------------------------------------------------------------------------
-checkpoints/
-cache/
-database_100sty_375_memmap*/
-data/
+/checkpoints/
+/cache/
+/database_100sty_375_memmap*/
+/data/
 *.pt
 *.pth
 *.ckpt
@@ -41,13 +45,14 @@ data/
 *.u16
 *.bin
 
+# Exception: tiny per-run normalization metadata (~3 KB) needed to interpret eval_results.
+!eval_results/**/*.npz
+
 # -----------------------------------------------------------------------------
-# Generated evaluation / visualization artifacts
+# Media and profiler traces (large; keep generated media on disk)
 # -----------------------------------------------------------------------------
-eval_results/
 rollout_vis/
 reconstruction_vis/
-**/motion_eval_summary.json
 *.trace.json
 *.mp4
 *.mov
@@ -55,7 +60,6 @@ reconstruction_vis/
 *.gif
 
 # -----------------------------------------------------------------------------
-# Logs / runtime scratch
+# Runtime scratch (keep nohup auto-output out; real *.log files ARE versioned)
 # -----------------------------------------------------------------------------
-*.log
 nohup.out

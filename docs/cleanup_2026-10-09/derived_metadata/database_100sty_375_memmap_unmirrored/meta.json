@@ -1,0 +1,794 @@
+{
+  "format": "motion375_memmap",
+  "schema_version": 4,
+  "dataset_role": "in_distribution",
+  "num_frames": 3534258,
+  "feature_dim": 375,
+  "num_styles": 90,
+  "num_segments": 729,
+  "mirror_layout": "interleaved_per_entry",
+  "segment_counts": {
+    "total": 729,
+    "mirrored": 0,
+    "unmirrored": 729
+  },
+  "files": {
+    "features": {
+      "path": "X.f32",
+      "dtype": "float32",
+      "shape": [
+        3534258,
+        375
+      ]
+    },
+    "labels": {
+      "path": "Labels.i32",
+      "dtype": "int32",
+      "shape": [
+        3534258
+      ]
+    },
+    "style_names": {
+      "path": "StyleNames.json",
+      "count": 90
+    },
+    "segments": {
+      "path": "segments.json",
+      "count": 729
+    }
+  },
+  "feature_layout": {
+    "trajectory": {
+      "offset": 0,
+      "dim": 84
+    },
+    "motion": {
+      "offset": 84,
+      "dim": 291
+    }
+  },
+  "split": {
+    "strategy": "clip_level_stratified_by_style_and_frame_count",
+    "seed": 42,
+    "val_ratio": 0.1,
+    "test_ratio": 0.1,
+    "style_partition": "csv_order: first (N - K) styles IND, last K styles OOD",
+    "held_out_style_count": 0,
+    "held_out_style_names": [],
+    "coverage": {
+      "styles": 90,
+      "styles_in_all_splits": 90,
+      "min_clips_per_split": {
+        "train": 6,
+        "val": 1,
+        "test": 1
+      },
+      "max_clips_per_split": {
+        "train": 8,
+        "val": 1,
+        "test": 1
+      },
+      "per_style_clips": {
+        "Aeroplane": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 38847
+        },
+        "Akimbo": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34951
+        },
+        "Angry": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 24868
+        },
+        "ArmsAboveHead": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31766
+        },
+        "ArmsBehindBack": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33605
+        },
+        "ArmsBySide": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33637
+        },
+        "ArmsFolded": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34511
+        },
+        "Balance": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 49247
+        },
+        "BeatChest": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34798
+        },
+        "BentForward": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33931
+        },
+        "BentKnees": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 38090
+        },
+        "BigSteps": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31194
+        },
+        "BouncyLeft": {
+          "train": 7,
+          "val": 1,
+          "test": 1,
+          "frames": 34258
+        },
+        "BouncyRight": {
+          "train": 7,
+          "val": 1,
+          "test": 1,
+          "frames": 34690
+        },
+        "Cat": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 44696
+        },
+        "Chicken": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 36203
+        },
+        "CrossOver": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 48477
+        },
+        "Crouched": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34993
+        },
+        "CrowdAvoidance": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 44568
+        },
+        "Depressed": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 45114
+        },
+        "Dinosaur": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 43191
+        },
+        "DragLeftLeg": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 46132
+        },
+        "DragRightLeg": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 46111
+        },
+        "Drunk": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 39845
+        },
+        "DuckFoot": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 52688
+        },
+        "Elated": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 29235
+        },
+        "FairySteps": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 60117
+        },
+        "Flapping": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 28986
+        },
+        "FlickLegs": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 53833
+        },
+        "Followed": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 32161
+        },
+        "GracefulArms": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34592
+        },
+        "HandsBetweenLegs": {
+          "train": 7,
+          "val": 1,
+          "test": 1,
+          "frames": 32942
+        },
+        "HandsInPockets": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34384
+        },
+        "Heavyset": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 35648
+        },
+        "HighKnees": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 46786
+        },
+        "InTheDark": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 50205
+        },
+        "KarateChop": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 43677
+        },
+        "Kick": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 48563
+        },
+        "LawnMower": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 38844
+        },
+        "LeanBack": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 37327
+        },
+        "LeanLeft": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 41490
+        },
+        "LeanRight": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 43293
+        },
+        "LeftHop": {
+          "train": 7,
+          "val": 1,
+          "test": 1,
+          "frames": 18891
+        },
+        "LegsApart": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42418
+        },
+        "LimpLeft": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 48117
+        },
+        "LimpRight": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42516
+        },
+        "LookUp": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 40764
+        },
+        "Lunge": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 39799
+        },
+        "March": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 35987
+        },
+        "Monk": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42515
+        },
+        "Morris": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34204
+        },
+        "Neutral": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 38491
+        },
+        "Old": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 67626
+        },
+        "OnHeels": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34937
+        },
+        "OnPhoneLeft": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33960
+        },
+        "OnPhoneRight": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 36843
+        },
+        "OnToesBentForward": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34372
+        },
+        "OnToesCrouched": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 37628
+        },
+        "PendulumHands": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 36753
+        },
+        "Penguin": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 67008
+        },
+        "PigeonToed": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 55545
+        },
+        "Proud": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33816
+        },
+        "Punch": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 34370
+        },
+        "Quail": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42730
+        },
+        "RaisedLeftArm": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 29547
+        },
+        "RaisedRightArm": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31922
+        },
+        "RightHop": {
+          "train": 7,
+          "val": 1,
+          "test": 1,
+          "frames": 18827
+        },
+        "Roadrunner": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 28038
+        },
+        "Robot": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 52358
+        },
+        "Rocket": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33304
+        },
+        "Rushed": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 20270
+        },
+        "ShieldedLeft": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31371
+        },
+        "ShieldedRight": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 32053
+        },
+        "Skip": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31150
+        },
+        "SlideFeet": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 43248
+        },
+        "SpinAntiClock": {
+          "train": 8,
+          "val": 1,
+          "test": 1,
+          "frames": 30169
+        },
+        "SpinClock": {
+          "train": 8,
+          "val": 1,
+          "test": 1,
+          "frames": 29633
+        },
+        "Star": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 37146
+        },
+        "StartStop": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 80377
+        },
+        "Stiff": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 45630
+        },
+        "Strutting": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42978
+        },
+        "Superman": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 31467
+        },
+        "Swat": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 28483
+        },
+        "Sweep": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 42962
+        },
+        "Swimming": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 33635
+        },
+        "SwingArmsRound": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 44414
+        },
+        "SwingShoulders": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 44858
+        },
+        "Teapot": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 30974
+        },
+        "Tiptoe": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 35084
+        },
+        "TogetherStep": {
+          "train": 6,
+          "val": 1,
+          "test": 1,
+          "frames": 62576
+        }
+      }
+    },
+    "summary": {
+      "test": {
+        "frames": 303906,
+        "segments": 90
+      },
+      "train": {
+        "frames": 2857160,
+        "segments": 549
+      },
+      "val": {
+        "frames": 373192,
+        "segments": 90
+      }
+    }
+  },
+  "generation": {
+    "tool": "generate_database_100sty.py",
+    "schema_version": 4,
+    "frame_cuts_sha256": "e3c1d2beab6486e083622cef6a5402fe9b20edc75a9963ea30675c67ec29ee82",
+    "inputs": {
+      "frame_cuts": "/home/shinn/桌面/Projects/data/100style/Frame_Cuts.csv",
+      "data_root": "/home/shinn/桌面/Projects/data/100style"
+    },
+    "feature_extraction": {
+      "window": 60,
+      "context_stride": 10,
+      "trajectory_samples": 12,
+      "trajectory_blocks": 7,
+      "savgol_window": 61,
+      "savgol_polyorder": 3,
+      "min_clip_len": 122,
+      "motion_source_offset": -1,
+      "coordinate_convert": false,
+      "selected_joint_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        35,
+        36,
+        37,
+        38,
+        61,
+        62,
+        63,
+        64,
+        68,
+        69,
+        70,
+        71
+      ]
+    },
+    "selection": {
+      "style_limit": 90,
+      "max_entries": 0,
+      "suffixes": [
+        "BR",
+        "BW",
+        "FR",
+        "FW",
+        "ID",
+        "SR",
+        "SW",
+        "TR1",
+        "TR2",
+        "TR3"
+      ],
+      "selected_style_names": [
+        "Aeroplane",
+        "Akimbo",
+        "Angry",
+        "ArmsAboveHead",
+        "ArmsBehindBack",
+        "ArmsBySide",
+        "ArmsFolded",
+        "Balance",
+        "BeatChest",
+        "BentForward",
+        "BentKnees",
+        "BigSteps",
+        "BouncyLeft",
+        "BouncyRight",
+        "Cat",
+        "Chicken",
+        "CrossOver",
+        "Crouched",
+        "CrowdAvoidance",
+        "Depressed",
+        "Dinosaur",
+        "DragLeftLeg",
+        "DragRightLeg",
+        "Drunk",
+        "DuckFoot",
+        "Elated",
+        "FairySteps",
+        "Flapping",
+        "FlickLegs",
+        "Followed",
+        "GracefulArms",
+        "HandsBetweenLegs",
+        "HandsInPockets",
+        "Heavyset",
+        "HighKnees",
+        "InTheDark",
+        "KarateChop",
+        "Kick",
+        "LawnMower",
+        "LeanBack",
+        "LeanLeft",
+        "LeanRight",
+        "LeftHop",
+        "LegsApart",
+        "LimpLeft",
+        "LimpRight",
+        "LookUp",
+        "Lunge",
+        "March",
+        "Monk",
+        "Morris",
+        "Neutral",
+        "Old",
+        "OnHeels",
+        "OnPhoneLeft",
+        "OnPhoneRight",
+        "OnToesBentForward",
+        "OnToesCrouched",
+        "PendulumHands",
+        "Penguin",
+        "PigeonToed",
+        "Proud",
+        "Punch",
+        "Quail",
+        "RaisedLeftArm",
+        "RaisedRightArm",
+        "RightHop",
+        "Roadrunner",
+        "Robot",
+        "Rocket",
+        "Rushed",
+        "ShieldedLeft",
+        "ShieldedRight",
+        "Skip",
+        "SlideFeet",
+        "SpinAntiClock",
+        "SpinClock",
+        "Star",
+        "StartStop",
+        "Stiff",
+        "Strutting",
+        "Superman",
+        "Swat",
+        "Sweep",
+        "Swimming",
+        "SwingArmsRound",
+        "SwingShoulders",
+        "Teapot",
+        "Tiptoe",
+        "TogetherStep"
+      ]
+    },
+    "parallelism": {
+      "num_workers": 12,
+      "max_pending_jobs": 24,
+      "ordered_output": true
+    },
+    "augmentation": {
+      "mirror_in_distribution": false,
+      "mirror_zero_shot": false,
+      "mirror_layout": "interleaved_per_entry"
+    }
+  },
+  "relations": {}
+}
