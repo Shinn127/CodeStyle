@@ -95,6 +95,7 @@ METRIC_KEYS = (
     "codebook_loss",
     "commitment_loss",
     "code_align_loss",
+    "teacher_align_loss",
     "latent_margin_loss",
     "boundary_distance",
     "boundary_valid_fraction",
@@ -125,6 +126,8 @@ def epoch_pass(
     latent_margin_target: float = 0.05,
     latent_margin_mode: str = "nearest_boundary",
     roundtrip_weight: float = 0.0,
+    teacher=None,
+    teacher_align_weight: float = 0.0,
     optimizer: Optional[torch.optim.Optimizer] = None,
     scaler: Optional[torch.cuda.amp.GradScaler] = None,
     grad_clip: float = 0.0,
@@ -193,6 +196,8 @@ def epoch_pass(
                 latent_margin_target=latent_margin_target,
                 latent_margin_mode=latent_margin_mode,
                 roundtrip_weight=roundtrip_weight,
+                teacher_align_weight=teacher_align_weight,
+                teacher_motion=None if teacher is None else _teacher_target(teacher, x),
             )
             loss = loss_dict["loss"] / denom
 
@@ -234,6 +239,7 @@ def epoch_pass(
                 f"root={to_float(loss_dict['root_loss']):.6f} "
                 f"z_l1={to_float(loss_dict['latent_l1_loss']):.6f} "
                 f"align={to_float(loss_dict['code_align_loss']):.6f} "
+                f"talign={to_float(loss_dict['teacher_align_loss']):.6f} "
                 f"z_gap={to_float(loss_dict['latent_code_gap']):.6f} "
                 f"bd={to_float(loss_dict['boundary_distance']):.6f} "
                 f"margin={to_float(loss_dict['latent_margin_loss']):.6f} "
@@ -417,6 +423,18 @@ def parse_args() -> argparse.Namespace:
         help=("Weight of the re-encode consistency term: decode the prediction, re-encode it "
               "(with the GT trajectory block) and pull the result back to the code it came "
               "from. This is a same-frame codec cycle, not autoregressive controller feedback."))
+    parser.add_argument("--decoder-only", action="store_true",
+        help=("Decoder-only calibration: freeze the encoder parameters and keep the quantizer's "
+              "EMA/dead-code path in eval (model.set_representation_frozen). The optimizer then "
+              "only sees the decoder; margin/roundtrip/vq losses are rejected because they "
+              "would target frozen parts."))
+    parser.add_argument("--teacher-ckpt", type=Path, default=None,
+        help=("Frozen continuous teacher for --teacher-align-weight: encoder+decoder are loaded "
+              "from this checkpoint into a separate no-grad module (never part of the trained "
+              "model's state_dict). Its continuous decode D0(E0(x)) supervises D(q)."))
+    parser.add_argument("--teacher-align-weight", type=float, default=0.0,
+        help=("Weight of ||D_theta(q) - sg(D0(E0(x)))||^2 (normalized motion291 space), the "
+              "decoder-continuity term for decoder-only calibration. 0 disables."))
     parser.add_argument("--vel-weight", type=float, default=15.0)
     parser.add_argument(
         "--acc-weight",
@@ -460,10 +478,36 @@ def parse_args() -> argparse.Namespace:
 def validate_args(args: argparse.Namespace) -> None:
     if args.init_ckpt is not None and args.resume is not None:
         raise ValueError("Use only one of --init-ckpt and --resume")
-    for name in ("code_align_weight", "latent_margin_weight", "roundtrip_weight", "latent_margin_target"):
+    for name in ("code_align_weight", "latent_margin_weight", "roundtrip_weight", "latent_margin_target",
+                 "teacher_align_weight"):
         value=getattr(args,name)
         if not math.isfinite(value) or value<0:
             raise ValueError(f"--{name.replace('_','-')} must be finite and nonnegative")
+    if args.teacher_align_weight > 0.0 and args.teacher_ckpt is None:
+        raise ValueError("--teacher-align-weight requires --teacher-ckpt")
+    if args.teacher_ckpt is not None and args.teacher_align_weight <= 0.0:
+        raise ValueError("--teacher-ckpt requires --teacher-align-weight > 0")
+    if args.decoder_only:
+        # Margin/roundtrip/target the frozen encoder; asking for them here is a configuration
+        # mistake, not a knob to silently ignore.
+        for name in ("latent_margin_weight", "roundtrip_weight"):
+            if float(getattr(args, name)) > 0.0:
+                raise ValueError(
+                    f"--decoder-only cannot be combined with --{name.replace('_','-')} > 0 "
+                    "(those objectives train the frozen encoder)")
+        if args.init_ckpt is None:
+            raise ValueError("--decoder-only expects --init-ckpt (start from the VQ whose decoder is calibrated)")
+        # The remaining representation losses/side objectives are zeroed because their targets
+        # are frozen (no gradient path) or they belong to the other alignment direction; this
+        # matches the calibration protocol (controls A/B in the plan) and is reported loudly.
+        zeroed = {}
+        for name in ("vq_weight", "code_align_weight", "latent_l1_weight", "latent_vel_weight"):
+            if float(getattr(args, name)) != 0.0:
+                zeroed[name] = float(getattr(args, name))
+                setattr(args, name, 0.0)
+        if zeroed:
+            print("[Info] decoder-only zeroed frozen-representation terms: "
+                  + ", ".join(f"{k}={v}" for k, v in zeroed.items()))
     validate_common_data_args(
         grad_accum_steps=args.grad_accum_steps,
         val_every=args.val_every,
@@ -577,6 +621,48 @@ def load_initial_vq_weights(model, checkpoint):
     return drop_quantizer
 
 
+def build_frozen_teacher(args, device):
+    """Separate no-grad copy of the teacher checkpoint; never enters the trained state_dict."""
+    teacher = build_model(args, device=device)
+    load_initial_vq_weights(teacher, load_checkpoint(args.teacher_ckpt, map_location='cpu'))
+    teacher = teacher.to(device).eval()
+    for parameter in teacher.parameters():
+        parameter.requires_grad_(False)
+    return teacher
+
+
+def validate_teacher_match(model, teacher):
+    """The teacher's representation must equal the frozen student's (same codes under D)."""
+    student = state_dict_fingerprint(model.state_dict(), prefix=('encoder.', 'quantizer.'))
+    source = state_dict_fingerprint(teacher.state_dict(), prefix=('encoder.', 'quantizer.'))
+    if student != source:
+        raise ValueError(
+            'Teacher encoder/quantizer differs from the trained model; decoder-only calibration '
+            'needs the same frozen representation on both sides')
+
+
+def state_dict_fingerprint(state, *, prefix):
+    import hashlib
+    digest = hashlib.sha256()
+    for key in sorted(state):
+        if not key.startswith(tuple(prefix)):
+            continue
+        tensor = state[key].detach().to('cpu', torch.float32).contiguous()
+        digest.update(key.encode())
+        digest.update(tensor.numpy().tobytes())
+    return digest.hexdigest()
+
+
+@torch.no_grad()
+def _teacher_target(teacher, x: torch.Tensor) -> torch.Tensor:
+    """Frozen continuous decode D0(E0(x)) (normalized motion291), the alignment target.
+
+    Runs only the teacher encoder + decoder (no quantizer pass): the target is the smooth
+    continuous branch, and skipping the quantized forward keeps it cheap and side-effect-free.
+    """
+    return teacher.decode(teacher.encode_pre_vq(x))
+
+
 def validate_stability_resume(args, previous):
     """Old pilots used the runner-up code, not the nearest Voronoi plane."""
     old=previous.get('args') or {}
@@ -586,6 +672,12 @@ def validate_stability_resume(args, previous):
     if args.latent_margin_weight>0:
         if old.get('latent_margin_mode','nearest_code')!=args.latent_margin_mode or float(old.get('latent_margin_target',.05))!=args.latent_margin_target:
             raise ValueError('Resume changes margin geometry/target; old pilots need --latent-margin-mode nearest_code, or use --init-ckpt')
+    if bool(old.get('decoder_only', False)) != bool(getattr(args, 'decoder_only', False)):
+        raise ValueError('Resume changes decoder_only; use --init-ckpt for a new objective')
+    if float(old.get('teacher_align_weight', 0.)) != float(getattr(args, 'teacher_align_weight', 0.)):
+        raise ValueError('Resume changes teacher_align_weight; use --init-ckpt for a new objective')
+    if getattr(args, 'teacher_align_weight', 0.) > 0 and old.get('teacher_fingerprint') != getattr(args, 'teacher_fingerprint', None):
+        raise ValueError('Resume teacher differs from the recorded one; start a new run')
 
 
 def main() -> None:
@@ -671,6 +763,13 @@ def main() -> None:
             f"(needs about {db_size_gb + 2.0:.1f} GB memory for X + overhead)."
         )
 
+    # Record the teacher's representation fingerprint before the config is written: it is the
+    # identity that resume validation later requires to match.
+    args.teacher_fingerprint = None
+    if args.teacher_ckpt is not None:
+        teacher_state = sanitize_state_dict_keys(load_checkpoint(args.teacher_ckpt, map_location='cpu')['model'])
+        args.teacher_fingerprint = state_dict_fingerprint(teacher_state, prefix=('encoder.', 'quantizer.'))
+
     write_config_json(out_dir=args.out_dir, args=args)
 
     prepared = prepare_data_loaders_from_args(
@@ -686,7 +785,34 @@ def main() -> None:
         print(
             f"[Info] init from       : {args.init_ckpt} "
             f"({'encoder/decoder only, codebook re-initialised' if drop_quantizer else 'full state'})")
-    optimizer, use_fused_adamw = build_optimizer(model=model, args=args, device=device)
+    teacher = None
+    if args.teacher_ckpt is not None:
+        teacher = build_frozen_teacher(args, device)
+        validate_teacher_match(model, teacher)
+        teacher_fp = state_dict_fingerprint(teacher.state_dict(), prefix=('encoder.', 'quantizer.'))
+        if args.teacher_fingerprint is not None and teacher_fp != args.teacher_fingerprint:
+            raise RuntimeError('Teacher fingerprint changed between config write and load')
+        args.teacher_fingerprint = teacher_fp
+        print(f"[Info] teacher         : {args.teacher_ckpt} (frozen, representation matches)")
+    if args.decoder_only:
+        model.set_representation_frozen(True)
+        frozen_parts = {
+            'encoder': all(not p.requires_grad for p in model.encoder.parameters()),
+            'quantizer': not model.quantizer.training,
+        }
+        if not (frozen_parts['encoder'] and frozen_parts['quantizer']):
+            raise RuntimeError(f'decoder-only freeze failed: {frozen_parts}')
+        trainable = [n for n, p in model.named_parameters() if p.requires_grad]
+        if not trainable or any(not n.startswith('decoder.') for n in trainable):
+            raise RuntimeError(f'decoder-only expects decoder.* to be the only trainable params, got {trainable}')
+        print(f"[Info] decoder-only    : encoder+quantizer frozen; trainable={len(trainable)} decoder tensors")
+        # Decoder-only optimizer directly: no state or weight-decay slot for frozen parameters.
+        optimizer, use_fused_adamw = build_adamw(
+            [p for p in model.parameters() if p.requires_grad],
+            lr=args.lr, beta1=args.beta1, beta2=args.beta2, weight_decay=args.weight_decay,
+            use_fused=bool(args.fused_adamw and device.type == 'cuda'))
+    else:
+        optimizer, use_fused_adamw = build_optimizer(model=model, args=args, device=device)
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs, eta_min=args.min_lr)
     scaler = build_grad_scaler(
         device=device,
@@ -812,6 +938,8 @@ def main() -> None:
             latent_margin_target=args.latent_margin_target,
             latent_margin_mode=args.latent_margin_mode,
             roundtrip_weight=args.roundtrip_weight,
+            teacher=teacher,
+            teacher_align_weight=args.teacher_align_weight,
             root_weight=args.root_weight,
             optimizer=optimizer,
             scaler=scaler,
@@ -848,6 +976,8 @@ def main() -> None:
                         latent_margin_target=args.latent_margin_target,
                         latent_margin_mode=args.latent_margin_mode,
                         roundtrip_weight=args.roundtrip_weight,
+                        teacher=teacher,
+                        teacher_align_weight=args.teacher_align_weight,
                         root_weight=args.root_weight,
                         optimizer=None,
                         scaler=None,

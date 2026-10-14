@@ -779,6 +779,29 @@ class BasicVQVAE375to291(nn.Module):
     def reconstruct(self, x: torch.Tensor) -> torch.Tensor:
         return self.forward(x, return_details=True)["motion_hat"]
 
+    def set_representation_frozen(self, frozen: bool = True) -> None:
+        """Freeze the encoder and the quantizer for decoder-only calibration runs.
+
+        Parameter freezing alone cannot freeze the EMA codebook: the library updates it in
+        every *training-mode* forward and may also replace dead codes there. This switches the
+        encoder parameters to `requires_grad=False` and keeps the encoder/quantizer modules in
+        eval mode across subsequent `train()` calls, which is what actually blocks the EMA
+        update and the dead-code replacement (both guarded by `self.training` in the library).
+        """
+        self.representation_frozen = bool(frozen)
+        for parameter in self.encoder.parameters():
+            parameter.requires_grad_(not self.representation_frozen)
+        self.train(self.training)
+
+    def train(self, mode: bool = True):
+        super().train(mode)
+        if getattr(self, "representation_frozen", False):
+            # Re-assert eval on the frozen parts after every train() call; `model.train()`
+            # alone would re-enable the EMA path on the next forward.
+            self.encoder.eval()
+            self.quantizer.eval()
+        return self
+
     @staticmethod
     def _loss_by_type(
         pred: torch.Tensor,
@@ -811,9 +834,13 @@ class BasicVQVAE375to291(nn.Module):
         roundtrip_weight: float = 0.0,
         latent_margin_target: float = 0.05,
         latent_margin_mode: Literal["nearest_boundary", "nearest_code"] = "nearest_boundary",
+        teacher_align_weight: float = 0.0,
+        teacher_motion: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
         if not math.isfinite(code_align_weight) or code_align_weight < 0.0:
             raise ValueError(f"code_align_weight must be >= 0, got {code_align_weight}")
+        if not math.isfinite(teacher_align_weight) or teacher_align_weight < 0.0:
+            raise ValueError(f"teacher_align_weight must be >= 0, got {teacher_align_weight}")
         if not math.isfinite(latent_margin_weight) or latent_margin_weight < 0.0:
             raise ValueError(f"latent_margin_weight must be >= 0, got {latent_margin_weight}")
         if not math.isfinite(roundtrip_weight) or roundtrip_weight < 0.0:
@@ -909,6 +936,22 @@ class BasicVQVAE375to291(nn.Module):
                 raise RuntimeError("code_align_weight requires the continuous decode")
             code_align_loss = torch.mean((continuous_hat - pred.detach()).square())
 
+        # Teacher alignment (decoder-only calibration): pull the quantized decode D(q) toward a
+        # FROZEN continuous teacher D0(E0(x)) supplied by the caller (.detach() here; the
+        # teacher itself is never part of this model). Opposite direction of `code_align_loss`
+        # (which moves the continuous branch toward the quantized one): this term exists to
+        # reduce the extra temporal error that quantization introduces on the decode side,
+        # not the code identity.
+        teacher_align_loss = pred.new_zeros(())
+        if teacher_align_weight > 0.0:
+            if teacher_motion is None:
+                raise ValueError("teacher_align_weight requires teacher_motion")
+            if teacher_motion.shape != pred.shape:
+                raise ValueError(
+                    f"teacher_motion shape mismatch: expected {tuple(pred.shape)}, got {tuple(teacher_motion.shape)}"
+                )
+            teacher_align_loss = torch.mean((pred - teacher_motion.detach()).square())
+
         # Margin supervises encoder geometry against the current post-EMA table.
         # EMA buffers receive no gradient, but still update in training forward.
         latent_margin_loss = pred.new_zeros(())
@@ -944,6 +987,7 @@ class BasicVQVAE375to291(nn.Module):
         total = (
             recon_weight * recon_loss
             + code_align_weight * code_align_loss
+            + teacher_align_weight * teacher_align_loss
             + latent_margin_weight * latent_margin_loss
             + roundtrip_weight * roundtrip_loss
             + vq_weight * details["vq_loss"]
@@ -965,6 +1009,7 @@ class BasicVQVAE375to291(nn.Module):
             "codebook_loss": details["codebook_loss"],
             "commitment_loss": details["commitment_loss"],
             "code_align_loss": code_align_loss,
+            "teacher_align_loss": teacher_align_loss,
             "latent_margin_loss": latent_margin_loss,
             "boundary_distance": boundary_distance,
             "boundary_valid_fraction": boundary_valid_fraction,

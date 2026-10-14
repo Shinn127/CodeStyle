@@ -64,6 +64,12 @@ ROUNDTRIP_WEIGHT="${ROUNDTRIP_WEIGHT:-0.0}"
 # Warm start (encoder/decoder only); codebook re-initialises when the size changes.
 INIT_CKPT="${INIT_CKPT:-}"
 NUM_EMBEDDINGS="${NUM_EMBEDDINGS:-2048}"
+# Decoder-only calibration: freeze encoder+quantizer (EMA included), train only the decoder.
+# TEACHER_CKPT + TEACHER_ALIGN_WEIGHT add the frozen continuous-teacher alignment
+# ||D(q) - sg(D0(E0(x)))||^2 (see docs/VQ_DECODE_CONTINUITY_PLAN.md).
+DECODER_ONLY="${DECODER_ONLY:-0}"
+TEACHER_CKPT="${TEACHER_CKPT:-}"
+TEACHER_ALIGN_WEIGHT="${TEACHER_ALIGN_WEIGHT:-0.0}"
 EVAL_EVERY="${EVAL_EVERY:-10}"
 # Primary metric: reported in the logs and stored as best_metric. It is always part of the
 # gate below, but never decides alone.
@@ -117,6 +123,7 @@ cmd=(
   --latent-margin-mode "${LATENT_MARGIN_MODE}"
   --roundtrip-weight "${ROUNDTRIP_WEIGHT}"
   --num-embeddings "${NUM_EMBEDDINGS}"
+  --teacher-align-weight "${TEACHER_ALIGN_WEIGHT}"
   --eval-every "${EVAL_EVERY}"
   --eval-metric "${EVAL_METRIC}"
   --best-metrics "${BEST_METRICS}"
@@ -129,8 +136,12 @@ cmd=(
 
 ru_append_bool_flag cmd "${TF32}" --tf32 --no-tf32
 ru_append_if_enabled cmd "${LOAD_INTO_MEMORY}" --load-into-memory
-ru_append_if_enabled cmd "${NORM_STATS}" --norm-stats "${NORM_STATS}"
-ru_append_if_enabled cmd "${INIT_CKPT}" --init-ckpt "${INIT_CKPT}"
+# Path-valued options must use an explicit non-empty test: ru_append_if_enabled treats the
+# value as a boolean literal ("1"/"true"/...), so a path was silently dropped before.
+if [[ -n "${NORM_STATS}" ]]; then cmd+=(--norm-stats "${NORM_STATS}"); fi
+if [[ -n "${INIT_CKPT}" ]]; then cmd+=(--init-ckpt "${INIT_CKPT}"); fi
+if [[ -n "${TEACHER_CKPT}" ]]; then cmd+=(--teacher-ckpt "${TEACHER_CKPT}"); fi
+ru_append_bool_flag cmd "${DECODER_ONLY}" --decoder-only --no-decoder-only
 ru_append_bool_flag cmd "${COMPILE}" --compile --no-compile
 ru_append_bool_flag cmd "${USE_ROTATION_TRICK}" --use-rotation-trick --no-use-rotation-trick
 ru_append_bool_flag cmd "${KMEANS_INIT}" --kmeans-init --no-kmeans-init

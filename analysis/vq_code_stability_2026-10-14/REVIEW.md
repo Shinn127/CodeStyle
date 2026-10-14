@@ -19,10 +19,19 @@
 
 ## 1. K=1024 精确几何首跑（本会话执行）
 
-配置：30ep、bs512、seed42、warm start（encoder/decoder 自 150ep 基线，码本 k-means 重建）、
-`latent_margin_weight=1.0`、`roundtrip_weight=1.0`、`latent_margin_mode=nearest_boundary`、
-`latent_margin_target=0.05`、K=1024。config 核对：`vq_stability_version=2` ✓。
-epoch ≈72s（33–36k samples/s，与 K=2048 同档）。
+> **重要更正（同日发现并修复）**：两个 pilot 的 `--init-ckpt` 实际**从未传入训练器**——
+> 入口脚本用 `ru_append_if_enabled` 追加路径参数，而该 helper 只接受布尔字面量
+> （"1"/"true"/…），路径被静默丢弃（`config.json` 的 `init_ckpt` 均为 null，见下）。
+> **因此 K=2048 与 K=1024 两个 pilot 都是从零训练、码本 k-means 冷启动**；此前"warm start
+> 自 150ep 基线"的表述作废。wrapper 已改为显式 `[[ -n ... ]]` 判断（`NORM_STATS` 同款
+> 问题一并修复）。这个更正让结果解释反而更干净：**两个 pilot 是同起点、同预算（30ep）的
+> 从零训练**，与 150ep 基线的对比是"30ep 新配方 vs 150ep 旧配方"。
+> 对照基线自身的 ep30：recon 0.0554 / mpjpe 1.264——K=2048 新配方（0.0417 / 1.011）在
+> 同预算下显著更好，K=1024（0.0550 / 1.233）与之持平。
+
+配置（实际生效）：30ep、bs512、seed42、**从零**、`latent_margin_weight=1.0`、
+`roundtrip_weight=1.0`、`latent_margin_mode=nearest_boundary`、`latent_margin_target=0.05`、
+K=1024（k-means 冷启动）。config 核对：`vq_stability_version=2` ✓、`init_ckpt=null`。
 
 训练内 90 窗口 eval：ep10 mpjpe 1.287 → ep25 1.253 → ep30 1.233；train recon 0.1790→0.0550；
 rt_drift（128 维整体范数口径）1.548→0.977——比 K=2048 档（1.186）更低。
